@@ -1,3 +1,14 @@
-# NaviNinja
+M1 Informatique - Génie logiciel avancé
+NaviNinja
+=====================================================
 
-Logiciel de calcul d’itinéraire- Groupe 5 
+## Groupe 5
+
+Martini Reen
+Rochier Marie
+Falguerolle Elliott
+Guinard Océane
+Seddiki Bilal
+Ngoy John
+
+##
