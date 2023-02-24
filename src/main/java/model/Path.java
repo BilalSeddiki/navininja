@@ -13,7 +13,7 @@ public class Path {
     /** Durée du trajet jusqu'à la prochaine station. */
     private Duration travelDuration;
     /** Distance du trajet jusqu'à la prochaine station. */
-    private float travelDistance;
+    private double travelDistance;
     /** La station vers laquelle mène le chemin. */
     private Station nextStation;
 
@@ -48,7 +48,7 @@ public class Path {
      * Renvoie la distance du trajet vers la prochaine station en km.
      * @return la distance du trajet
      */
-    public float getTravelDistance() {
+    public double getTravelDistance() {
         return travelDistance;
     }
 
