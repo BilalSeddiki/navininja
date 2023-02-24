@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Path {
     /** Nom de la ligne sur laquelle se situe le chemin. */
     private String lineName;
-    /** Horaires de passage des trains. */
+    /** Horaires de passage des trains sur ce chemin, dans l'ordre. */
     private ArrayList<LocalTime> schedule;
     /** Durée du trajet jusqu'à la prochaine station. */
     private Duration travelDuration;
@@ -34,6 +34,14 @@ public class Path {
      */
     public String getLineName() {
         return lineName;
+    }
+
+    /**
+     * Renvoie les horaires de passage des trains sur ce chemin dans l'ordre.
+     * @return les horaires de passage des trains
+     */
+    public ArrayList<LocalTime> getSchedule() {
+        return schedule;
     }
 
     /** 
