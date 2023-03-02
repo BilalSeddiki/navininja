@@ -12,10 +12,26 @@ public class Path {
     private ArrayList<LocalTime> schedule;
     /** Durée du trajet jusqu'à la prochaine station. */
     private Duration travelDuration;
-    /** Distance du trajet jusqu'à la prochaine station. */
+    /** Distance du trajet jusqu'à la prochaine station en km. */
     private double travelDistance;
-    /** La station vers laquelle mène le chemin. */
+    /** Station vers laquelle mène le chemin. */
     private Station nextStation;
+
+    /**
+     * Construit un chemin jusqu'à une prochaine station
+     * @param lineName le nom de la ligne sur laquelle se situe le chemin
+     * @param schedule les horaires de passage des trains sur ce chemin, dans l'ordre
+     * @param travelDuration la durée du trajet jusqu'à la prochaine station
+     * @param travelDistance la distance du trajet jusqu'à la prochaine station en km
+     * @param nextStation la station vers laquelle mène le chemin
+     */
+    public Path(String lineName, ArrayList<LocalTime> schedule, Duration travelDuration, double travelDistance, Station nextStation) {
+        this.lineName = lineName;
+        this.schedule = schedule;
+        this.travelDuration = travelDuration;
+        this.travelDistance = travelDistance;
+        this.nextStation = nextStation;
+    }
 
     /**
      * Calcule le temps pour arriver à la prochaine station à partir d'une heure donnée.

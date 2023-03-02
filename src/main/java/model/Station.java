@@ -5,12 +5,24 @@ import java.awt.geom.Point2D.Double;
 
 /** Une station du réseau */
 public class Station {
-    /** Le nom de la station. */
+    /** Nom de la station. */
     private String name;
-    /** Les coordonnées gps de la station. */
+    /** Coordonnées gps de la station. */
     private Double coordinates;
-    /** Les differents chemins que l'on peut prendre à partir de la station. */
+    /** Differents chemins que l'on peut prendre à partir de la station. */
     private ArrayList<Path> paths;
+
+    /**
+     * Construit une sation du réseau
+     * @param name le nom de la station
+     * @param coordinates les coordonnées gps de la station 
+     * @param paths les differents chemins que l'on peut prendre à partir de la station
+     */
+    public Station(String name, Double coordinates, ArrayList<Path> paths) {
+        this.name = name;
+        this.coordinates = coordinates;
+        this.paths = paths;
+    }
 
     /**
      * Renvoie le nom de la station.
