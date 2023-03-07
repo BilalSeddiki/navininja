@@ -34,6 +34,15 @@ public class Path {
     }
 
     /**
+     * Renvoie l'heure du prochain départ de train dans cette direction à partir de l'heure indiquée.
+     * @param from l'heure depuis laquelle calculer le prochain départ
+     * @return l'heure du prochain départ
+     */
+    public LocalTime nextTrainDeparture(LocalTime from) {
+        return LocalTime.of(0, 0);
+    }
+
+    /**
      * Calcule le temps pour arriver à la prochaine station à partir d'une heure donnée.
      * <p>
      * Additionne le temps du trajet jusqu'à la prochaine station et le temps d'attente jusqu'au prochain train.
