@@ -32,7 +32,7 @@ public class CardsData {
     @CsvBindByPosition(position = 4)
     private char line;
 
-    @CsvDate(value = "mm:ss") @CsvBindByPosition(position = 5)
+    @CsvBindByPosition(position = 5) @CsvDate(value = "mm:ss")
     private Date duration;
 
     @CsvBindByPosition(position = 6)
