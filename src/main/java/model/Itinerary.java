@@ -4,25 +4,22 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+/** Un itinéraire d'une station à une autre. */
 public class Itinerary {
-    private Station source;
-    private Station destination;
     private LocalTime departureTime;
     private ArrayList<Path> paths;
 
-    public Itinerary(Station source, Station destination, LocalTime departureTime, ArrayList<Path> paths) {
-        this.source = source;
-        this.destination = destination;
+    public Itinerary(LocalTime departureTime, ArrayList<Path> paths) {
         this.departureTime = departureTime;
         this.paths = paths;
     }
 
     public Station getSource() {
-        return source;
+        return null;
     }
 
     public Station getDestination() {
-        return destination;
+        return null;
     }
 
     public ArrayList<Station> getStations() {

@@ -15,14 +15,16 @@ public class TestPath {
         ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
         Duration travelDuration = Duration.ZERO;
         double travelDistance = 0;
-        Station nextStation = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station source = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station destination = new Station("", new Double(0, 0), new ArrayList<Path>());
 
-        Path path = new Path(lineName, schedule, travelDuration, travelDistance, nextStation);
+        Path path = new Path(lineName, schedule, travelDuration, travelDistance, source, destination);
         assertEquals(lineName, path.getLineName(), "L'attribut lineName est incorrect.");
         assertEquals(schedule, path.getSchedule(), "L'attribut schedule est incorrect.");
         assertEquals(travelDuration, path.getTravelDuration(), "L'attribut travelDuration est incorrect.");
         assertEquals(travelDistance, path.getTravelDistance(), "L'attribut travelDistance est incorrect.");
-        assertEquals(nextStation, path.getNextStation(), "L'attribut nextStation est incorrect.");
+        assertEquals(source, path.getSource(), "L'attribut source est incorrect.");
+        assertEquals(destination, path.getDestination(), "L'attribut destination est incorrect.");
 
         /* TODO (1 ?): assertEquals -> assertSame avec redéfinition de equals.
          * TODO (2 ?): 
