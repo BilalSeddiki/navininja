@@ -16,7 +16,7 @@ dependencies {
 }
 
 application {
-    mainClass = 'hello.Hello' 
+    mainClass = 'Main'
 }
 
 tasks.named('test') {
@@ -31,7 +31,7 @@ jacocoTestReport {
 
 javafx {
     version = "19.0.2"
-    modules = [ 'javafx.controls' ]
+    modules = [ 'javafx.controls' , 'javafx.fxml' , 'javafx.graphics', 'javafx.controls']
 }
 
 java {
