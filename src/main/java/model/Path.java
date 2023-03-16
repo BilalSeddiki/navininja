@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+/* Note : Pour implémenter les chemins à pied, on pourra créer une interface implémentée par Path et une nouvelle classe pour la marche à pied */
+ 
 /** Un chemin jusqu'à une prochaine station. */
 public class Path {
     /** Nom de la ligne sur laquelle se situe le chemin. */

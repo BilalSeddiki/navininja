@@ -6,28 +6,23 @@ import java.util.ArrayList;
 
 /** Un itinéraire d'une station à une autre. */
 public class Itinerary {
+    /** Heure de départ de l'itinéraire. */
     private LocalTime departureTime;
+    /** L'ensemble des chemins constituant l'itinéraire */
     private ArrayList<Path> paths;
 
+    /**
+     * Construit un itinéraire. 
+     * @param departureTime l'heure de départ de l'itinéraire
+     * @param paths l'ensemble des chemins constituant l'itinéraire
+     */
     public Itinerary(LocalTime departureTime, ArrayList<Path> paths) {
         this.departureTime = departureTime;
         this.paths = paths;
     }
 
-    public Station getSource() {
-        return null;
-    }
-
-    public Station getDestination() {
-        return null;
-    }
-
-    public ArrayList<Station> getStations() {
-        return new ArrayList<Station>();
-    }
-
-    public ArrayList<LocalTime> getTrainDepartureTimes() {
-        return new ArrayList<>();
+    public ArrayList<Path> getPaths() {
+        return paths;
     }
 
     public LocalTime getDepartureTime() {
