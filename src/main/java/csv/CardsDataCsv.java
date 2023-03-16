@@ -1,7 +1,8 @@
-package hello;
+package csv;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,14 +71,15 @@ public class CardsDataCsv {
         return stationA + " (x = " + coordinatesA.get(0) + ", y = " + coordinatesA.get(1) + ") -> " + stationB + " (x = " + coordinatesB.get(0) + ", y = " + coordinatesB.get(1) + ") = " + distance + "km (" + FORMAT.format(duration) + ")";
     }
 
-    public static void main(String[] args) {
-        String csv = "Jeanne d'arc; 43.60887,1.44544; Jean Jaurès; 43.60573,1.44883; B; 1:42; 8.43;";
-        Reader reader = (new StringReader(csv));
+    /**
+     * 
+     * @param path Le chemin vers le fichier CSV à parser
+     * @return La liste d'instance de {@code CardsDataCsv} décrit par le fichier CSV donné en argument
+     * @throws FileNotFoundException si le fichier n'existe pas
+     */
+    public static List<CardsDataCsv> readCSV(String path) throws FileNotFoundException {
+        Reader reader = new FileReader(path);
         CsvToBean<CardsDataCsv> csvToBean = new CsvToBeanBuilder<CardsDataCsv>(reader).withType(CardsDataCsv.class).withIgnoreEmptyLine(true).withSeparator(';').build();
-        List<CardsDataCsv> list = csvToBean.parse();
-        
-        for (CardsDataCsv data : list) {
-            System.out.println(data);
-        }
+        return csvToBean.parse();
     }
 }
