@@ -19,8 +19,11 @@ public class Main extends Application {
         File file = new File(Globals.pathToView("MenuView.fxml"));
         FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
         Parent root = loader.load();
+        primaryStage.setResizable(false);
         primaryStage.setTitle("NaviNinja");
         Scene scene = new Scene(root, Globals.windowWidth(), Globals.windowHeight());
+        scene.getStylesheets().add(getClass().getResource("views/style/style.css").toExternalForm());
+
         primaryStage.setScene(scene);
         primaryStage.show();
 

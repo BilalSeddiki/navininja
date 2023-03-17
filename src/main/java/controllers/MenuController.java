@@ -51,6 +51,8 @@ public class MenuController {
         stage = (Stage)((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setTitle("findARoute");
         Scene scene = new Scene(root, Globals.windowWidth(), Globals.windowHeight());
+        scene.getStylesheets().add(getClass().getResource(Globals.pathToStyleSheetFromController("style.css")).toExternalForm());
+
         stage.setScene(scene);
         stage.show();
     }

@@ -10,10 +10,9 @@
 <?import javafx.scene.paint.LinearGradient?>
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.SVGPath?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="700.0" maxWidth="1040.0" minHeight="700.0" minWidth="1040.0" prefHeight="700.0"
-            prefWidth="1040.0" style="-fx-background-color: #FFFFFF;" stylesheets="@style/Menu_Style.css"
+            prefWidth="1040.0" style="-fx-background-color: #FFFFFF;"
             xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controllers.MenuController">
    <SVGPath
@@ -38,11 +37,9 @@
    </SVGPath>
    <Button fx:id="networkPlanBtn" ellipsisString="" layoutX="416.0" layoutY="279.0" mnemonicParsing="false"
            prefHeight="60.0" prefWidth="250.0"  onAction="#networkPlanListener"
-           style="-fx-border-radius: 15px; -fx-background-color: linear-gradient(#82AFFC 0%, #8399FB 100%);"
+
            text="Network plan" textAlignment="CENTER" textFill="WHITE">
-      <font>
-         <Font name="Verdana Bold" size="13.0"/>
-      </font>
+
       <effect>
          <DropShadow height="15.0" radius="7.0" width="15.0">
             <color>
@@ -56,11 +53,9 @@
    </Button>
    <Button fx:id="findARouteBtn" ellipsisString="" layoutX="416.0" layoutY="435.0" mnemonicParsing="false"
            prefHeight="60.0" prefWidth="250.0" onAction="#findARouteListener"
-           style="-fx-border-radius: 15px; -fx-background-color: linear-gradient(#82AFFC 0%, #8399FB 100%);"
+
            text="Find a route" textAlignment="CENTER" textFill="WHITE">
-      <font>
-         <Font name="Verdana Bold" size="13.0"/>
-      </font>
+
       <effect>
          <DropShadow height="15.0" radius="7.0" width="15.0">
             <color>
@@ -74,11 +69,9 @@
    </Button>
    <Button fx:id="timePlanBtn" ellipsisString="" layoutX="418.0" layoutY="356.0" mnemonicParsing="false"
            prefHeight="60.0" prefWidth="250.0"  onAction="#timePlanListener"
-           style="-fx-border-radius: 15px; -fx-background-color: linear-gradient(#82AFFC 0%, #8399FB 100%);"
+
            text="Time plan" textAlignment="CENTER" textFill="WHITE">
-      <font>
-         <Font name="Verdana Bold" size="13.0"/>
-      </font>
+
       <effect>
          <DropShadow height="15.0" radius="7.0" width="15.0">
             <color>
@@ -111,8 +104,6 @@
       </fill>
    </SVGPath>
    <ImageView fitHeight="96.0" fitWidth="323.0" layoutX="390.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@../Logo_black.png"/>
-      </image>
+      <Image url="@../Logo_black.png"/>
    </ImageView>
 </AnchorPane>
