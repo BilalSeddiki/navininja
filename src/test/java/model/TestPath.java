@@ -24,10 +24,67 @@ public class TestPath {
         assertEquals(travelDistance, path.getTravelDistance(), "L'attribut travelDistance est incorrect.");
         assertEquals(nextStation, path.getNextStation(), "L'attribut nextStation est incorrect.");
 
-        /* TODO (1 ?): assertEquals -> assertSame avec redéfinition de equals.
-         * TODO (2 ?): 
-         * Conditions de création (nom non vide, liste d'horaires non vide, ...).
-         * -> Plusieurs tests (constructeur correct, constructeur incorrect).
-         */
+        /* TODO (1 ?): assertEquals -> assertSame avec redéfinition de equals. */
+    }
+
+    //TODO (?): Factorisation des constructeurs.
+    @Test
+    public void testConstructorLineNameNotEmpty() {
+        String lineName = "";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        Duration travelDuration = Duration.ZERO;
+        double travelDistance = 0;
+        Station nextStation = new Station("", new Double(0, 0), new ArrayList<Path>());
+
+        Path path = new Path(lineName, schedule, travelDuration, travelDistance, nextStation);
+        //assertFalse(path.getLineName().isEmpty(), "L'attribut lineName ne peut pas être vide.");
+    }
+
+    @Test
+    public void testConstructorScheduleNotEmpty() {
+        String lineName = "";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        Duration travelDuration = Duration.ZERO;
+        double travelDistance = 0;
+        Station nextStation = new Station("", new Double(0, 0), new ArrayList<Path>());
+
+        Path path = new Path(lineName, schedule, travelDuration, travelDistance, nextStation);
+        //assertFalse(path.getSchedule().isEmpty(), "L'attribut schedule ne peut pas être vide.");
+    }
+
+    @Test
+    public void testConstructorTravelDurationNotZero() {
+        String lineName = "";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        Duration travelDuration = Duration.ZERO;
+        double travelDistance = 0;
+        Station nextStation = new Station("", new Double(0, 0), new ArrayList<Path>());
+
+        Path path = new Path(lineName, schedule, travelDuration, travelDistance, nextStation);
+        //assertNotEquals(path.getTravelDuration(), Duration.ZERO, "L'attribut travelDuration ne peut pas valoir zéro.");
+    }
+
+    @Test
+    public void testConstructorTravelDistanceNotZero() {
+        String lineName = "";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        Duration travelDuration = Duration.ZERO;
+        double travelDistance = 0;
+        Station nextStation = new Station("", new Double(0, 0), new ArrayList<Path>());
+
+        Path path = new Path(lineName, schedule, travelDuration, travelDistance, nextStation);
+        //assertNotEquals(path.getTravelDistance(), 0, "L'attribut travelDistance ne peut pas valoir zéro.");
+    }
+
+    @Test
+    public void testConstructorNextStationNotNull() {
+        String lineName = "";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        Duration travelDuration = Duration.ZERO;
+        double travelDistance = 0;
+        Station nextStation = new Station("", new Double(0, 0), new ArrayList<Path>());
+
+        Path path = new Path(lineName, schedule, travelDuration, travelDistance, nextStation);
+        assertNotNull(path.getNextStation(), "L'attribut nextStation ne peut pas être nul.");
     }
 }
