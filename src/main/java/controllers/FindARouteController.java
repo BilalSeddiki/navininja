@@ -1,6 +1,5 @@
 package controllers;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,8 +9,7 @@ import javafx.scene.control.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindARouteController {
-
+public class FindARouteController extends Controller {
 
     @FXML
     Button goBackBtn;
@@ -100,6 +98,7 @@ public class FindARouteController {
     }
 
     public void goBackListener(ActionEvent actionEvent) {
+        navigationController.navigateBack();
     }
 }
 

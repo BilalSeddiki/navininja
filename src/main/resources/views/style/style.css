@@ -7,11 +7,24 @@
 }
 
 .button{
+-fx-cursor:hand;
+}
+.primary-button{
 -fx-border-radius: 10px;
 -fx-background-color: linear-gradient(#82AFFC 0%, #8399FB 100%);
 -fx-background-radius: 10px;
 -fx-font-size: 20px;
 }
+
+.secondary-button{
+-fx-border-width: 4px;
+-fx-border-radius: 10px;
+-fx-border-color: linear-gradient(#82AFFC 0%, #8399FB 100%);
+-fx-background-radius: 14px;
+-fx-background-color: transparent;
+
+}
+
 
 .dropshadow{
 -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
