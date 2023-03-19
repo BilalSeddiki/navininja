@@ -9,6 +9,10 @@ import javafx.scene.control.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controlleur de la vue trouver un itinéraire
+ * @author R. MARTINI
+ */
 public class FindARouteController extends Controller {
 
     @FXML
@@ -29,20 +33,31 @@ public class FindARouteController extends Controller {
     TextField coordinatesAInput;
     @FXML
     TextField coordinatesBInput;
+    /**
+     * todo remove this list and replace it by the actual stations
+     */
     ArrayList<String> stations = new ArrayList<>();
+
+
+    /**
+     * Liste contenant les heures de la journée
+     */
     private final ObservableList<String> hours = FXCollections.observableArrayList(
             "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12",
             "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"
     );
+    /**
+     * Liste contenant les minutes
+     */
     private final ObservableList<String> minutes = FXCollections.observableArrayList();
 
-
     public void initialize() {
+        //Initialisation de la liste des minutes
         for (int i = 0; i < 60; i++) {
             String minute = String.format("%02d", i);
             minutes.add(minute);
         }
-        //todo remplacer par getAllStations
+        //todo remove all of this
         stations.add("BNF");
         stations.add("place d'italie");
         stations.add("corvisare");
@@ -54,49 +69,68 @@ public class FindARouteController extends Controller {
         hourComboBoxB.getItems().addAll(hours);
         minComboBoxA.getItems().addAll(minutes);
         minComboBoxB.getItems().addAll(minutes);
-        coordinatesAInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.isBlank()) {
-                List<String> filteredSuggestions = new ArrayList<>();
+        coordinatesAInput.textProperty().addListener((observable, oldValue, newValue) -> textFieldListener(newValue, coordinatesAInput));
+        coordinatesBInput.textProperty().addListener((observable, oldValue, newValue) -> textFieldListener(newValue, coordinatesBInput));
 
-                for (String s : stations) {
-                    if (s.toLowerCase().startsWith(newValue.toLowerCase())) {
-                        filteredSuggestions.add(s);
-                    }
+    }
+
+    /**
+     * Écouteur de changement dans un textfield afin d'afficher le menu de suggestions d'auto complétion
+     * @param newValue nouvelle valeur saisie pour filtrer la liste des suggestions
+     * @param textField textfield auquel on rattache le menu
+     */
+    private void textFieldListener(String newValue, TextField textField){
+        if (!newValue.isBlank()) {
+            List<String> filteredSuggestions = new ArrayList<>();
+            for (String s : stations) {
+                if (s.toLowerCase().startsWith(newValue.toLowerCase())) {
+                    filteredSuggestions.add(s);
                 }
-                if (!filteredSuggestions.isEmpty()) {
-                    showCompletionList(suggestionMenu, filteredSuggestions);
-                } else {
-                   suggestionMenu.hide();
-                }
+            }
+            if (!filteredSuggestions.isEmpty()) {
+                showCompletionList(suggestionMenu, filteredSuggestions, textField);
             } else {
                 suggestionMenu.hide();
             }
-        });
+        } else {
+            suggestionMenu.hide();
+        }
     }
 
-    private void showCompletionList(ContextMenu completionMenu, List<String> suggestions) {
+    /**
+     * Fonction permettant d'afficher le menu de complétion
+     * @param completionMenu le menu à afficher
+     * @param suggestions liste de suggestions
+     * @param textField textfield auquel le menu est rattaché
+     */
+    private void showCompletionList(ContextMenu completionMenu, List<String> suggestions, TextField textField) {
         completionMenu.getItems().clear();
-
         for (String suggestion : suggestions) {
             completionMenu.getItems().add(new MenuItem(suggestion));
         }
-
         completionMenu.setOnAction(event -> {
             MenuItem selectedItem = (MenuItem) event.getTarget();
-            coordinatesAInput.setText(selectedItem.getText());
-            coordinatesAInput.positionCaret(selectedItem.getText().length());
+            textField.setText(selectedItem.getText());
+            textField.positionCaret(selectedItem.getText().length());
             completionMenu.hide();
         });
-        coordinatesAInput.setContextMenu(completionMenu);
-        Bounds bounds = coordinatesAInput.localToScreen(coordinatesAInput.getBoundsInLocal());
-        // show the menu below the text field
-        completionMenu.show(coordinatesAInput, bounds.getMinX()+5, bounds.getMaxY());
+        textField.setContextMenu(completionMenu);
+        Bounds bounds = textField.localToScreen(textField.getBoundsInLocal());
+        completionMenu.show(textField, bounds.getMinX(), bounds.getMaxY());
     }
 
+    /**
+     * Écouteur du bouton 'Search' : lance la recherche d'itinéraire
+     * @param actionEvent événement détécté
+     */
     public void searchPathListener(ActionEvent actionEvent) {
         //todo implement search action
     }
 
+    /**
+     * Écouteur du bouton 'Back' permet de retourner à la page précédente
+     * @param actionEvent événement détécté
+     */
     public void goBackListener(ActionEvent actionEvent) {
         navigationController.navigateBack();
     }

@@ -5,17 +5,33 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utils.Globals;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Stack;
 
+/**
+ * Classe NavigationController, Singleton, se charge de définir la pile de l'historique de navigation dans l'application
+ * @author R. MARTINI
+ */
 public class NavigationController {
+    /**
+     * Instance
+     */
     private static NavigationController instance;
-    private Stack<String> history = new Stack<>();
+    /**
+     * Pile de l'historique
+     */
+    private final Stack<String> history = new Stack<>();
+    /**
+     * Fenêtre de l'application
+     */
     private final Stage stage;
-    private Controller currentController;
 
+    /**
+     * Constructeur privé
+     * @param stage fenêtre de l'application
+     */
     private NavigationController(Stage stage) {
         this.stage = stage;
     }
@@ -26,6 +42,11 @@ public class NavigationController {
         }
         return instance;
     }
+
+    /**
+     * Fonction pour changer de scène dans l'application
+     * @param viewName nouvelle scène à afficher
+     */
     public void navigateTo(String viewName) {
         try {
             File file = new File(Globals.pathToView(viewName+".fxml"));
@@ -33,16 +54,20 @@ public class NavigationController {
             FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
             Parent root = loader.load();
             Scene scene = new Scene(root);
-            currentController = loader.getController();
+            //Instance actuelle du controlleur : permet de passer la pile de navigation en paramètre à celui-ci
+            Controller currentController = loader.getController();
             currentController.setNavigationController(this);
             history.push(viewName);
-            scene.getStylesheets().add(getClass().getResource(Globals.pathToStyleSheetFromController("style.css")).toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource(Globals.pathToStyleSheetFromController("style.css"))).toExternalForm());
             stage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Fonction pour retourner à la scène précédente dans l'application.
+     */
     public void navigateBack() {
         if (!history.isEmpty()) {
             history.pop();

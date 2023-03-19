@@ -56,7 +56,7 @@
          <Cursor fx:constant="HAND" />
       </cursor>
    </Button>
-   <Button fx:id="timePlanBtn" ellipsisString="" layoutX="418.0" layoutY="356.0" mnemonicParsing="false" onAction="#timePlanListener" prefHeight="60.0" prefWidth="250.0" styleClass="primary-button" text="Time plan" textAlignment="CENTER" textFill="WHITE">
+   <Button fx:id="scheduleBtn" ellipsisString="" layoutX="418.0" layoutY="356.0" mnemonicParsing="false" onAction="#scheduleListener" prefHeight="60.0" prefWidth="250.0" styleClass="primary-button" text="Schedule" textAlignment="CENTER" textFill="WHITE">
 
       <effect>
          <DropShadow height="15.0" radius="7.0" width="15.0">

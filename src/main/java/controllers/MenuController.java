@@ -3,11 +3,10 @@ package controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 
 /**
- * Controlleur de la vue Menu, se charge de définir les écouteurs des boutons présents sur l'interface.
+ * Contrôleur de la vue Menu, se charge de définir les écouteurs des boutons présents sur l'écran.
  * @author R. MARTINI
  */
 public class MenuController extends Controller {
@@ -25,9 +24,7 @@ public class MenuController extends Controller {
      * Référence au composant FXML du bouton 'Time plan'
      */
     @FXML
-    Button timePlanBtn;
-    @FXML
-    AnchorPane root;
+    Button scheduleBtn;
 
     public MenuController(){
         super();
@@ -40,16 +37,17 @@ public class MenuController extends Controller {
     public void findARouteListener(ActionEvent actionEvent) throws IOException {
         navigationController.navigateTo("findARouteView");
     }
-    /**
-     * Écouteur du bouton 'Time plan'
-     * @param actionEvent événement
-     */
-    public void timePlanListener(ActionEvent actionEvent) {
-    }
+
     /**
      * Écouteur du bouton 'Network plan'
      * @param actionEvent événement
      */
     public void networkPlanListener(ActionEvent actionEvent) {
+    }
+    /**
+     * Écouteur du bouton 'Schedule'
+     * @param actionEvent événement
+     */
+    public void scheduleListener(ActionEvent actionEvent) {
     }
 }
