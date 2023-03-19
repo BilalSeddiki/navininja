@@ -67,8 +67,9 @@ public class CardsDataCsv {
         return distance;
     }
 
+    @Override
     public String toString() {
-        return stationA + " (x = " + coordinatesA.get(0) + ", y = " + coordinatesA.get(1) + ") -> " + stationB + " (x = " + coordinatesB.get(0) + ", y = " + coordinatesB.get(1) + ") = " + distance + "km (" + FORMAT.format(duration) + ")";
+        return stationA + "; " + coordinatesA.get(0) + "," + coordinatesA.get(1) + "; " + stationB + "; " + coordinatesB.get(0) + "," + coordinatesB.get(1) + "; " + distance + "; " + FORMAT.format(duration) + ";";
     }
 
     /**
