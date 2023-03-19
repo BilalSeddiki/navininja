@@ -33,7 +33,6 @@ public class MenuController {
     @FXML
     public Button timePlanBtn;
 
-    private Stage stage;
     /**
      * Constructeur
      */
@@ -48,8 +47,8 @@ public class MenuController {
         File file = new File(Globals.pathToView("FindARouteView.fxml"));
         FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
         Parent root = loader.load();
-        stage = (Stage)((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle("findARoute");
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage.setTitle("Search");
         Scene scene = new Scene(root, Globals.windowWidth(), Globals.windowHeight());
         scene.getStylesheets().add(getClass().getResource(Globals.pathToStyleSheetFromController("style.css")).toExternalForm());
 

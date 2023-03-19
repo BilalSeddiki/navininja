@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -65,22 +66,28 @@
             </LinearGradient>
          </fill>
       </SVGPath>
-      <Rectangle id="rectangle" arcHeight="5.0" arcWidth="5.0" blendMode="DARKEN" fill="#eef0f2" height="279.0" layoutX="44.0" layoutY="127.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="dropshadow" width="956.0" AnchorPane.bottomAnchor="697.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="25.0" />
-      <Label fx:id="title" layoutX="103.0" layoutY="162.0" prefHeight="17.0" prefWidth="207.0" text="Where to ?">
+      <Rectangle id="rectangle" arcHeight="5.0" arcWidth="5.0" blendMode="DARKEN" fill="#eef0f2" height="323.0" layoutX="44.0" layoutY="127.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="dropshadow" width="956.0" AnchorPane.bottomAnchor="653.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="34.0" />
+      <Label layoutX="157.0" layoutY="162.0" prefHeight="17.0" prefWidth="207.0" styleClass="title" text="Where to ?" AnchorPane.leftAnchor="169.0">
          </Label>
-      <Button fx:id="searchBtn" layoutX="704.0" layoutY="330.0" mnemonicParsing="false" onAction="#searchPathListener" prefHeight="39.0" prefWidth="200.0" styleClass="dropshadow" text="Search" textFill="WHITE">
+      <Button fx:id="searchBtn" layoutX="361.0" layoutY="380.0" mnemonicParsing="false" onAction="#searchPathListener" prefHeight="39.0" prefWidth="318.0" styleClass="dropshadow" text="Search" textFill="WHITE">
 
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <TextField fx:id="coordinatesAInput" layoutX="102.0" layoutY="236.0" prefHeight="38.0" prefWidth="321.0" promptText="From..." styleClass="dropshadow">
+      <TextField fx:id="coordinatesAInput" layoutX="156.0" layoutY="219.0" prefHeight="38.0" prefWidth="321.0" promptText="From..." AnchorPane.leftAnchor="169.0">
 
          <contextMenu>
             <ContextMenu fx:id="suggestionMenu" />
          </contextMenu>
       </TextField>
-      <TextField fx:id="coordinatesBInput" layoutX="585.0" layoutY="237.0" prefHeight="38.0" prefWidth="321.0" promptText="To..." styleClass="dropshadow">
+      <TextField fx:id="coordinatesBInput" layoutX="156.0" layoutY="289.0" prefHeight="38.0" prefWidth="321.0" promptText="To..." AnchorPane.leftAnchor="169.0">
       </TextField>
+      <Label layoutX="553.0" layoutY="162.0" prefHeight="17.0" prefWidth="207.0" styleClass="title" text="When ? " />
+      <ComboBox fx:id="hourComboBoxA" editable="true" layoutX="550.0" layoutY="222.0" prefHeight="39.0" prefWidth="150.0" promptText="Hour" visibleRowCount="12" />
+      <ComboBox fx:id="minComboBoxA" editable="true" layoutX="715.0" layoutY="222.0" prefHeight="39.0" prefWidth="150.0" promptText="Minute" visibleRowCount="12" AnchorPane.rightAnchor="169.0" />
+      <ComboBox fx:id="hourComboBoxB" editable="true" layoutX="549.0" layoutY="288.0" prefHeight="39.0" prefWidth="150.0" promptText="Hour" visibleRowCount="12" />
+      <ComboBox fx:id="minComboBoxB" editable="true" layoutX="715.0" layoutY="289.0" prefHeight="39.0" prefWidth="150.0" promptText="Minute" visibleRowCount="12" AnchorPane.rightAnchor="169.0" />
+      <Button fx:id="goBackBtn" layoutX="53.0" layoutY="40.0" mnemonicParsing="false" onAction="#goBackListener" text="Back" />
    </AnchorPane>
 </ScrollPane>
