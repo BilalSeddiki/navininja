@@ -1,24 +1,19 @@
 package csv;
 
 import org.junit.jupiter.api.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
-
-import org.junit.Rule;
 
 public class ScheduleDataCsvTest {
 
-    @Rule
-    TemporaryFolder tempFolder = new TemporaryFolder();
-
     @Test
-    public void readCSVTest() throws IOException {
+    public void readCSVTest(@TempDir Path tempDir) throws IOException {
         String csv = "B; Borderouge; 7:00;\n" +
         "B; Borderouge; 8:00;\n" +
         "B; Borderouge; 9:00;\n" +
@@ -36,11 +31,9 @@ public class ScheduleDataCsvTest {
         "B; Borderouge; 21:00;\n" +
         "B; Borderouge; 22:00;\n" +
         "B; Borderouge; 23:00;";
-        File file = tempFolder.newFile();
-        PrintWriter printWriter = new PrintWriter(file);
-        printWriter.println(csv);
-        printWriter.close();
-        List<ScheduleDataCsv> parsedData = ScheduleDataCsv.readCSV(file.getAbsolutePath());
+        Path file = tempDir.resolve("schedule_data.csv");
+        Files.writeString(file, csv);
+        List<ScheduleDataCsv> parsedData = ScheduleDataCsv.readCSV(file.toAbsolutePath().toString());
 
         int i = 7;
         for (ScheduleDataCsv scheduleDataCsvItem : parsedData) {
