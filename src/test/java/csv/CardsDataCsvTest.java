@@ -1,30 +1,24 @@
 package csv;
 
 import org.junit.jupiter.api.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
-
-import org.junit.Rule;
 
 public class CardsDataCsvTest {
 
-    @Rule
-    TemporaryFolder tempFolder = new TemporaryFolder();
-
     @Test
-    public void readCSVTest() throws IOException {
+    public void readCSVTest(@TempDir Path tempDir) throws IOException {
         String csv = "Jeanne d'arc; 43.60887,1.44544; Jean Jaurès; 43.60573,1.44883; B; 1:42; 8.43;";
-        File file = tempFolder.newFile();
-        PrintWriter printWriter = new PrintWriter(file);
-        printWriter.println(csv);
-        printWriter.close();
-        List<CardsDataCsv> parsedData = CardsDataCsv.readCSV(file.getAbsolutePath());
+        Path file = tempDir.resolve("cardsdata_test.csv");
+
+        Files.writeString(file, csv);
+        List<CardsDataCsv> parsedData = CardsDataCsv.readCSV(file.toAbsolutePath().toString());
 
         assertEquals("Jeanne d'arc", parsedData.get(0).getStationA());
         assertEquals(43.60887, parsedData.get(0).getCoordinatesA().get(0));
