@@ -22,15 +22,15 @@ public abstract class CsvData<T extends CsvData<?>> {
     @SuppressWarnings("unchecked")
     public List<T> readCSV(Reader reader) throws IOException {
         CsvToBean<T> csvToBean = new CsvToBeanBuilder<T>(reader).withType((Class<? extends T>) getClass()).withSeparator(';').withIgnoreEmptyLine(true).withIgnoreLeadingWhiteSpace(true).build();
+        List<T> data = csvToBean.parse();
         reader.close();
-        return csvToBean.parse();
+        return data;
     }
 
     public List<T> readCSVFile(Path path) throws IOException {
         FileReader reader = new FileReader(path.toString(), StandardCharsets.UTF_8);
         return readCSV(reader);
     }
-
 
     public List<T> readCSVString(String text) throws IOException {
         StringReader reader = new StringReader(text);

@@ -25,8 +25,8 @@ public class CardsDataCsv extends CsvData<CardsDataCsv> {
     @CsvBindAndSplitByPosition(position = 3, splitOn = ",", elementType = Double.class)
     private List<Double> coordinatesB;
     
-    @CsvBindByPosition(position = 4)
-    private char line;
+    @CsvBindAndSplitByPosition(position = 4, splitOn = "variant", elementType = Integer.class)
+    private List<Integer> line;
 
     @CsvBindByPosition(position = 5) @CsvDate(value = "mm:ss")
     private Date duration;
@@ -50,8 +50,12 @@ public class CardsDataCsv extends CsvData<CardsDataCsv> {
         return coordinatesB;
     }
 
-    public char getLine() {
-        return line;
+    public int getLine() {
+        return line.get(0);
+    }
+
+    public int getLineVariant() {
+        return line.get(1);
     }
 
     public Date getDuration() {
