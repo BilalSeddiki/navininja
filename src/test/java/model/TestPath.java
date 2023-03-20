@@ -36,9 +36,10 @@ public class TestPath {
         ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
         Duration travelDuration = Duration.ZERO;
         double travelDistance = 0;
-        Station nextStation = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station source = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station destination = new Station("", new Double(0, 0), new ArrayList<Path>());
 
-        Path path = new Path(lineName, schedule, travelDuration, travelDistance, nextStation);
+        Path path = new Path(lineName, schedule, travelDuration, travelDistance, source, destination);
         //assertFalse(path.getLineName().isEmpty(), "L'attribut lineName ne peut pas être vide.");
     }
 
@@ -48,9 +49,10 @@ public class TestPath {
         ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
         Duration travelDuration = Duration.ZERO;
         double travelDistance = 0;
-        Station nextStation = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station source = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station destination = new Station("", new Double(0, 0), new ArrayList<Path>());
 
-        Path path = new Path(lineName, schedule, travelDuration, travelDistance, nextStation);
+        Path path = new Path(lineName, schedule, travelDuration, travelDistance, source, destination);
         //assertFalse(path.getSchedule().isEmpty(), "L'attribut schedule ne peut pas être vide.");
     }
 
@@ -60,9 +62,10 @@ public class TestPath {
         ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
         Duration travelDuration = Duration.ZERO;
         double travelDistance = 0;
-        Station nextStation = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station source = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station destination = new Station("", new Double(0, 0), new ArrayList<Path>());
 
-        Path path = new Path(lineName, schedule, travelDuration, travelDistance, nextStation);
+        Path path = new Path(lineName, schedule, travelDuration, travelDistance, source, destination);
         //assertNotEquals(path.getTravelDuration(), Duration.ZERO, "L'attribut travelDuration ne peut pas valoir zéro.");
     }
 
@@ -72,10 +75,24 @@ public class TestPath {
         ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
         Duration travelDuration = Duration.ZERO;
         double travelDistance = 0;
-        Station nextStation = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station source = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station destination = new Station("", new Double(0, 0), new ArrayList<Path>());
 
-        Path path = new Path(lineName, schedule, travelDuration, travelDistance, nextStation);
+        Path path = new Path(lineName, schedule, travelDuration, travelDistance, source, destination);
         //assertNotEquals(path.getTravelDistance(), 0, "L'attribut travelDistance ne peut pas valoir zéro.");
+    }
+
+    @Test
+    public void testConstructorSourceNotNull() {
+        String lineName = "";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        Duration travelDuration = Duration.ZERO;
+        double travelDistance = 0;
+        Station source = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station destination = new Station("", new Double(0, 0), new ArrayList<Path>());
+
+        Path path = new Path(lineName, schedule, travelDuration, travelDistance, source, destination);
+        assertNotNull(path.getSource(), "L'attribut source ne peut pas être nul.");
     }
 
     @Test
@@ -84,9 +101,10 @@ public class TestPath {
         ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
         Duration travelDuration = Duration.ZERO;
         double travelDistance = 0;
-        Station nextStation = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station source = new Station("", new Double(0, 0), new ArrayList<Path>());
+        Station destination = new Station("", new Double(0, 0), new ArrayList<Path>());
 
-        Path path = new Path(lineName, schedule, travelDuration, travelDistance, nextStation);
-        assertNotNull(path.getNextStation(), "L'attribut nextStation ne peut pas être nul.");
+        Path path = new Path(lineName, schedule, travelDuration, travelDistance, source, destination);
+        assertNotNull(path.getDestination(), "L'attribut destination ne peut pas être nul.");
     }
 }
