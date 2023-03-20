@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.awt.geom.Point2D.Double;
 
-/** Une station du réseau */
+/** Une station du réseau. */
 public class Station {
     /** Nom de la station. */
     private String name;

@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+/* Note : Pour implémenter les chemins à pied, on pourra créer une interface implémentée par Path et une nouvelle classe pour la marche à pied */
+ 
 /** Un chemin jusqu'à une prochaine station. */
 public class Path {
     /** Nom de la ligne sur laquelle se situe le chemin. */
@@ -14,8 +16,10 @@ public class Path {
     private Duration travelDuration;
     /** Distance du trajet jusqu'à la prochaine station en km. */
     private double travelDistance;
+    /** Station depuis laquelle part le chemin. */
+    private Station source;
     /** Station vers laquelle mène le chemin. */
-    private Station nextStation;
+    private Station destination;
 
     /**
      * Construit un chemin jusqu'à une prochaine station
@@ -23,14 +27,25 @@ public class Path {
      * @param schedule les horaires de passage des trains sur ce chemin, dans l'ordre
      * @param travelDuration la durée du trajet jusqu'à la prochaine station
      * @param travelDistance la distance du trajet jusqu'à la prochaine station en km
-     * @param nextStation la station vers laquelle mène le chemin
+     * @param source la depuis laquelle part le chemin
+     * @param destination la station vers laquelle mène le chemin
      */
-    public Path(String lineName, ArrayList<LocalTime> schedule, Duration travelDuration, double travelDistance, Station nextStation) {
+    public Path(String lineName, ArrayList<LocalTime> schedule, Duration travelDuration, double travelDistance, Station source, Station destination) {
         this.lineName = lineName;
         this.schedule = schedule;
         this.travelDuration = travelDuration;
         this.travelDistance = travelDistance;
-        this.nextStation = nextStation;
+        this.source = source;
+        this.destination = destination;
+    }
+
+    /**
+     * Renvoie l'heure du prochain départ de train dans cette direction à partir de l'heure indiquée.
+     * @param from l'heure depuis laquelle calculer le prochain départ
+     * @return l'heure du prochain départ
+     */
+    public LocalTime nextTrainDeparture(LocalTime from) {
+        return LocalTime.of(0, 0);
     }
 
     /**
@@ -76,13 +91,21 @@ public class Path {
         return travelDistance;
     }
 
+    /**
+     * Renvoie la station depuis laquelle part le chemin.
+     * @return la station de départ
+     */
+    public Station getSource() {
+        return source;
+    }
 
     /**
      * Renvoie la station vers laquelle mène le chemin.
      * @return la prochaine station
      */
-    public Station getNextStation() {
-        return nextStation;
+    public Station getDestination() {
+        return destination;
     }
+
 
 }
