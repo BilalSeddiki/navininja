@@ -18,8 +18,9 @@ public class CardsDataCsvTest {
         Path file = tempDir.resolve("cardsdata_test.csv");
 
         Files.writeString(file, csv);
-        List<CardsDataCsv> parsedData = CardsDataCsv.readCSV(file.toAbsolutePath().toString());
+        List<CardsDataCsv> parsedData = new CardsDataCsv().readCSVFile(file);
 
+        assertEquals(1, parsedData.size());
         assertEquals("Jeanne d'arc", parsedData.get(0).getStationA());
         assertEquals(43.60887, parsedData.get(0).getCoordinatesA().get(0));
         assertEquals(1.44544, parsedData.get(0).getCoordinatesA().get(1));

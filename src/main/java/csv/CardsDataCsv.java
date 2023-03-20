@@ -1,8 +1,5 @@
 package csv;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,10 +8,8 @@ import java.util.List;
 import com.opencsv.bean.CsvBindAndSplitByPosition;
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 
-public class CardsDataCsv {
+public class CardsDataCsv extends CsvData<CardsDataCsv> {
 
     private final static Format FORMAT = new SimpleDateFormat("mm:ss");
 
@@ -40,11 +35,11 @@ public class CardsDataCsv {
     private double distance;
 
     public String getStationA() {
-        return stationA;
+        return stationA.trim();
     }
 
     public String getStationB() {
-        return stationB;
+        return stationB.trim();
     }
 
     public List<Double> getCoordinatesA() {
@@ -70,17 +65,5 @@ public class CardsDataCsv {
     @Override
     public String toString() {
         return stationA + "; " + coordinatesA.get(0) + "," + coordinatesA.get(1) + "; " + stationB + "; " + coordinatesB.get(0) + "," + coordinatesB.get(1) + "; " + distance + "; " + FORMAT.format(duration) + ";";
-    }
-
-    /**
-     * 
-     * @param path Le chemin vers le fichier CSV à parser
-     * @return La liste d'instance de {@code CardsDataCsv} décrit par le fichier CSV donné en argument
-     * @throws FileNotFoundException si le fichier n'existe pas
-     */
-    public static List<CardsDataCsv> readCSV(String path) throws FileNotFoundException {
-        Reader reader = new FileReader(path);
-        CsvToBean<CardsDataCsv> csvToBean = new CsvToBeanBuilder<CardsDataCsv>(reader).withType(CardsDataCsv.class).withIgnoreEmptyLine(true).withSeparator(';').build();
-        return csvToBean.parse();
     }
 }
