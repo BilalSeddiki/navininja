@@ -8,6 +8,7 @@ import javafx.util.Pair;
 
 import java.awt.geom.Point2D.Double;
 
+/* TODO: Changer l'initialisation de lines après l'implémentation des horaires */
 /** Un réseau de stations. */
 public class Network {
     /** Ensemble de stations du réseau. <p> Une HashMap avec le nom des stations pour clé, et les stations pour valeur.*/
@@ -20,13 +21,15 @@ public class Network {
     /**
      * Construit un réseau de station.
      * <p>
-     * Le constructeur ajoute à chaque stations les chemins qui y partent et arrivent.
+     * Le constructeur ajoute à chaque stations les chemins entrant et sortant.
      * @param stationList une liste de stations
+     * @param pathList une liste de chemins entre les stations
      */
     public Network(ArrayList<Station> stationList, ArrayList<Path> pathList) {
-        buildStationMaps(stationList);
+        initStationByName(stationList);
+        initStationByCoordinates(stationList);
         addPathsToStations(pathList);
-        buildLines(stationList, pathList);
+        initLines(stationList, pathList);
     }
 
     /**
@@ -67,7 +70,7 @@ public class Network {
 
     /**
      * Vérifie l'existence d'une station dans le réseau.
-     * @param name les coordonnées d'une station
+     * @param coordinates les coordonnées d'une station
      * @return true si la station existe
      */
     public boolean hasStation(Double coordinates) {
@@ -90,10 +93,10 @@ public class Network {
     }
 
     /**
-     * Renvoie une station du réseau à partir d'un nom.
+     * Renvoie une station du réseau à partir de coordonnées.
      * <p>
      * L'existence de la station dans le réseau doit être vérifié avant appel de cette fonction.
-     * @param name les coordonnées d'une station
+     * @param coordinates les coordonnées d'une station
      * @return la station
      * @throws NoSuchElementException si la station n'existe pas dans le réseau
      */
@@ -114,6 +117,12 @@ public class Network {
         return null;
     }
 
+    /**
+     * Ajoute à chaque station ses chemins entrant et sortant
+     * <p>
+     * Cette méthode doit être utilisée après avoir initialisé stationByName
+     * @param pathList la liste des chemins
+     */
     private void addPathsToStations(ArrayList<Path> pathList) {
         pathList.stream().forEach(p -> {
             stationsByName.get(p.getSource().getName()).addOutPath(p);
@@ -121,16 +130,36 @@ public class Network {
         });
     }
 
-    private void buildStationMaps(ArrayList<Station> stationList) {
+    /**
+     * Initialise l'attribut stationByName
+     * @param stationList la liste des stations
+     */
+    private void initStationByName(ArrayList<Station> stationList) {
         stationsByName = new HashMap<String, Station>();
-        stationsByCoordinates = new HashMap<Double, Station>();
         stationList.forEach(s -> {
             stationsByName.put(s.getName(), s);
+        });
+    }
+
+    /**
+     * Initialise l'attribut stationByCoordinates
+     * @param stationList la liste des stations
+     */
+    private void initStationByCoordinates(ArrayList<Station> stationList) {
+        stationsByCoordinates = new HashMap<Double, Station>();
+        stationList.forEach(s -> {
             stationsByCoordinates.put(s.getCoordinates(), s);
         });
     }
 
-    private void buildLines(ArrayList<Station> stationList, ArrayList<Path> pathList) {
+    /**
+     * Initialise l'attribut lines
+     * <p>
+     * Cette méthode doit être utilisée après avoir ajouter les chemins aux stations via addPathToStations
+     * @param stationList la liste des stations
+     * @param pathList la liste des chemins
+     */
+    private void initLines(ArrayList<Station> stationList, ArrayList<Path> pathList) {
         lines = new HashMap<String, HashMap<Integer, ArrayList<Station>>>();
         var lineList = pathList.stream()
                 .map(p -> new Pair<String, Integer>(p.getLineName(), p.getVariant()))
@@ -141,12 +170,21 @@ public class Network {
             var variant = pair.getValue();
             if (!lines.containsKey(lineName))
                 lines.put(lineName, new HashMap<Integer, ArrayList<Station>>());
-            lines.get(lineName).put(variant, buildLine(lineName, variant, stationList));
+            lines.get(lineName).put(variant, initVariant(lineName, variant, stationList));
 
         }
     }
 
-    private ArrayList<Station> buildLine(String name, int variant, ArrayList<Station> stationList) {
+    /**
+     * Initialise le variant d'une ligne
+     * <p>
+     * Cette méthode doit être utilisée après avoir ajouter les chemins aux stations via addPathToStations
+     * @param name le nom de la ligne
+     * @param variant le numéro de variant de la ligne
+     * @param stationList la liste des stations
+     * @return une liste de stations
+     */
+    private ArrayList<Station> initVariant(String name, int variant, ArrayList<Station> stationList) {
         var stationFromLine = stationList.stream()
                 .filter(s -> s.getInPath(name, variant).isPresent() || s.getOutPath(name, variant).isPresent())
                 .findFirst()
