@@ -12,21 +12,21 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 public abstract class CsvData<T extends CsvData<?>> {
-    
-    /**
-     * 
-     * @param path Le chemin vers le fichier CSV à parser
-     * @return La liste d'instance de {@code T} décrit par le fichier CSV donné en argument
-     * @throws IOException if the named file does not exist, is a directory rather than a regular file, or for some other reason cannot be opened for reading.
-     */
+
     @SuppressWarnings("unchecked")
-    public List<T> readCSV(Reader reader) throws IOException {
+    private List<T> readCSV(Reader reader) throws IOException {
         CsvToBean<T> csvToBean = new CsvToBeanBuilder<T>(reader).withType((Class<? extends T>) getClass()).withSeparator(';').withIgnoreEmptyLine(true).withIgnoreLeadingWhiteSpace(true).build();
         List<T> data = csvToBean.parse();
         reader.close();
         return data;
     }
 
+    /**
+     * 
+     * @param path Le chemin vers le fichier CSV à parser
+     * @return La liste d'instance de {@code T} décrit par le fichier CSV donné en argument
+     * @throws IOException if the named file does not exist, is a directory rather than a regular file, or for some other reason cannot be opened for reading.
+     */
     public List<T> readCSVFile(Path path) throws IOException {
         FileReader reader = new FileReader(path.toString(), StandardCharsets.UTF_8);
         return readCSV(reader);

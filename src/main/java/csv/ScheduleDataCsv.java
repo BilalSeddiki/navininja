@@ -1,15 +1,11 @@
 package csv;
 
-import java.io.StringReader;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 
 public class ScheduleDataCsv extends CsvData<ScheduleDataCsv> {
  
