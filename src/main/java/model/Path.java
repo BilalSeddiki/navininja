@@ -45,6 +45,14 @@ public class Path {
      * @return l'heure du prochain départ
      */
     public LocalTime nextTrainDeparture(LocalTime from) {
+        for(int i = 0; i < schedule.size(); i++) {
+            if(schedule.get(i).isAfter(from)) {
+                return schedule.get(i);
+            }
+        }
+        if(schedule.size() > 0) {
+            return schedule.get(0);
+        }
         return LocalTime.of(0, 0);
     }
 
@@ -56,7 +64,15 @@ public class Path {
      * @return la durée du trajet
      */
     public Duration totalDuration(LocalTime time) {
-        return Duration.ofSeconds(0);
+        LocalTime nextTrain = this.nextTrainDeparture(time);
+        Duration waitingTime = Duration.between(time, nextTrain);
+        if(waitingTime.isNegative()) {
+            Duration toMidnight = Duration.between(time, LocalTime.MAX);
+            Duration fromMidnight = Duration.between(LocalTime.MIDNIGHT, nextTrain);
+            waitingTime = toMidnight.plus(fromMidnight).plusNanos(1);
+        }
+        Duration totalDuration = waitingTime.plus(this.travelDuration);
+        return totalDuration;
     }
 
     /**

@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestPath {
 
+    /* Constructeurs et getters */
     @Test
     public void testConstructorAndGetters() {
         String lineName = "";
@@ -106,5 +107,85 @@ public class TestPath {
 
         Path path = new Path(lineName, schedule, travelDuration, travelDistance, source, destination);
         assertNotNull(path.getDestination(), "L'attribut destination ne peut pas être nul.");
+    }
+
+    /* Fonction nextTrainDeparture */
+    @Test
+    public void testNextTrainDepartureSameDay() {
+        String lineName = "Test";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        schedule.add(LocalTime.of(8, 30, 00));
+        schedule.add(LocalTime.of(8, 40, 00));
+        schedule.add(LocalTime.of(8, 50, 00));
+        Station source = new Station("Station 1", new Double(0, 0), new ArrayList<Path>());
+        Station destination = new Station("Station 2", new Double(0, 0), new ArrayList<Path>());
+
+        Path path = new Path("Test", schedule, Duration.ZERO, 0, source, destination);
+        LocalTime depart = LocalTime.of(8, 37, 00);
+        assertEquals(schedule.get(1), path.nextTrainDeparture(depart), "TODO");
+    }
+
+    @Test
+    public void testNextTrainDepartureNextDay() {
+        String lineName = "Test";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        schedule.add(LocalTime.of(8, 30, 00));
+        schedule.add(LocalTime.of(8, 40, 00));
+        schedule.add(LocalTime.of(8, 50, 00));
+        Station source = new Station("Station 1", new Double(0, 0), new ArrayList<Path>());
+        Station destination = new Station("Station 2", new Double(0, 0), new ArrayList<Path>());
+
+        Path path = new Path("Test", schedule, Duration.ZERO, 0, source, destination);
+        LocalTime depart = LocalTime.of(23, 30, 00);
+        assertEquals(schedule.get(0), path.nextTrainDeparture(depart), "Le calcul du prochain départ est incorrect.");
+    }
+
+    @Test
+    public void testNextTrainDepartureEmptySchedule() {
+        String lineName = "Test";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        Station source = new Station("Station 1", new Double(0, 0), new ArrayList<Path>());
+        Station destination = new Station("Station 2", new Double(0, 0), new ArrayList<Path>());
+
+        Path path = new Path("Test", schedule, Duration.ZERO, 0, source, destination);
+        LocalTime depart = LocalTime.of(14, 30, 00);
+        assertEquals(LocalTime.of(0, 0), path.nextTrainDeparture(depart), "Le calcul du prochain départ est incorrect.");
+    }
+
+    /* Fonction totalDuration */
+    @Test
+    public void testTotalDurationPositive() {
+        String lineName = "Test";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        schedule.add(LocalTime.of(8, 30, 00));
+        schedule.add(LocalTime.of(8, 40, 00));
+        schedule.add(LocalTime.of(8, 50, 00));
+        Duration travelDuration = Duration.ofMinutes(5);
+        Station source = new Station("Station 1", new Double(0, 0), new ArrayList<Path>());
+        Station destination = new Station("Station 2", new Double(0, 0), new ArrayList<Path>());
+        //TODO: Factoriser les constructeurs pour les Station ?
+        
+        Path path = new Path("Test", schedule, travelDuration, 0, source, destination);
+        LocalTime depart = LocalTime.of(7, 30, 00);
+        Duration duration = (Duration.ofMinutes(60)).plus(travelDuration); 
+        //TODO: Trouver une autre façon de préciser les données ?
+        assertEquals(duration, path.totalDuration(depart), "Le calcul de la durée totale du trajet est incorrect.");
+    }
+
+    @Test
+    public void testTotalDurationNegative() {
+        String lineName = "Test";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        schedule.add(LocalTime.of(8, 30, 00));
+        Duration travelDuration = Duration.ofMinutes(5);
+        Station source = new Station("Station 1", new Double(0, 0), new ArrayList<Path>());
+        Station destination = new Station("Station 2", new Double(0, 0), new ArrayList<Path>());
+        //TODO: Factoriser les constructeurs pour les Station ?
+
+        Path path = new Path("Test", schedule, travelDuration, 0, source, destination);
+        LocalTime depart = LocalTime.of(23, 30, 00);
+        Duration duration = (Duration.ofMinutes(540)).plus(travelDuration); 
+        //TODO: Trouver une autre façon de préciser les données ?
+        assertEquals(duration, path.totalDuration(depart), "Le calcul de la durée totale du trajet est incorrect.");
     }
 }
