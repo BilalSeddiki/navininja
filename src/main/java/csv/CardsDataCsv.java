@@ -26,16 +26,16 @@ public class CardsDataCsv extends CsvData<CardsDataCsv> {
     @CsvBindByPosition(position = 0)
     private String stationA;
     
-    @CsvBindAndSplitByPosition(position = 1, splitOn = ",", elementType = Double.class)
+    @CsvBindAndSplitByPosition(position = 1, splitOn = ", ", elementType = Double.class)
     private List<Double> coordinatesA;
 
     @CsvBindByPosition(position = 2)
     private String stationB;
     
-    @CsvBindAndSplitByPosition(position = 3, splitOn = ",", elementType = Double.class)
+    @CsvBindAndSplitByPosition(position = 3, splitOn = ", ", elementType = Double.class)
     private List<Double> coordinatesB;
     
-    @CsvBindAndSplitByPosition(position = 4, splitOn = "variant", elementType = String.class)
+    @CsvBindAndSplitByPosition(position = 4, splitOn = " variant ", elementType = String.class)
     private List<String> line;
 
     @CsvBindByPosition(position = 5) @CsvDate(value = "mm:ss")
@@ -64,8 +64,8 @@ public class CardsDataCsv extends CsvData<CardsDataCsv> {
         return line.get(0);
     }
 
-    public String getLineVariant() {
-        return line.get(1);
+    public int getLineVariant() {
+        return Integer.parseInt(line.get(1));
     }
 
     public Date getDuration() {

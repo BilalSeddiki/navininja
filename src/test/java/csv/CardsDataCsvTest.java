@@ -14,7 +14,7 @@ public class CardsDataCsvTest {
 
     @Test
     public void readCSVTest(@TempDir Path tempDir) throws IOException {
-        String csv = "Jeanne d'arc; 43.60887,1.44544; Jean Jaurès; 43.60573,1.44883; 8 variant 6; 1:42; 8.43;\n" +
+        String csv = "Jeanne d'arc; 43.60887, 1.44544; Jean Jaurès; 43.60573, 1.44883;8 variant 6; 1:42; 8.43\n" +
             "Lourmel;2.2822419598550767, 48.83866086365992;Boucicaut;2.2879184311245595, 48.841024160993214;8 variant 1;4:14;15.93935780373747\n" +
             "Félix Faure;2.2918472203679703, 48.84268433479664;Commerce;2.293796842192864, 48.84461151236847;8 variant 1;3:18;12.415657251400846\n" +
             "La Motte-Picquet - Grenelle;2.298745444388579, 48.84950618174656;École Militaire;2.3064410394306907, 48.85486175512232;8 variant 1;9:16;34.97596299947988\n";
@@ -28,7 +28,7 @@ public class CardsDataCsvTest {
         assertEquals("Jean Jaurès", parsedData.get(0).getStationB());
         assertEquals(43.60573, parsedData.get(0).getCoordinatesB().get(0));
         assertEquals(1.44883, parsedData.get(0).getCoordinatesB().get(1));
-        assertEquals(8, parsedData.get(0).getLine());
+        assertEquals("8", parsedData.get(0).getLine());
         assertEquals(6, parsedData.get(0).getLineVariant());
         assertEquals(1, parsedData.get(0).getDuration().getMinutes());
         assertEquals(42, parsedData.get(0).getDuration().getSeconds());
@@ -40,7 +40,7 @@ public class CardsDataCsvTest {
         assertEquals("Boucicaut", parsedData.get(1).getStationB());
         assertEquals(2.2879184311245595, parsedData.get(1).getCoordinatesB().get(0));
         assertEquals(48.841024160993214, parsedData.get(1).getCoordinatesB().get(1));
-        assertEquals(8, parsedData.get(1).getLine());
+        assertEquals("8", parsedData.get(1).getLine());
         assertEquals(1, parsedData.get(1).getLineVariant());
         assertEquals(4, parsedData.get(1).getDuration().getMinutes());
         assertEquals(14, parsedData.get(1).getDuration().getSeconds());
@@ -52,7 +52,7 @@ public class CardsDataCsvTest {
         assertEquals("Commerce", parsedData.get(2).getStationB());
         assertEquals(2.293796842192864, parsedData.get(2).getCoordinatesB().get(0));
         assertEquals(48.84461151236847, parsedData.get(2).getCoordinatesB().get(1));
-        assertEquals(8, parsedData.get(2).getLine());
+        assertEquals("8", parsedData.get(2).getLine());
         assertEquals(1, parsedData.get(2).getLineVariant());
         assertEquals(3, parsedData.get(2).getDuration().getMinutes());
         assertEquals(18, parsedData.get(2).getDuration().getSeconds());
@@ -64,7 +64,7 @@ public class CardsDataCsvTest {
         assertEquals("École Militaire", parsedData.get(3).getStationB());
         assertEquals(2.3064410394306907, parsedData.get(3).getCoordinatesB().get(0));
         assertEquals(48.85486175512232, parsedData.get(3).getCoordinatesB().get(1));
-        assertEquals(8, parsedData.get(3).getLine());
+        assertEquals("8", parsedData.get(3).getLine());
         assertEquals(1, parsedData.get(3).getLineVariant());
         assertEquals(9, parsedData.get(3).getDuration().getMinutes());
         assertEquals(16, parsedData.get(3).getDuration().getSeconds());
