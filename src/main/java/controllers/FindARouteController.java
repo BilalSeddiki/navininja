@@ -4,10 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
 import javafx.scene.control.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Controlleur de la vue trouver un itinéraire
@@ -60,8 +58,6 @@ public class FindARouteController extends Controller {
         //todo remove all of this
         stations.add("BNF");
         stations.add("place d'italie");
-        stations.add("corvisare");
-        stations.add("copéra");
         stations.add("nation");
         stations.add("glacière");
         stations.add("Gare de lyon");
@@ -69,55 +65,13 @@ public class FindARouteController extends Controller {
         hourComboBoxB.getItems().addAll(hours);
         minComboBoxA.getItems().addAll(minutes);
         minComboBoxB.getItems().addAll(minutes);
-        coordinatesAInput.textProperty().addListener((observable, oldValue, newValue) -> textFieldListener(newValue, coordinatesAInput));
-        coordinatesBInput.textProperty().addListener((observable, oldValue, newValue) -> textFieldListener(newValue, coordinatesBInput));
+        coordinatesAInput.textProperty().addListener(new TextFieldListener( coordinatesAInput, suggestionMenu, stations));
+        coordinatesBInput.textProperty().addListener( new TextFieldListener( coordinatesBInput, suggestionMenu, stations));
 
     }
 
-    /**
-     * Écouteur de changement dans un textfield afin d'afficher le menu de suggestions d'auto complétion
-     * @param newValue nouvelle valeur saisie pour filtrer la liste des suggestions
-     * @param textField textfield auquel on rattache le menu
-     */
-    private void textFieldListener(String newValue, TextField textField){
-        if (!newValue.isBlank()) {
-            List<String> filteredSuggestions = new ArrayList<>();
-            for (String s : stations) {
-                if (s.toLowerCase().startsWith(newValue.toLowerCase())) {
-                    filteredSuggestions.add(s);
-                }
-            }
-            if (!filteredSuggestions.isEmpty()) {
-                showCompletionList(suggestionMenu, filteredSuggestions, textField);
-            } else {
-                suggestionMenu.hide();
-            }
-        } else {
-            suggestionMenu.hide();
-        }
-    }
 
-    /**
-     * Fonction permettant d'afficher le menu de complétion
-     * @param completionMenu le menu à afficher
-     * @param suggestions liste de suggestions
-     * @param textField textfield auquel le menu est rattaché
-     */
-    private void showCompletionList(ContextMenu completionMenu, List<String> suggestions, TextField textField) {
-        completionMenu.getItems().clear();
-        for (String suggestion : suggestions) {
-            completionMenu.getItems().add(new MenuItem(suggestion));
-        }
-        completionMenu.setOnAction(event -> {
-            MenuItem selectedItem = (MenuItem) event.getTarget();
-            textField.setText(selectedItem.getText());
-            textField.positionCaret(selectedItem.getText().length());
-            completionMenu.hide();
-        });
-        textField.setContextMenu(completionMenu);
-        Bounds bounds = textField.localToScreen(textField.getBoundsInLocal());
-        completionMenu.show(textField, bounds.getMinX(), bounds.getMaxY());
-    }
+
 
     /**
      * Écouteur du bouton 'Search' : lance la recherche d'itinéraire

@@ -49,5 +49,7 @@ public class MenuController extends Controller {
      * @param actionEvent événement
      */
     public void scheduleListener(ActionEvent actionEvent) {
+        navigationController.navigateTo("scheduleView");
+
     }
 }
