@@ -5,11 +5,13 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 /* Note : Pour implémenter les chemins à pied, on pourra créer une interface implémentée par Path et une nouvelle classe pour la marche à pied */
- 
+
 /** Un chemin jusqu'à une prochaine station. */
 public class Path {
     /** Nom de la ligne sur laquelle se situe le chemin. */
     private String lineName;
+    /** Numéro de variant de la ligne sur laquelle se situe le chemin */
+    private int variant;
     /** Horaires de passage des trains sur ce chemin, dans l'ordre. */
     private ArrayList<LocalTime> schedule;
     /** Durée du trajet jusqu'à la prochaine station. */
@@ -24,14 +26,18 @@ public class Path {
     /**
      * Construit un chemin jusqu'à une prochaine station
      * @param lineName le nom de la ligne sur laquelle se situe le chemin
+     * @param variant le variant de la ligne sur laquelle se situe le chemin
      * @param schedule les horaires de passage des trains sur ce chemin, dans l'ordre
      * @param travelDuration la durée du trajet jusqu'à la prochaine station
      * @param travelDistance la distance du trajet jusqu'à la prochaine station en km
      * @param source la depuis laquelle part le chemin
      * @param destination la station vers laquelle mène le chemin
      */
-    public Path(String lineName, ArrayList<LocalTime> schedule, Duration travelDuration, double travelDistance, Station source, Station destination) {
+    public Path(String lineName, int variant, ArrayList<LocalTime> schedule, Duration travelDuration,
+            double travelDistance,
+            Station source, Station destination) {
         this.lineName = lineName;
+        this.variant = variant;
         this.schedule = schedule;
         this.travelDuration = travelDuration;
         this.travelDistance = travelDistance;
@@ -84,6 +90,14 @@ public class Path {
     }
 
     /**
+     * Renvoie le numéro de variant de la ligne sur laquelle se situe le chemin.
+     * @return le numéro de variant
+     */
+    public int getVariant() {
+        return variant;
+    }
+
+    /**
      * Renvoie les horaires de passage des trains sur ce chemin dans l'ordre.
      * @return les horaires de passage des trains
      */
@@ -122,6 +136,5 @@ public class Path {
     public Station getDestination() {
         return destination;
     }
-
 
 }
