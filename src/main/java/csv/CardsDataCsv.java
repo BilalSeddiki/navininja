@@ -1,23 +1,11 @@
 package csv;
-
-import java.io.IOException;
-import java.nio.file.Path;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import com.opencsv.bean.CsvBindAndSplitByPosition;
 import com.opencsv.bean.CsvBindByPosition;
-import com.opencsv.bean.CsvDate;
-
-import model.Station;
 
 public class CardsDataCsv extends CsvData<CardsDataCsv> {
 
@@ -38,8 +26,8 @@ public class CardsDataCsv extends CsvData<CardsDataCsv> {
     @CsvBindAndSplitByPosition(position = 4, splitOn = " variant ", elementType = String.class)
     private List<String> line;
 
-    @CsvBindByPosition(position = 5) @CsvDate(value = "mm:ss")
-    private Date duration;
+    @CsvBindAndSplitByPosition(position = 5, splitOn = ":", elementType = Integer.class)
+    private List<Integer> duration;
 
     @CsvBindByPosition(position = 6)
     private double distance;
@@ -68,8 +56,8 @@ public class CardsDataCsv extends CsvData<CardsDataCsv> {
         return Integer.parseInt(line.get(1));
     }
 
-    public Date getDuration() {
-        return duration;
+    public Duration getDuration() {
+        return Duration.ofSeconds(duration.get(0) * 60 + duration.get(1));
     }
 
     public double getDistance() {
