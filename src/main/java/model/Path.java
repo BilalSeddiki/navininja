@@ -10,8 +10,8 @@ import java.util.ArrayList;
 public class Path {
     /** Nom de la ligne sur laquelle se situe le chemin. */
     private String lineName;
-    /** Numéro de variant de la ligne sur laquelle se situe le chemin */
-    private int variant;
+    /** Nom du variant de la ligne sur laquelle se situe le chemin */
+    private char variant;
     /** Horaires de passage des trains sur ce chemin, dans l'ordre. */
     private ArrayList<LocalTime> schedule;
     /** Durée du trajet jusqu'à la prochaine station. */
@@ -33,7 +33,7 @@ public class Path {
      * @param source la depuis laquelle part le chemin
      * @param destination la station vers laquelle mène le chemin
      */
-    public Path(String lineName, int variant, ArrayList<LocalTime> schedule, Duration travelDuration,
+    public Path(String lineName, char variant, ArrayList<LocalTime> schedule, Duration travelDuration,
             double travelDistance,
             Station source, Station destination) {
         this.lineName = lineName;
@@ -93,7 +93,7 @@ public class Path {
      * Renvoie le numéro de variant de la ligne sur laquelle se situe le chemin.
      * @return le numéro de variant
      */
-    public int getVariant() {
+    public char getVariant() {
         return variant;
     }
 

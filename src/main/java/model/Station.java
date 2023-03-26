@@ -89,7 +89,7 @@ public class Station {
      * @param variant le variant de la ligne du chemin
      * @return un Optional du chemin si celui-ci existe, sinon un Optional vide
      */
-    public Optional<Path> getOutPath(String lineName, int variant) {
+    public Optional<Path> getOutPath(String lineName, char variant) {
         return outPaths.stream()
                 .filter(path -> path.getLineName().equals(lineName) && path.getVariant() == variant)
                 .findFirst();
@@ -101,7 +101,7 @@ public class Station {
     * @param variant le variant de la ligne du chemin
     * @return un Optional du chemin si celui-ci existe, sinon un Optional vide
     */
-    public Optional<Path> getInPath(String lineName, int variant) {
+    public Optional<Path> getInPath(String lineName, char variant) {
         return inPaths.stream()
                 .filter(path -> path.getLineName().equals(lineName) && path.getVariant() == variant)
                 .findFirst();
