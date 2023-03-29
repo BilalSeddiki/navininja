@@ -229,11 +229,14 @@ public class Network {
         while(out.isPresent()){
             Path path=out.get();
             Duration d=path.getTravelDuration();
+            ArrayList<LocalTime> next=new ArrayList<LocalTime>();
             for(int i=0;i<timedepart.size();i++){
-
+                next.add(timedepart.get(i).plusSeconds(d.getSeconds()));
             }
+            path.initPath(next);
             current=path.getDestination();
             out=current.getOutPath(nom, variant);
+            timedepart=next;
         }
     }
 }
