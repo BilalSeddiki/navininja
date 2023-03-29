@@ -1,6 +1,8 @@
 package model;
 
 import java.time.LocalTime;
+import javafx.beans.property.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 /** Horaire de passage dans une certaine direction. */
 public class Schedule {
@@ -35,5 +37,21 @@ public class Schedule {
      */
     public LocalTime getPassingTime() {
         return this.passingTime;
+    }
+
+    /** 
+     * Renvoie la direction du trajet sous forme de SimpleStringProperty.
+     * @return La direction du trajet sous forme de SimpleStringProperty.
+     */
+    public SimpleStringProperty getDirectionAsSimpleString() {
+        return new SimpleStringProperty(this.direction.getName());
+    }
+
+    /** 
+     * Renvoie l'horaire de passage sous forme de SimpleStringProperty.
+     * @return L'horaire de passage sous forme de SimpleStringProperty.
+     */
+    public SimpleStringProperty getPassingTimeAsSimpleString() {
+        return new SimpleStringProperty(this.passingTime.toString());
     }
 }
