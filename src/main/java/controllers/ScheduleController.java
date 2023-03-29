@@ -4,10 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.util.ArrayList;
 
@@ -24,11 +21,19 @@ public class ScheduleController extends Controller {
     @FXML
     ContextMenu suggestionMenuStation;
     @FXML
-    ContextMenu suggestionMenuLine;
-    @FXML
     Button searchBtn;
     @FXML
     Button goBackBtn;
+    @FXML
+    TableView<String> busScheduleTable;
+
+    //todo on doit avoir TableColumn<Schedule, String> directionColumn; à la fin
+    @FXML
+     TableColumn<String, String> directionColumn;
+
+    //todo on doit avoir TableColumn<Schedule, String> timeColumn; à la fin
+    @FXML
+    TableColumn<String, String> timeColumn;
 
     private final ArrayList<String> stations = new ArrayList<>();
     public void initialize(){
@@ -47,6 +52,12 @@ public class ScheduleController extends Controller {
         stationInput.textProperty().addListener(new TextFieldListener( stationInput, suggestionMenuStation, stations));
         //lineInput.textProperty().addListener( new TextFieldListener( lineInput, suggestionMenuLine, stations));
         lineComboBox.getItems().addAll(lines);
+
+        /*directionColumn.setCellValueFactory(cellData -> cellData.getValue().directionProperty());
+        timeColumn.setCellValueFactory(cellData -> cellData.getValue().timeProperty());
+
+        // Populate the table with data
+        busScheduleTable.setItems(BusSchedule.getSampleData());*/
     }
     /**
      * Écouteur du bouton 'Back' permet de retourner à la page précédente
