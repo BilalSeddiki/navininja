@@ -100,4 +100,6 @@
     -fx-padding: 0 5px;
 }
 
-
+.table-view, .column-header{
+    -fx-background-color: #eef0f2;
+}
