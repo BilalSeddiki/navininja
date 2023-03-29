@@ -44,7 +44,9 @@ public class Path {
         this.source = source;
         this.destination = destination;
     }
-
+    public void initPath(ArrayList<LocalTime> horaire){
+        schedule=horaire;
+    }
     /**
      * Renvoie l'heure du prochain départ de train dans cette direction à partir de l'heure indiquée.
      * @param from l'heure depuis laquelle calculer le prochain départ

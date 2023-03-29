@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
+import java.time.Duration;
+
 import javafx.util.Pair;
 
 import java.awt.geom.Point2D.Double;
+import java.time.LocalTime;
 
 /* TODO: Changer l'initialisation de lines après l'implémentation des horaires */
 /** Un réseau de stations. */
@@ -203,5 +206,34 @@ public class Network {
         }
         System.out.println(line);
         return line;
+    }
+
+    /**
+     * Initialise les horraire du reseau
+     * <p>
+     * les paramètres de la methode doivent tous contenir le meme nombre d'élément
+     * @param noms les noms des lignes
+     * @param variants le variant des lignes
+     * @param timedeparts les horaire de depart pour la ligne
+     * @param stationdeparts la station de depart pour la ligne
+     */
+    private void InitTimes(ArrayList<String> noms, ArrayList<Integer> variants, ArrayList<ArrayList<LocalTime>> timedeparts, ArrayList<String> stationdeparts){
+        for(int i=0;i<noms.size();i++){
+            Station tmp=getStation(stationdeparts.get(i));
+            InitTime(noms.get(i), variants.get(i), timedeparts.get(i), tmp);
+        }
+    }
+    private void InitTime(String nom, Integer variant, ArrayList<LocalTime> timedepart, Station stationdepart){
+        Station current=stationdepart;
+        var out=current.getOutPath(nom, variant);
+        while(out.isPresent()){
+            Path path=out.get();
+            Duration d=path.getTravelDuration();
+            for(int i=0;i<timedepart.size();i++){
+
+            }
+            current=path.getDestination();
+            out=current.getOutPath(nom, variant);
+        }
     }
 }
