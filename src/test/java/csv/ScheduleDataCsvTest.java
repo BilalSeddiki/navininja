@@ -16,23 +16,23 @@ public class ScheduleDataCsvTest {
     @Test
     public void readCSVTest(@TempDir Path tempDir) throws IOException {
         String csv = 
-            "B; Borderouge; 7:00;\n" +
-            "B; Borderouge; 8:00;\n" +
-            "B; Borderouge; 9:00;\n" +
-            "B; Borderouge; 10:00;\n" +
-            "B; Borderouge; 11:00;\n" +
-            "B; Borderouge; 12:00;\n" +
-            "B; Borderouge; 13:00;\n" +
-            "B; Borderouge; 14:00;\n" +
-            "B; Borderouge; 15:00;\n" +
-            "B; Borderouge; 16:00;\n" +
-            "B; Borderouge; 17:00;\n" +
-            "B; Borderouge; 18:00;\n" +
-            "B; Borderouge; 19:00;\n" +
-            "B; Borderouge; 20:00;\n" +
-            "B; Borderouge; 21:00;\n" +
-            "B; Borderouge; 22:00;\n" +
-            "B; Borderouge; 23:00;";
+            "B;Borderouge;7:00;\n" +
+            "B;Borderouge;8:00;\n" +
+            "B;Borderouge;9:00;\n" +
+            "B;Borderouge;10:00;\n" +
+            "B;Borderouge;11:00;\n" +
+            "B;Borderouge;12:00;\n" +
+            "B;Borderouge;13:00;\n" +
+            "B;Borderouge;14:00;\n" +
+            "B;Borderouge;15:00;\n" +
+            "B;Borderouge;16:00;\n" +
+            "B;Borderouge;17:00;\n" +
+            "B;Borderouge;18:00;\n" +
+            "B;Borderouge;19:00;\n" +
+            "B;Borderouge;20:00;\n" +
+            "B;Borderouge;21:00;\n" +
+            "B;Borderouge;22:00;\n" +
+            "B;Borderouge;23:00;";
         Path file = tempDir.resolve("schedule_data.csv");
         Files.writeString(file, csv);
         assertTrue(Files.exists(file));
@@ -45,8 +45,8 @@ public class ScheduleDataCsvTest {
         for (ScheduleDataCsv scheduleDataCsvItem : parsedData) {
             assertEquals('B', scheduleDataCsvItem.getLine());
             assertEquals("Borderouge", scheduleDataCsvItem.getDepartStation());
-            assertEquals(i, scheduleDataCsvItem.getDepartTime().getMinutes());
-            assertEquals(0, scheduleDataCsvItem.getDepartTime().getSeconds());
+            assertEquals(i, scheduleDataCsvItem.getDepartTime().getHour());
+            assertEquals(0, scheduleDataCsvItem.getDepartTime().getMinute());
             i++;
         }
     }
