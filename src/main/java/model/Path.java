@@ -12,7 +12,7 @@ public class Path {
     private String lineName;
     /** Numéro de variant de la ligne sur laquelle se situe le chemin */
     private int variant;
-    /** Horaires de passage des trains sur ce chemin, dans l'ordre. */
+    /** Horaires de passage des trains sur ce chemin, dans l'ordre si c'est un terminus. */
     private ArrayList<LocalTime> schedule;
     /** Durée du trajet jusqu'à la prochaine station. */
     private Duration travelDuration;
@@ -22,6 +22,8 @@ public class Path {
     private Station source;
     /** Station vers laquelle mène le chemin. */
     private Station destination;
+    /** Indique si la source est un terminus */
+    private boolean terminus;
 
     /**
      * Construit un chemin jusqu'à une prochaine station
@@ -43,6 +45,12 @@ public class Path {
         this.travelDistance = travelDistance;
         this.source = source;
         this.destination = destination;
+        terminus=false;
+    }
+
+    public void setTerminus(ArrayList<LocalTime> schedule){
+        terminus=true;
+        this.schedule=schedule;
     }
 
     /**
