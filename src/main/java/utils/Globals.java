@@ -13,6 +13,10 @@ public class Globals {
         return "src/main/resources/views/"+viewFileName;
     }
 
+    public static String pathToRessources(String fileName) {
+        return "src/main/resources/" + fileName;
+    }
+
     /**
      * Fonction statique pour récupérer la largeur de l'écran
      * @return la largeur de l'écran

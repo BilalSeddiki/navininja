@@ -35,7 +35,8 @@ public class Station {
      */
     public void addOutPath(Path path) {
         if (path.getSource() != this)
-            throw new IllegalArgumentException("The path should start from this station");
+            throw new IllegalArgumentException(
+                    "The path should start from this station " + this + " but instead starts from " + path.getSource());
         outPaths.add(path);
     }
 
@@ -47,7 +48,8 @@ public class Station {
      */
     public void addInPath(Path path) {
         if (path.getDestination() != this)
-            throw new IllegalArgumentException("The path should lead to this station");
+            throw new IllegalArgumentException(
+                    "The path should lead to this station " + this + " but instead leads to " + path.getDestination());
         inPaths.add(path);
     }
 
@@ -115,4 +117,20 @@ public class Station {
         return name;
     }
 
+    @Override
+    public boolean equals(Object arg0) {
+        return arg0 instanceof Station s &&
+                this.name.equals(s.name) &&
+                this.coordinates.equals(s.coordinates) &&
+                this.inPaths.containsAll(s.inPaths) &&
+                s.inPaths.containsAll(this.inPaths) &&
+                this.outPaths.containsAll(s.outPaths) &&
+                s.outPaths.containsAll(this.outPaths);
+    }
+
+    public boolean equalsNonRecursive(Object arg0) {
+        return arg0 instanceof Station s &&
+                this.name.equals(s.name) &&
+                this.coordinates.equals(s.coordinates);
+    }
 }

@@ -137,4 +137,16 @@ public class Path {
         return destination;
     }
 
+    @Override
+    public boolean equals(Object arg0) {
+        return arg0 instanceof Path p &&
+                this.variant == p.variant &&
+                this.travelDistance == p.travelDistance &&
+                this.lineName.equals(p.lineName) &&
+                this.schedule.equals(p.schedule) &&
+                this.travelDuration.equals(p.travelDuration) &&
+                this.source.equalsNonRecursive(p.source) &&
+                this.destination.equalsNonRecursive(p.destination);
+    }
+
 }

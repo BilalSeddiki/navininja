@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import model.Network;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import controllers.*;
@@ -16,6 +17,7 @@ public class Main extends Application {
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
+        var network = Network.fromCSV(Globals.pathToRessources("map_data.csv"), "");
         File file = new File(Globals.pathToView("MenuView.fxml"));
         FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
         Parent root = loader.load();
@@ -23,6 +25,5 @@ public class Main extends Application {
         Scene scene = new Scene(root, Globals.windowWidth(), Globals.windowHeight());
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 }
