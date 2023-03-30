@@ -24,10 +24,10 @@ public abstract class CsvData<T extends CsvData<?>> {
     /**
      * 
      * @param path Le chemin vers le fichier CSV à parser
-     * @return La liste d'instance de {@code T} décrit par le fichier CSV donné en argument
+     * @return La liste d'instance décrit par le fichier CSV donné en argument
      * @throws IOException if the named file does not exist, is a directory rather than a regular file, or for some other reason cannot be opened for reading.
      */
-    public List<T> readCSVFile(Path path) throws IOException {
+    protected List<T> readCSVFile(Path path) throws IOException {
         FileReader reader = new FileReader(path.toString(), StandardCharsets.UTF_8);
         return readCSV(reader);
     }
@@ -36,4 +36,11 @@ public abstract class CsvData<T extends CsvData<?>> {
         StringReader reader = new StringReader(text);
         return readCSV(reader);
     }
+
+    /**
+     * Méthode utilitaire afin à ne pas avoir à préciser le chemin vers le fichier CSV correspondant.
+     * @return <T> La liste d'instance décrit par le fichier CSV correspondant contenu dans resources/
+     * @throws IOException
+     */
+    public abstract List<T> readCSVFile() throws IOException;
 }
