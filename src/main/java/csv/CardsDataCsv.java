@@ -3,7 +3,6 @@ package csv;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.ZoneId;
