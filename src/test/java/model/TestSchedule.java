@@ -10,11 +10,11 @@ public class TestSchedule {
     /* Constructeurs et getters */
     @Test
     public void testConstructorAndGetters() {
-        Station direction = new Station("", new Double(0, 0));
-        LocalTime passingTime = LocalTime.MIN;
 
+        String direction = "Olympiades";
+        String passingTime = "14:04";
         Schedule schedule = new Schedule(direction, passingTime);
-        assertEquals(direction, schedule.getDirection(), "L'attribut direction est incorrect.");
-        assertEquals(passingTime, schedule.getPassingTime(), "L'attribut passingTime est incorrect.");
+        assertEquals(direction, schedule.getDirectionAsSimpleString(), "L'attribut direction est incorrect.");
+        assertEquals(passingTime, schedule.getPassingTimeAsSimpleString(), "L'attribut passingTime est incorrect.");
     }
 }

@@ -73,8 +73,8 @@
    <ComboBox fx:id="lineComboBox" editable="true" layoutX="563.0" layoutY="229.0" prefHeight="39.0" prefWidth="321.0" promptText="Line" styleClass="combo-box" stylesheets="@style/style.css" visibleRowCount="12" />
    <TableView fx:id="busScheduleTable" layoutX="315.0" layoutY="421.0" prefHeight="200.0" prefWidth="425.0" styleClass="dropshadow">
       <columns>
-         <TableColumn fx:id="directionColumn" prefWidth="207.86569213867188" text="Direction" />
-         <TableColumn fx:id="timeColumn" prefWidth="216.0" text="Time" />
+         <TableColumn fx:id="directionColumn" editable="false" prefWidth="207.86569213867188" text="Direction" />
+         <TableColumn fx:id="timeColumn" editable="false" prefWidth="216.0" text="Time" />
       </columns>
    </TableView>
 </AnchorPane>

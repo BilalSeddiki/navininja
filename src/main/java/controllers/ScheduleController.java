@@ -5,8 +5,17 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import model.Schedule;
+import model.Station;
 
+import java.awt.geom.Point2D;
+import java.sql.Time;
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Controlleur de la vue trouver un itinéraire
@@ -25,15 +34,15 @@ public class ScheduleController extends Controller {
     @FXML
     Button goBackBtn;
     @FXML
-    TableView<String> busScheduleTable;
+    TableView<Schedule> busScheduleTable;
 
     //todo on doit avoir TableColumn<Schedule, String> directionColumn; à la fin
     @FXML
-     TableColumn<String, String> directionColumn;
+     TableColumn<Schedule, String> directionColumn;
 
     //todo on doit avoir TableColumn<Schedule, String> timeColumn; à la fin
     @FXML
-    TableColumn<String, String> timeColumn;
+    TableColumn<Schedule, String> timeColumn;
 
     private final ArrayList<String> stations = new ArrayList<>();
     public void initialize(){
@@ -52,12 +61,25 @@ public class ScheduleController extends Controller {
         stationInput.textProperty().addListener(new TextFieldListener( stationInput, suggestionMenuStation, stations));
         //lineInput.textProperty().addListener( new TextFieldListener( lineInput, suggestionMenuLine, stations));
         lineComboBox.getItems().addAll(lines);
+        // Assuming you have a List<Schedule> called schedules that you want to display in the table view
 
-        /*directionColumn.setCellValueFactory(cellData -> cellData.getValue().directionProperty());
-        timeColumn.setCellValueFactory(cellData -> cellData.getValue().timeProperty());
 
-        // Populate the table with data
-        busScheduleTable.setItems(BusSchedule.getSampleData());*/
+
+        ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+
+        //TODO mettre ici la bonne liste d'horaires
+        for( String s : stations ){
+            schedules.add(new Schedule(s, LocalTime.now().format(dtf) ));
+        }
+
+        ObservableList<Schedule> scheduleList = FXCollections.observableArrayList(schedules);
+
+        directionColumn.setCellValueFactory(new PropertyValueFactory<>("directionAsSimpleString"));
+        timeColumn.setCellValueFactory(new PropertyValueFactory<>("passingTimeAsSimpleString"));
+
+
+        busScheduleTable.setItems(scheduleList);
     }
     /**
      * Écouteur du bouton 'Back' permet de retourner à la page précédente
