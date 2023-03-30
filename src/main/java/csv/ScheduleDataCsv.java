@@ -9,7 +9,7 @@ import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
 
 /**
- * Classe représentant les données contenues dans le fichier CSV des horaires du réseau de transport. Pour obtenir les données sous forme de liste, {@code new ScheduleDataCsv().readCSVFile()}.
+ * Classe représentant les données contenues dans le fichier CSV des horaires du réseau de transport. Pour obtenir les données sous forme de liste, où chaque élément de la liste représente une ligne dudit fichier, {@code new ScheduleDataCsv().readCSVFile()}.
  */
 public class ScheduleDataCsv extends CsvData<ScheduleDataCsv> {
  

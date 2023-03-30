@@ -14,7 +14,7 @@ import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
 
 /**
- * Classe représentant les données contenues dans le fichier CSV des chemins du réseau de transport. Pour obtenir les données sous forme de liste, {@code new CardsDataCsv().readCSVFile()}.
+ * Classe représentant les données contenues dans le fichier CSV des chemins du réseau de transport. Pour obtenir les données sous forme de liste, où chaque élément de la liste représente une ligne dudit fichier, {@code new CardsDataCsv().readCSVFile()}.
  */
 public class CardsDataCsv extends CsvData<CardsDataCsv> {
 
