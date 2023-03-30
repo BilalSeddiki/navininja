@@ -27,7 +27,7 @@ public abstract class CsvData<T extends CsvData<?>> {
      * @return La liste d'instance décrit par le fichier CSV donné en argument
      * @throws IOException if the named file does not exist, is a directory rather than a regular file, or for some other reason cannot be opened for reading.
      */
-    protected List<T> readCSVFile(Path path) throws IOException {
+    public List<T> readCSVFile(Path path) throws IOException {
         FileReader reader = new FileReader(path.toString(), StandardCharsets.UTF_8);
         return readCSV(reader);
     }
