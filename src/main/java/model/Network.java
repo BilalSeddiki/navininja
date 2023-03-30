@@ -1,5 +1,7 @@
 package model;
 
+import csv.CardsDataCsv;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
@@ -7,6 +9,8 @@ import java.util.NoSuchElementException;
 import javafx.util.Pair;
 
 import java.awt.geom.Point2D.Double;
+import java.io.IOException;
+import java.time.LocalTime;
 
 /* TODO: Changer l'initialisation de lines après l'implémentation des horaires */
 /** Un réseau de stations. */
@@ -30,6 +34,44 @@ public class Network {
         initStationByCoordinates(stationList);
         addPathsToStations(pathList);
         initLines(stationList, pathList);
+    }
+
+    /**
+     * Crée un réseau à partir de deux fichiers CSV.
+     * @param mapFile le nom d'un fichier CSV contenant les informations des chemins du réseau
+     * @param scheduleFile le nom d'un fichier CSV contenant les informations des horaires des lignes 
+     * @return un réseau
+     * @throws IOException si la lecture d'un des fichier echoue
+     */
+    public static Network fromCSV(String mapFile, String scheduleFile) throws IOException {
+        var list = new CardsDataCsv().readCSVFile(java.nio.file.Path.of(mapFile));
+        var stations = new HashMap<String, Station>();
+        var paths = new ArrayList<Path>();
+        for (CardsDataCsv item : list) {
+            String stationNameA = item.getStationA();
+            if (!stations.containsKey(stationNameA)) {
+                double x1 = item.getCoordinatesA().get(0);
+                double y1 = item.getCoordinatesA().get(1);
+                Station stationA = new Station(stationNameA, new Double(x1, y1));
+                stations.put(stationA.getName(), stationA);
+            }
+
+            String stationNameB = item.getStationB();
+            if (!stations.containsKey(stationNameB)) {
+                double x2 = item.getCoordinatesB().get(0);
+                double y2 = item.getCoordinatesB().get(1);
+                Station stationB = new Station(stationNameB, new Double(x2, y2));
+                stations.put(stationB.getName(), stationB);
+            }
+            // TODO: Ajouter le véritable emploi du temps. Par défaut un train part toutes les 5 minutes
+            var schedule = new ArrayList<LocalTime>();
+            for (int minutes = 0; minutes < 1440; minutes += 5) {
+                schedule.add(LocalTime.ofSecondOfDay(minutes * 60));
+            }
+            paths.add(new Path(item.getLine(), item.getLineVariant(), schedule, item.getDuration(), item.getDistance(),
+                    stations.get(stationNameA), stations.get(stationNameB)));
+        }
+        return new Network(new ArrayList<Station>(stations.values()), paths);
     }
 
     /**
@@ -201,7 +243,15 @@ public class Network {
             line.add(nextPath.get().getDestination());
             nextPath = nextPath.get().getDestination().getOutPath(name, variant);
         }
-        System.out.println(line);
         return line;
     }
+
+    @Override
+    public boolean equals(Object arg0) {
+        return arg0 instanceof Network n &&
+                this.stationsByName.equals(n.stationsByName) &&
+                this.stationsByCoordinates.equals(n.stationsByCoordinates) &&
+                this.lines.equals(n.lines);
+    }
+
 }
