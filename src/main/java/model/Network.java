@@ -1,17 +1,20 @@
 package model;
 
-import csv.CardsDataCsv;
-import csv.ScheduleDataCsv;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 import javafx.util.Pair;
+import model.dijkstra.Node;
+import model.dijkstra.NodeDistanceComparator;
 
 import java.awt.geom.Point2D.Double;
-import java.io.IOException;
-import java.time.LocalTime;
+import java.time.Duration;
 
 /* TODO: Changer l'initialisation de lines après l'implémentation des horaires */
 /** Un réseau de stations. */
@@ -21,7 +24,7 @@ public class Network {
     /** Ensemble de stations du réseau. <p> Une HashMap avec les coordonnées des stations pour clé, et les stations pour valeur.*/
     private HashMap<Double, Station> stationsByCoordinates;
     /** Ensemble des lignes du réseau. <p> Une HashMap à deux dimension avec le nom et le variant des lignes pour clé, et une liste de station pour valeur */
-    private HashMap<String, HashMap<String, ArrayList<Station>>> lines;
+    private HashMap<String, HashMap<Integer, ArrayList<Station>>> lines;
 
     /**
      * Construit un réseau de station.
@@ -38,61 +41,13 @@ public class Network {
     }
 
     /**
-     * Crée un réseau à partir de deux fichiers CSV.
-     * @param mapFile le nom d'un fichier CSV contenant les informations des chemins du réseau
-     * @param scheduleFile le nom d'un fichier CSV contenant les informations des horaires des lignes 
-     * @return un réseau
-     * @throws IOException si la lecture d'un des fichier echoue
-     */
-    public static Network fromCSV(String mapFile, String scheduleFile) throws IOException {
-        var schedules = new HashMap<String, HashMap<String, HashMap<String, ArrayList<LocalTime>>>>();
-        var csvSchedules = new ScheduleDataCsv().readCSVFile(java.nio.file.Path.of(scheduleFile));
-
-        for (var item : csvSchedules) {
-            schedules
-                    .computeIfAbsent(item.getDepartStation(),
-                            k -> new HashMap<String, HashMap<String, ArrayList<LocalTime>>>())
-                    .computeIfAbsent(item.getLine(), k -> new HashMap<String, ArrayList<LocalTime>>())
-                    .computeIfAbsent(item.getVariant(), k -> new ArrayList<LocalTime>());
-            schedules.get(item.getDepartStation()).get(item.getLine()).get(item.getVariant()).add(item.getDepartTime());
-        }
-
-        var csvPaths = new CardsDataCsv().readCSVFile(java.nio.file.Path.of(mapFile));
-        var stations = new HashMap<String, Station>();
-        var paths = new ArrayList<Path>();
-        for (CardsDataCsv item : csvPaths) {
-            String stationNameA = item.getStationA();
-            if (!stations.containsKey(stationNameA)) {
-                Double coordinatesA = item.getCoordinatesA();
-                Station stationA = new Station(stationNameA, coordinatesA);
-                stations.put(stationA.getName(), stationA);
-            }
-
-            String stationNameB = item.getStationB();
-            if (!stations.containsKey(stationNameB)) {
-                Double coordinatesB = item.getCoordinatesB();
-                Station stationB = new Station(stationNameB, coordinatesB);
-                stations.put(stationB.getName(), stationB);
-            }
-
-            var schedule = schedules.getOrDefault(stationNameA, new HashMap<>())
-                    .getOrDefault(item.getLine(), new HashMap<>())
-                    .getOrDefault(item.getLineVariant(), new ArrayList<LocalTime>());
-
-            paths.add(new Path(item.getLine(), item.getLineVariant(), schedule, item.getDuration(),
-                    item.getDistance(), stations.get(stationNameA), stations.get(stationNameB)));
-        }
-        return new Network(new ArrayList<Station>(stations.values()), paths);
-    }
-
-    /**
      * Renvoie la liste de station constituant le variant d'une ligne
      * @param name le nom de la ligne
      * @param variant le variant de la ligne
      * @throws NoSuchElementException si le nom ou le variant ne correspond à aucune des lignes ou variant du réseau
      * @return une liste de station
      */
-    public ArrayList<Station> getLineVariant(String name, String variant) throws NoSuchElementException {
+    public ArrayList<Station> getLineVariant(String name, int variant) throws NoSuchElementException {
         var lineVariant = getLine(name).get(variant);
         if (lineVariant == null)
             throw new NoSuchElementException();
@@ -105,7 +60,7 @@ public class Network {
      * @throws NoSuchElementException si le nom ne correspond à aucune des lignes du réseau
      * @return une HashMap avec pour clé le numéro des variants et pour valeur la liste des stations de chaque variants
      */
-    public HashMap<String, ArrayList<Station>> getLine(String name) throws NoSuchElementException {
+    public HashMap<Integer, ArrayList<Station>> getLine(String name) throws NoSuchElementException {
         var line = lines.get(name);
         if (line == null)
             throw new NoSuchElementException();
@@ -161,13 +116,86 @@ public class Network {
     }
 
     /**
+     * Calcule un itinéraire d'une station à une autre de manière naïve.
+     * @param source la station de départ
+     * @param destination la station d'arrivée
+     * @return un itinéraire d'une station à une autre
+     */
+    public Itinerary naivePath(Station source, Station destination) {
+        return null;
+    }
+
+    /**
      * Calcule le meilleur itinéraire d'une station à une autre.
      * @param source la station de départ
      * @param destination la station d'arrivée
      * @return un itinéraire d'une station à une autre
      */
     public Itinerary bestPath(Station source, Station destination) {
-        return null;
+        PriorityQueue<Node> queue = new PriorityQueue<>(new NodeDistanceComparator());
+        Set<String> visitedStations = new HashSet<>();
+        Map<Station, Node> stationNodeMap = new HashMap<>();
+        
+        Node initialNode = new Node(source, 0, Duration.ZERO);
+        stationNodeMap.put(source, initialNode);
+        queue.add(initialNode);
+
+        while (!queue.isEmpty()) {
+            Node currentNode = queue.remove();
+            if (visitedStations.contains(currentNode.getStation().getName())) {
+                System.out.println("Node déjà visitée = " + currentNode.getStation().getName());
+                continue;
+            }
+            System.out.println("Node actuelle = " + currentNode.getStation().getName());
+            for (Path path : currentNode.getStation().getOutPaths()) {
+                if (visitedStations.contains(path.getDestination().getName())) {
+                    continue;
+                }
+                Node adjacentNode = stationNodeMap.getOrDefault(
+                    path.getDestination(),
+                    new Node(path.getDestination())
+                );
+                if (currentNode.getDistance() + path.getTravelDistance() <= adjacentNode.getDistance()) {
+                    adjacentNode.setDistance(currentNode.getDistance() + path.getTravelDistance());
+                    adjacentNode.setShortestPath(currentNode, path);
+                    stationNodeMap.put(path.getDestination(), adjacentNode);
+                    System.out.println("Optimal = " + currentNode.getStation() + " -> " + adjacentNode.getStation());
+                }
+                else {
+                    System.out.println("Pas optimal = " + currentNode.getStation() + " -> " + adjacentNode.getStation());
+                }
+                queue.add(adjacentNode);
+            }
+            visitedStations.add(currentNode.getStation().getName());
+        }
+        System.out.println(stationNodeMap.get(destination).getDistance() + " km");
+        return new Itinerary(null, stationNodeMap.get(destination).getShortestPath());
+    }
+
+    public static void main(String[] args) {
+        Station station1 = new Station("1", null);
+        Station station2 = new Station("2", null);
+        Station station3 = new Station("3", null);
+        Station station4 = new Station("4", null);
+        Station station5 = new Station("5", null);
+        Station station6 = new Station("6", null);
+        ArrayList<Station> stations = new ArrayList<>(Arrays.asList(station1, station2, station3, station4, station5, station6));
+        ArrayList<Path> paths = new ArrayList<>(Arrays.asList(
+            new Path("", 0, null, null, 7, station1, station2),
+            new Path("", 0, null, null, 9, station1, station3),
+            new Path("", 0, null, null, 14, station1, station6),
+            new Path("", 0, null, null, 10, station2, station3),
+            new Path("", 0, null, null, 15, station2, station4),
+            new Path("", 0, null, null, 11, station3, station4),
+            new Path("", 0, null, null, 2, station3, station6),
+            new Path("", 0, null, null, 6, station5, station4),
+            new Path("", 0, null, null, 9, station6, station5)
+        ));
+        Network network = new Network(stations, paths);
+        Itinerary itinerary = network.bestPath(station1, station5);
+        for (Path path : itinerary.getPaths()) {
+            System.out.println(path.getSource().getName() + " -> " + path.getDestination().getName()); 
+        }
     }
 
     /**
@@ -213,16 +241,16 @@ public class Network {
      * @param pathList la liste des chemins
      */
     private void initLines(ArrayList<Station> stationList, ArrayList<Path> pathList) {
-        lines = new HashMap<String, HashMap<String, ArrayList<Station>>>();
+        lines = new HashMap<String, HashMap<Integer, ArrayList<Station>>>();
         var lineList = pathList.stream()
-                .map(p -> new Pair<String, String>(p.getLineName(), p.getVariant()))
+                .map(p -> new Pair<String, Integer>(p.getLineName(), p.getVariant()))
                 .distinct()
                 .toList();
-        for (Pair<String, String> pair : lineList) {
+        for (Pair<String, Integer> pair : lineList) {
             var lineName = pair.getKey();
             var variant = pair.getValue();
             if (!lines.containsKey(lineName))
-                lines.put(lineName, new HashMap<String, ArrayList<Station>>());
+                lines.put(lineName, new HashMap<Integer, ArrayList<Station>>());
             lines.get(lineName).put(variant, initVariant(lineName, variant, stationList));
 
         }
@@ -237,7 +265,7 @@ public class Network {
      * @param stationList la liste des stations
      * @return une liste de stations
      */
-    private ArrayList<Station> initVariant(String name, String variant, ArrayList<Station> stationList) {
+    private ArrayList<Station> initVariant(String name, int variant, ArrayList<Station> stationList) {
         var stationFromLine = stationList.stream()
                 .filter(s -> s.getInPath(name, variant).isPresent() || s.getOutPath(name, variant).isPresent())
                 .findFirst()
@@ -254,6 +282,7 @@ public class Network {
             line.add(nextPath.get().getDestination());
             nextPath = nextPath.get().getDestination().getOutPath(name, variant);
         }
+        System.out.println(line);
         return line;
     }
 
@@ -264,5 +293,4 @@ public class Network {
                 this.stationsByCoordinates.equals(n.stationsByCoordinates) &&
                 this.lines.equals(n.lines);
     }
-
 }

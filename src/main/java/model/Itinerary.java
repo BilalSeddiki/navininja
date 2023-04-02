@@ -2,21 +2,21 @@ package model;
 
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.List;
 
 /** Un itinéraire d'une station à une autre. */
 public class Itinerary {
     /** Heure de départ de l'itinéraire. */
     private LocalTime departureTime;
     /** L'ensemble des chemins constituant l'itinéraire */
-    private ArrayList<Path> paths;
+    private List<Path> paths;
 
     /**
      * Construit un itinéraire. 
      * @param departureTime l'heure de départ de l'itinéraire
      * @param paths l'ensemble des chemins constituant l'itinéraire
      */
-    public Itinerary(LocalTime departureTime, ArrayList<Path> paths) {
+    public Itinerary(LocalTime departureTime, List<Path> paths) {
         this.departureTime = departureTime;
         this.paths = paths;
     }
@@ -25,7 +25,7 @@ public class Itinerary {
      * Renvoie l'ensemble des chemins constituant l'itinéraire
      * @return une liste de chemins
      */
-    public ArrayList<Path> getPaths() {
+    public List<Path> getPaths() {
         return paths;
     }
 
