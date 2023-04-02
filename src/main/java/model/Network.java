@@ -152,13 +152,86 @@ public class Network {
     }
 
     /**
+     * Calcule un itinéraire d'une station à une autre de manière naïve.
+     * @param source la station de départ
+     * @param destination la station d'arrivée
+     * @return un itinéraire d'une station à une autre
+     */
+    public Itinerary naivePath(Station source, Station destination) {
+        return null;
+    }
+
+    /**
      * Calcule le meilleur itinéraire d'une station à une autre.
      * @param source la station de départ
      * @param destination la station d'arrivée
      * @return un itinéraire d'une station à une autre
      */
     public Itinerary bestPath(Station source, Station destination) {
-        return null;
+        PriorityQueue<Node> queue = new PriorityQueue<>(new NodeDistanceComparator());
+        Set<String> visitedStations = new HashSet<>();
+        Map<Station, Node> stationNodeMap = new HashMap<>();
+        
+        Node initialNode = new Node(source, 0, Duration.ZERO);
+        stationNodeMap.put(source, initialNode);
+        queue.add(initialNode);
+
+        while (!queue.isEmpty()) {
+            Node currentNode = queue.remove();
+            if (visitedStations.contains(currentNode.getStation().getName())) {
+                System.out.println("Node déjà visitée = " + currentNode.getStation().getName());
+                continue;
+            }
+            System.out.println("Node actuelle = " + currentNode.getStation().getName());
+            for (Path path : currentNode.getStation().getOutPaths()) {
+                if (visitedStations.contains(path.getDestination().getName())) {
+                    continue;
+                }
+                Node adjacentNode = stationNodeMap.getOrDefault(
+                    path.getDestination(),
+                    new Node(path.getDestination())
+                );
+                if (currentNode.getDistance() + path.getTravelDistance() <= adjacentNode.getDistance()) {
+                    adjacentNode.setDistance(currentNode.getDistance() + path.getTravelDistance());
+                    adjacentNode.setShortestPath(currentNode, path);
+                    stationNodeMap.put(path.getDestination(), adjacentNode);
+                    System.out.println("Optimal = " + currentNode.getStation() + " -> " + adjacentNode.getStation());
+                }
+                else {
+                    System.out.println("Pas optimal = " + currentNode.getStation() + " -> " + adjacentNode.getStation());
+                }
+                queue.add(adjacentNode);
+            }
+            visitedStations.add(currentNode.getStation().getName());
+        }
+        System.out.println(stationNodeMap.get(destination).getDistance() + " km");
+        return new Itinerary(null, stationNodeMap.get(destination).getShortestPath());
+    }
+
+    public static void main(String[] args) {
+        Station station1 = new Station("1", null);
+        Station station2 = new Station("2", null);
+        Station station3 = new Station("3", null);
+        Station station4 = new Station("4", null);
+        Station station5 = new Station("5", null);
+        Station station6 = new Station("6", null);
+        ArrayList<Station> stations = new ArrayList<>(Arrays.asList(station1, station2, station3, station4, station5, station6));
+        ArrayList<Path> paths = new ArrayList<>(Arrays.asList(
+            new Path("", 0, null, null, 7, station1, station2),
+            new Path("", 0, null, null, 9, station1, station3),
+            new Path("", 0, null, null, 14, station1, station6),
+            new Path("", 0, null, null, 10, station2, station3),
+            new Path("", 0, null, null, 15, station2, station4),
+            new Path("", 0, null, null, 11, station3, station4),
+            new Path("", 0, null, null, 2, station3, station6),
+            new Path("", 0, null, null, 6, station5, station4),
+            new Path("", 0, null, null, 9, station6, station5)
+        ));
+        Network network = new Network(stations, paths);
+        Itinerary itinerary = network.bestPath(station1, station5);
+        for (Path path : itinerary.getPaths()) {
+            System.out.println(path.getSource().getName() + " -> " + path.getDestination().getName()); 
+        }
     }
 
     /**
