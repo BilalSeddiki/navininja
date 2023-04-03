@@ -45,7 +45,7 @@ public class Path {
         this.travelDistance = travelDistance;
         this.source = source;
         this.destination = destination;
-        terminus=false;
+        terminus=!(schedule.isEmpty());
     }
 
     public void setTerminus(ArrayList<LocalTime> schedule){
@@ -59,16 +59,26 @@ public class Path {
      * @return l'heure du prochain départ
      */
     public LocalTime nextTrainDeparture(LocalTime from) {
-        for(int i = 0; i < schedule.size(); i++) {
-            if(schedule.get(i).isAfter(from)) {
-                return schedule.get(i);
+        if(terminus){
+            for(int i = 0; i < schedule.size(); i++) {
+                if(schedule.get(i).isAfter(from)) {
+                    return schedule.get(i);
+                }
+            }
+            if(schedule.size() > 0) {
+                return schedule.get(0);
+            }
+        }else{
+            var tmp=source.getInPath(lineName,variant);
+            if(tmp.isPresent()){
+                var p=tmp.get();
+                return p.nextTrainDeparture(from.minus(p.getTravelDuration())).plus(p.getTravelDuration());
             }
         }
-        if(schedule.size() > 0) {
-            return schedule.get(0);
-        }
         return LocalTime.of(0, 0);
+
     }
+        
 
     /**
      * Calcule le temps pour arriver à la prochaine station à partir d'une heure donnée.
