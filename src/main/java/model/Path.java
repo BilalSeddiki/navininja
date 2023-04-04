@@ -29,7 +29,7 @@ public class Path {
      * Construit un chemin jusqu'à une prochaine station
      * @param lineName le nom de la ligne sur laquelle se situe le chemin
      * @param variant le variant de la ligne sur laquelle se situe le chemin
-     * @param schedule les horaires de passage des trains sur ce chemin, dans l'ordre
+     * @param schedule les horaires de passage des trains sur ce chemin, dans l'ordre, a mettre uniquement dans le cas d'un terminus
      * @param travelDuration la durée du trajet jusqu'à la prochaine station
      * @param travelDistance la distance du trajet jusqu'à la prochaine station en km
      * @param source la depuis laquelle part le chemin
