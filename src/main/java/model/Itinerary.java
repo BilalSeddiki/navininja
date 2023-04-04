@@ -42,7 +42,9 @@ public class Itinerary {
      * @return l'heure d'arrivé de l'itinéraire
      */
     public LocalTime getArrivaTime() {
-        return LocalTime.of(0, 0);
+        Duration duration = this.getDuration();
+        LocalTime arrivalTime = departureTime.plus(duration);
+        return arrivalTime;
     }
 
     /**
@@ -50,7 +52,14 @@ public class Itinerary {
      * @return la durée de l'itinéraire
      */
     public Duration getDuration() {
-        return Duration.ofSeconds(0);
+        Duration total = Duration.ZERO;
+        LocalTime newDeparture = departureTime;
+        for(int i = 0; i < this.paths.size(); i++) {
+            Duration pathDuration = paths.get(i).totalDuration(newDeparture);
+            total = total.plus(pathDuration);
+            newDeparture = newDeparture.plus(pathDuration);
+        }
+        return total;
     }
 
 }
