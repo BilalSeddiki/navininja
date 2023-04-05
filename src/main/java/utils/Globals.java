@@ -12,6 +12,9 @@ public class Globals {
     public static String pathToView(String viewFileName){
         return "src/main/resources/views/"+viewFileName;
     }
+    public static String pathToStyleSheetFromController(String stylesheet){
+        return "../views/style/"+stylesheet;
+    }
 
     /**
      * Fonction statique pour récupérer la largeur de l'écran
