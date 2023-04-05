@@ -2,21 +2,14 @@ package controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
-import utils.Globals;
-import java.io.File;
 import java.io.IOException;
 
 /**
- * Controlleur de la vue Menu, se charge de définir les écouteurs des boutons présents sur l'interface.
+ * Contrôleur de la vue Menu, se charge de définir les écouteurs des boutons présents sur l'écran.
  * @author R. MARTINI
  */
-public class MenuController {
+public class MenuController extends Controller {
     /**
      * Référence au composant FXML du bouton 'Network plan'
      */
@@ -31,13 +24,10 @@ public class MenuController {
      * Référence au composant FXML du bouton 'Time plan'
      */
     @FXML
-    public Button timePlanBtn;
+    Button scheduleBtn;
 
-    private Stage stage;
-    /**
-     * Constructeur
-     */
-    public MenuController() {
+    public MenuController(){
+        super();
     }
 
     /**
@@ -45,25 +35,21 @@ public class MenuController {
      * @param actionEvent événement
      */
     public void findARouteListener(ActionEvent actionEvent) throws IOException {
-        File file = new File(Globals.pathToView("FindARouteView.fxml"));
-        FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
-        Parent root = loader.load();
-        stage = (Stage)((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle("findARoute");
-        Scene scene = new Scene(root, Globals.windowWidth(), Globals.windowHeight());
-        stage.setScene(scene);
-        stage.show();
+        navigationController.navigateTo("findARouteView");
     }
-    /**
-     * Écouteur du bouton 'Time plan'
-     * @param actionEvent événement
-     */
-    public void timePlanListener(ActionEvent actionEvent) {
-    }
+
     /**
      * Écouteur du bouton 'Network plan'
      * @param actionEvent événement
      */
     public void networkPlanListener(ActionEvent actionEvent) {
+    }
+    /**
+     * Écouteur du bouton 'Schedule'
+     * @param actionEvent événement
+     */
+    public void scheduleListener(ActionEvent actionEvent) {
+        navigationController.navigateTo("scheduleView");
+
     }
 }

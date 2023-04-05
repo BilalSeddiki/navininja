@@ -12,6 +12,9 @@ public class Globals {
     public static String pathToView(String viewFileName){
         return "src/main/resources/views/"+viewFileName;
     }
+    public static String pathToStyleSheetFromController(String stylesheet){
+        return "../views/style/"+stylesheet;
+    }
 
     public static String pathToRessources(String fileName) {
         return "src/main/resources/" + fileName;
