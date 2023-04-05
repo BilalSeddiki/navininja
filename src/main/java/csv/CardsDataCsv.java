@@ -60,8 +60,8 @@ public class CardsDataCsv extends CsvData<CardsDataCsv> {
         return line.get(0);
     }
 
-    public char getLineVariant() {
-        return line.get(1).charAt(0);
+    public String getLineVariant() {
+        return line.get(1);
     }
 
     public Duration getDuration() {

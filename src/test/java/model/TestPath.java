@@ -12,7 +12,7 @@ public class TestPath {
     /* Constructeurs et getters */
     public Path createPathWithDefaultValues() {
         String lineName = "";
-        char variant = '0';
+        String variant = "0";
         ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
         Duration travelDuration = Duration.ZERO;
         double travelDistance = 0;
@@ -26,7 +26,7 @@ public class TestPath {
     @Test
     public void testConstructorAndGetters() {
         String lineName = "";
-        char variant = '0';
+        String variant = "0";
         ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
         Duration travelDuration = Duration.ZERO;
         double travelDistance = 0;
@@ -92,7 +92,7 @@ public class TestPath {
         Station source = new Station("Station 1", new Double(0, 0));
         Station destination = new Station("Station 2", new Double(0, 0));
 
-        Path path = new Path("Test", '0', schedule, Duration.ZERO, 0, source, destination);
+        Path path = new Path("Test", "0", schedule, Duration.ZERO, 0, source, destination);
         LocalTime depart = LocalTime.of(8, 37, 00);
         assertEquals(schedule.get(1), path.nextTrainDeparture(depart), "TODO");
     }
@@ -107,7 +107,7 @@ public class TestPath {
         Station source = new Station("Station 1", new Double(0, 0));
         Station destination = new Station("Station 2", new Double(0, 0));
 
-        Path path = new Path("Test", '0', schedule, Duration.ZERO, 0, source, destination);
+        Path path = new Path("Test", "0", schedule, Duration.ZERO, 0, source, destination);
         LocalTime depart = LocalTime.of(23, 30, 00);
         assertEquals(schedule.get(0), path.nextTrainDeparture(depart), "Le calcul du prochain départ est incorrect.");
     }
@@ -124,13 +124,13 @@ public class TestPath {
         Station destination= new Station("Destination",new Double(0,0));
         Duration t=Duration.ofMinutes(1);
 
-        Path path1 = new Path("Test", '0', schedule, t, 0, source, s1);
+        Path path1 = new Path("Test", "0", schedule, t, 0, source, s1);
         source.addOutPath(path1);
         s1.addInPath(path1);
-        Path path2 = new Path("Test", '0', new ArrayList<LocalTime>(), t, 0, s1, s2);
+        Path path2 = new Path("Test", "0", new ArrayList<LocalTime>(), t, 0, s1, s2);
         s1.addOutPath(path2);
         s2.addInPath(path2);
-        Path path3 = new Path("Test", '0', new ArrayList<LocalTime>(), t, 0, s2, destination);
+        Path path3 = new Path("Test", "0", new ArrayList<LocalTime>(), t, 0, s2, destination);
         s2.addOutPath(path3);
         destination.addInPath(path3);
 
@@ -146,7 +146,7 @@ public class TestPath {
         Station source = new Station("Station 1", new Double(0, 0));
         Station destination = new Station("Station 2", new Double(0, 0));
 
-        Path path = new Path("Test", '0', schedule, Duration.ZERO, 0, source, destination);
+        Path path = new Path("Test", "0", schedule, Duration.ZERO, 0, source, destination);
         LocalTime depart = LocalTime.of(14, 30, 00);
         assertEquals(LocalTime.of(0, 0), path.nextTrainDeparture(depart), "Le calcul du prochain départ est incorrect.");
     }
@@ -164,7 +164,7 @@ public class TestPath {
         Station destination = new Station("Station 2", new Double(0, 0));
         //TODO: Factoriser les constructeurs pour les Station ?
         
-        Path path = new Path("Test", '0', schedule, travelDuration, 0, source, destination);
+        Path path = new Path("Test", "0", schedule, travelDuration, 0, source, destination);
         LocalTime depart = LocalTime.of(7, 30, 00);
         Duration duration = (Duration.ofMinutes(60)).plus(travelDuration); 
         //TODO: Trouver une autre façon de préciser les données ?
@@ -181,7 +181,7 @@ public class TestPath {
         Station destination = new Station("Station 2", new Double(0, 0));
         //TODO: Factoriser les constructeurs pour les Station ?
 
-        Path path = new Path("Test", '0', schedule, travelDuration, 0, source, destination);
+        Path path = new Path("Test", "0", schedule, travelDuration, 0, source, destination);
         LocalTime depart = LocalTime.of(23, 30, 00);
         Duration duration = (Duration.ofMinutes(540)).plus(travelDuration); 
         //TODO: Trouver une autre façon de préciser les données ?

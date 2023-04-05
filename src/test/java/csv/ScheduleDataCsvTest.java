@@ -43,7 +43,7 @@ public class ScheduleDataCsvTest {
         assertEquals(17, parsedData.size());
         int i = 7;
         for (ScheduleDataCsv scheduleDataCsvItem : parsedData) {
-            assertEquals('B', scheduleDataCsvItem.getLine());
+            assertEquals("B", scheduleDataCsvItem.getLine());
             assertEquals("Borderouge", scheduleDataCsvItem.getDepartStation());
             assertEquals(i, scheduleDataCsvItem.getDepartTime().getHour());
             assertEquals(0, scheduleDataCsvItem.getDepartTime().getMinute());

@@ -54,7 +54,8 @@ public class Station {
                     "The path should lead to this station " + this + " but instead leads to " + path.getDestination());
         inPaths.add(path);
     }
-    public void setTerminus(String nom,Integer variant,ArrayList<LocalTime> schedule){
+
+    public void setTerminus(String nom, String variant, ArrayList<LocalTime> schedule) {
         Optional<Path> tmp=outPaths.stream()
                 .filter(path -> path.getLineName().equals(nom) && path.getVariant() == variant)
                 .findFirst();
@@ -99,9 +100,9 @@ public class Station {
      * @param variant le variant de la ligne du chemin
      * @return un Optional du chemin si celui-ci existe, sinon un Optional vide
      */
-    public Optional<Path> getOutPath(String lineName, char variant) {
+    public Optional<Path> getOutPath(String lineName, String variant) {
         return outPaths.stream()
-                .filter(path -> path.getLineName().equals(lineName) && path.getVariant() == variant)
+                .filter(path -> path.getLineName().equals(lineName) && path.getVariant().equals(variant))
                 .findFirst();
     }
 
@@ -111,9 +112,9 @@ public class Station {
     * @param variant le variant de la ligne du chemin
     * @return un Optional du chemin si celui-ci existe, sinon un Optional vide
     */
-    public Optional<Path> getInPath(String lineName, char variant) {
+    public Optional<Path> getInPath(String lineName, String variant) {
         return inPaths.stream()
-                .filter(path -> path.getLineName().equals(lineName) && path.getVariant() == variant)
+                .filter(path -> path.getLineName().equals(lineName) && path.getVariant().equals(variant))
                 .findFirst();
     }
 
