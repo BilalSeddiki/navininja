@@ -50,6 +50,10 @@ public class Node {
         return duration;
     }
 
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
     public List<Path> getShortestPath() {
         return shortestPath;
     }

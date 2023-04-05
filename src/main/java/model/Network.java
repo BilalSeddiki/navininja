@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Set;
 import javafx.util.Pair;
 import model.dijkstra.Node;
 import model.dijkstra.NodeDistanceComparator;
+import model.dijkstra.NodeDurationComparator;
 
 import java.awt.geom.Point2D.Double;
 import java.time.Duration;
@@ -125,14 +127,36 @@ public class Network {
         return null;
     }
 
+    public enum DijkstraComparator {
+
+        DISTANCE,
+        DURATION, 
+        TIME
+    }
+
     /**
      * Calcule le meilleur itinéraire d'une station à une autre.
      * @param source la station de départ
      * @param destination la station d'arrivée
      * @return un itinéraire d'une station à une autre
      */
-    public Itinerary bestPath(Station source, Station destination) {
-        PriorityQueue<Node> queue = new PriorityQueue<>(new NodeDistanceComparator());
+    public Itinerary bestPath(Station source, Station destination, DijkstraComparator valueToCompare) {
+        Comparator<? super Node> comparator = null;
+        switch (valueToCompare) {
+            case DISTANCE:
+                comparator = new NodeDistanceComparator();
+                break;
+            case DURATION:
+                comparator = new NodeDurationComparator();
+                break;
+            case TIME:
+                // TODO
+                break;
+            default:
+                break;
+
+        }
+        PriorityQueue<Node> queue = new PriorityQueue<>(comparator);
         Set<String> visitedStations = new HashSet<>();
         Map<Station, Node> stationNodeMap = new HashMap<>();
         
@@ -155,8 +179,22 @@ public class Network {
                     path.getDestination(),
                     new Node(path.getDestination())
                 );
-                if (currentNode.getDistance() + path.getTravelDistance() <= adjacentNode.getDistance()) {
+                boolean better = false;
+                switch (valueToCompare) {
+                    case DISTANCE:
+                        better = currentNode.getDistance() + path.getTravelDistance() <= adjacentNode.getDistance();
+                        break;
+                    case DURATION:
+                        better = currentNode.getDuration().toSeconds() + path.getTravelDuration().toSeconds() <= adjacentNode.getDuration().toSeconds();
+                        break;
+                    case TIME:
+                        better = currentNode.getDistance() + path.getTravelDistance() <= adjacentNode.getDistance();
+                        break;
+                }
+
+                if (better) {
                     adjacentNode.setDistance(currentNode.getDistance() + path.getTravelDistance());
+                    adjacentNode.setDuration(Duration.ofSeconds(currentNode.getDuration().toSeconds() + path.getTravelDuration().toSeconds()));
                     adjacentNode.setShortestPath(currentNode, path);
                     stationNodeMap.put(path.getDestination(), adjacentNode);
                     System.out.println("Optimal = " + currentNode.getStation() + " -> " + adjacentNode.getStation());
@@ -192,7 +230,7 @@ public class Network {
             new Path("", 0, null, null, 9, station6, station5)
         ));
         Network network = new Network(stations, paths);
-        Itinerary itinerary = network.bestPath(station1, station5);
+        Itinerary itinerary = network.bestPath(station1, station5, DijkstraComparator.DISTANCE);
         for (Path path : itinerary.getPaths()) {
             System.out.println(path.getSource().getName() + " -> " + path.getDestination().getName()); 
         }
