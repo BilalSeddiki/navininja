@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.awt.geom.Point2D.Double;
+import java.time.LocalTime;
+
 
 /** Une station du réseau. */
 public class Station {
@@ -51,6 +53,12 @@ public class Station {
             throw new IllegalArgumentException(
                     "The path should lead to this station " + this + " but instead leads to " + path.getDestination());
         inPaths.add(path);
+    }
+    public void setTerminus(String nom,Integer variant,ArrayList<LocalTime> schedule){
+        Optional<Path> tmp=outPaths.stream()
+                .filter(path -> path.getLineName().equals(nom) && path.getVariant() == variant)
+                .findFirst();
+        tmp.get().setTerminus(schedule);
     }
 
     /**
