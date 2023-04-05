@@ -7,15 +7,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Schedule;
-import model.Station;
 
-import java.awt.geom.Point2D;
-import java.sql.Time;
-import java.time.Instant;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 /**
  * Controlleur de la vue trouver un itinéraire
@@ -59,11 +55,7 @@ public class ScheduleController extends Controller {
         stations.add("Glacière");
         stations.add("Gare de lyon");
         stationInput.textProperty().addListener(new TextFieldListener( stationInput, suggestionMenuStation, stations));
-        //lineInput.textProperty().addListener( new TextFieldListener( lineInput, suggestionMenuLine, stations));
         lineComboBox.getItems().addAll(lines);
-        // Assuming you have a List<Schedule> called schedules that you want to display in the table view
-
-
 
         ArrayList<Schedule> schedules = new ArrayList<Schedule>();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
