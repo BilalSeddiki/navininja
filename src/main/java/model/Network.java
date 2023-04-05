@@ -50,26 +50,20 @@ public class Network {
         for (CardsDataCsv item : list) {
             String stationNameA = item.getStationA();
             if (!stations.containsKey(stationNameA)) {
-                double x1 = item.getCoordinatesA().get(0);
-                double y1 = item.getCoordinatesA().get(1);
-                Station stationA = new Station(stationNameA, new Double(x1, y1));
+                Double coordinatesA = item.getCoordinatesA();
+                Station stationA = new Station(stationNameA, coordinatesA);
                 stations.put(stationA.getName(), stationA);
             }
 
             String stationNameB = item.getStationB();
             if (!stations.containsKey(stationNameB)) {
-                double x2 = item.getCoordinatesB().get(0);
-                double y2 = item.getCoordinatesB().get(1);
-                Station stationB = new Station(stationNameB, new Double(x2, y2));
+                Double coordinatesB = item.getCoordinatesB();
+                Station stationB = new Station(stationNameB, coordinatesB);
                 stations.put(stationB.getName(), stationB);
             }
-            // TODO: Ajouter le véritable emploi du temps. Par défaut un train part toutes les 5 minutes
-            var schedule = new ArrayList<LocalTime>();
-            for (int minutes = 0; minutes < 1440; minutes += 5) {
-                schedule.add(LocalTime.ofSecondOfDay(minutes * 60));
-            }
-            paths.add(new Path(item.getLine(), item.getLineVariant(), schedule, item.getDuration(), item.getDistance(),
-                    stations.get(stationNameA), stations.get(stationNameB)));
+
+            paths.add(new Path(item.getLine(), item.getLineVariant(), new ArrayList<LocalTime>(), item.getDuration(),
+                    item.getDistance(), stations.get(stationNameA), stations.get(stationNameB)));
         }
         return new Network(new ArrayList<Station>(stations.values()), paths);
     }

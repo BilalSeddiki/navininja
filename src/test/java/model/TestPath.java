@@ -165,7 +165,6 @@ public class TestPath {
         Station source = new Station("Station 1", new Double(0, 0));
         Station destination = new Station("Station 2", new Double(0, 0));
         //TODO: Factoriser les constructeurs pour les Station ?
-
         Path path = new Path("Test", "0", schedule, travelDuration, 0, source, destination);
         LocalTime depart = LocalTime.of(7, 30, 00);
         Duration duration = (Duration.ofMinutes(60)).plus(travelDuration);
