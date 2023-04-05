@@ -124,13 +124,13 @@ public class TestPath {
         Station destination= new Station("Destination",new Double(0,0));
         Duration t=Duration.ofMinutes(1);
 
-        Path path1 = new Path("Test", 0, schedule, t, 0, source, s1);
+        Path path1 = new Path("Test", '0', schedule, t, 0, source, s1);
         source.addOutPath(path1);
         s1.addInPath(path1);
-        Path path2 = new Path("Test", 0, new ArrayList<LocalTime>(), t, 0, s1, s2);
+        Path path2 = new Path("Test", '0', new ArrayList<LocalTime>(), t, 0, s1, s2);
         s1.addOutPath(path2);
         s2.addInPath(path2);
-        Path path3= new Path("Test", 0, new ArrayList<LocalTime>(), t, 0, s2, destination);
+        Path path3 = new Path("Test", '0', new ArrayList<LocalTime>(), t, 0, s2, destination);
         s2.addOutPath(path3);
         destination.addInPath(path3);
 
