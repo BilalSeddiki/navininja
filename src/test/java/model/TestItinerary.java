@@ -27,7 +27,7 @@ public class TestItinerary {
         schedule.add(LocalTime.of(8, 30, 00));
         schedule.add(LocalTime.of(8, 40, 00));
         schedule.add(LocalTime.of(8, 50, 00));
-        Path path = new Path("", 0, schedule, duration, 0, source, destination);
+        Path path = new Path("", "0", schedule, duration, 0, source, destination);
         return path;
     }
 
