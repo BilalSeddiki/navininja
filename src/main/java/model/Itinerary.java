@@ -41,7 +41,7 @@ public class Itinerary {
      * Renvoie l'heure d'arrivé de l'itinéraire
      * @return l'heure d'arrivé de l'itinéraire
      */
-    public LocalTime getArrivaTime() {
+    public LocalTime getArrivalTime() {
         Duration duration = this.getDuration();
         LocalTime arrivalTime = departureTime.plus(duration);
         return arrivalTime;
@@ -61,5 +61,4 @@ public class Itinerary {
         }
         return total;
     }
-
 }
