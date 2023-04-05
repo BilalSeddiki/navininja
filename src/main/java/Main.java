@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.stage.Stage;
 import model.Network;
+import utils.Globals;
 import controllers.*;
 
 
