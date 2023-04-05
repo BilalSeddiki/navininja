@@ -14,7 +14,7 @@ import com.opencsv.bean.CsvDate;
 public class ScheduleDataCsv extends CsvData<ScheduleDataCsv> {
  
     @CsvBindByPosition(position = 0)
-    private char line;
+    private String line;
 
     @CsvBindByPosition(position = 1)
     private String departStation;
@@ -26,7 +26,7 @@ public class ScheduleDataCsv extends CsvData<ScheduleDataCsv> {
         return departStation.trim();
     }
 
-    public char getLine() {
+    public String getLine() {
         return line;
     }
 

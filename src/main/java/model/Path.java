@@ -11,7 +11,7 @@ public class Path {
     /** Nom de la ligne sur laquelle se situe le chemin. */
     private String lineName;
     /** Nom du variant de la ligne sur laquelle se situe le chemin */
-    private char variant;
+    private String variant;
     /** Horaires de passage des trains sur ce chemin, dans l'ordre. */
     private ArrayList<LocalTime> schedule;
     /** Durée du trajet jusqu'à la prochaine station. */
@@ -35,7 +35,7 @@ public class Path {
      * @param source la depuis laquelle part le chemin
      * @param destination la station vers laquelle mène le chemin
      */
-    public Path(String lineName, char variant, ArrayList<LocalTime> schedule, Duration travelDuration,
+    public Path(String lineName, String variant, ArrayList<LocalTime> schedule, Duration travelDuration,
             double travelDistance,
             Station source, Station destination) {
         this.lineName = lineName;
@@ -110,7 +110,7 @@ public class Path {
      * Renvoie le numéro de variant de la ligne sur laquelle se situe le chemin.
      * @return le numéro de variant
      */
-    public char getVariant() {
+    public String getVariant() {
         return variant;
     }
 
@@ -157,9 +157,9 @@ public class Path {
     @Override
     public boolean equals(Object arg0) {
         return arg0 instanceof Path p &&
-                this.variant == p.variant &&
                 this.travelDistance == p.travelDistance &&
                 this.lineName.equals(p.lineName) &&
+                this.variant.equals(p.variant) &&
                 this.schedule.equals(p.schedule) &&
                 this.travelDuration.equals(p.travelDuration) &&
                 this.source.equalsNonRecursive(p.source) &&

@@ -31,7 +31,7 @@ public class CardsDataCsvTest {
 		assertEquals(43.60573, parsedData.get(0).getCoordinatesB().getX());
 		assertEquals(1.44883, parsedData.get(0).getCoordinatesB().getY());
 		assertEquals("8", parsedData.get(0).getLine());
-		assertEquals('6', parsedData.get(0).getLineVariant());
+		assertEquals("6", parsedData.get(0).getLineVariant());
 		assertEquals(1, parsedData.get(0).getDuration().toMinutes());
 		assertEquals(42, parsedData.get(0).getDuration().toSecondsPart());
 		assertEquals(8.43, parsedData.get(0).getDistance());
@@ -43,7 +43,7 @@ public class CardsDataCsvTest {
 		assertEquals(2.2879184311245595, parsedData.get(1).getCoordinatesB().getX());
 		assertEquals(48.841024160993214, parsedData.get(1).getCoordinatesB().getY());
 		assertEquals("8", parsedData.get(1).getLine());
-		assertEquals('1', parsedData.get(1).getLineVariant());
+		assertEquals("1", parsedData.get(1).getLineVariant());
 		assertEquals(4 * 60 + 14, parsedData.get(1).getDuration().toSeconds());
 		assertEquals(15.93935780373747, parsedData.get(1).getDistance());
 
@@ -54,7 +54,7 @@ public class CardsDataCsvTest {
 		assertEquals(2.293796842192864, parsedData.get(2).getCoordinatesB().getX());
 		assertEquals(48.84461151236847, parsedData.get(2).getCoordinatesB().getY());
 		assertEquals("8", parsedData.get(2).getLine());
-		assertEquals('1', parsedData.get(2).getLineVariant());
+		assertEquals("1", parsedData.get(2).getLineVariant());
 		assertEquals(3 * 60 + 18, parsedData.get(2).getDuration().toSeconds());
 		assertEquals(12.415657251400846, parsedData.get(2).getDistance());
 
@@ -65,7 +65,7 @@ public class CardsDataCsvTest {
 		assertEquals(2.3064410394306907, parsedData.get(3).getCoordinatesB().getX());
 		assertEquals(48.85486175512232, parsedData.get(3).getCoordinatesB().getY());
 		assertEquals("8", parsedData.get(3).getLine());
-		assertEquals('1', parsedData.get(3).getLineVariant());
+		assertEquals("1", parsedData.get(3).getLineVariant());
 		assertEquals(9 * 60 + 16, parsedData.get(3).getDuration().toSeconds());
 		assertEquals(34.97596299947988, parsedData.get(3).getDistance());
 	}
