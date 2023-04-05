@@ -1,5 +1,7 @@
 import javafx.application.Application;
 import javafx.stage.Stage;
+import model.Network;
+import utils.Globals;
 import controllers.*;
 
 
@@ -11,11 +13,11 @@ public class Main extends Application {
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
+        var network = Network.fromCSV(Globals.pathToRessources("map_data.csv"), "");
         NavigationController navigation = NavigationController.getInstance(primaryStage);
         primaryStage.setResizable(false);
         primaryStage.setTitle("NaviNinja");
         navigation.navigateTo("MenuView");
         primaryStage.show();
-
     }
 }

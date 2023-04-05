@@ -1,5 +1,7 @@
 package model;
 
+import csv.CardsDataCsv;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
@@ -7,6 +9,8 @@ import java.util.NoSuchElementException;
 import javafx.util.Pair;
 
 import java.awt.geom.Point2D.Double;
+import java.io.IOException;
+import java.time.LocalTime;
 
 /* TODO: Changer l'initialisation de lines après l'implémentation des horaires */
 /** Un réseau de stations. */
@@ -16,7 +20,7 @@ public class Network {
     /** Ensemble de stations du réseau. <p> Une HashMap avec les coordonnées des stations pour clé, et les stations pour valeur.*/
     private HashMap<Double, Station> stationsByCoordinates;
     /** Ensemble des lignes du réseau. <p> Une HashMap à deux dimension avec le nom et le variant des lignes pour clé, et une liste de station pour valeur */
-    private HashMap<String, HashMap<Integer, ArrayList<Station>>> lines;
+    private HashMap<String, HashMap<String, ArrayList<Station>>> lines;
 
     /**
      * Construit un réseau de station.
@@ -33,13 +37,45 @@ public class Network {
     }
 
     /**
+     * Crée un réseau à partir de deux fichiers CSV.
+     * @param mapFile le nom d'un fichier CSV contenant les informations des chemins du réseau
+     * @param scheduleFile le nom d'un fichier CSV contenant les informations des horaires des lignes 
+     * @return un réseau
+     * @throws IOException si la lecture d'un des fichier echoue
+     */
+    public static Network fromCSV(String mapFile, String scheduleFile) throws IOException {
+        var list = new CardsDataCsv().readCSVFile(java.nio.file.Path.of(mapFile));
+        var stations = new HashMap<String, Station>();
+        var paths = new ArrayList<Path>();
+        for (CardsDataCsv item : list) {
+            String stationNameA = item.getStationA();
+            if (!stations.containsKey(stationNameA)) {
+                Double coordinatesA = item.getCoordinatesA();
+                Station stationA = new Station(stationNameA, coordinatesA);
+                stations.put(stationA.getName(), stationA);
+            }
+
+            String stationNameB = item.getStationB();
+            if (!stations.containsKey(stationNameB)) {
+                Double coordinatesB = item.getCoordinatesB();
+                Station stationB = new Station(stationNameB, coordinatesB);
+                stations.put(stationB.getName(), stationB);
+            }
+
+            paths.add(new Path(item.getLine(), item.getLineVariant(), new ArrayList<LocalTime>(), item.getDuration(),
+                    item.getDistance(), stations.get(stationNameA), stations.get(stationNameB)));
+        }
+        return new Network(new ArrayList<Station>(stations.values()), paths);
+    }
+
+    /**
      * Renvoie la liste de station constituant le variant d'une ligne
      * @param name le nom de la ligne
      * @param variant le variant de la ligne
      * @throws NoSuchElementException si le nom ou le variant ne correspond à aucune des lignes ou variant du réseau
      * @return une liste de station
      */
-    public ArrayList<Station> getLineVariant(String name, int variant) throws NoSuchElementException {
+    public ArrayList<Station> getLineVariant(String name, String variant) throws NoSuchElementException {
         var lineVariant = getLine(name).get(variant);
         if (lineVariant == null)
             throw new NoSuchElementException();
@@ -52,7 +88,7 @@ public class Network {
      * @throws NoSuchElementException si le nom ne correspond à aucune des lignes du réseau
      * @return une HashMap avec pour clé le numéro des variants et pour valeur la liste des stations de chaque variants
      */
-    public HashMap<Integer, ArrayList<Station>> getLine(String name) throws NoSuchElementException {
+    public HashMap<String, ArrayList<Station>> getLine(String name) throws NoSuchElementException {
         var line = lines.get(name);
         if (line == null)
             throw new NoSuchElementException();
@@ -160,16 +196,16 @@ public class Network {
      * @param pathList la liste des chemins
      */
     private void initLines(ArrayList<Station> stationList, ArrayList<Path> pathList) {
-        lines = new HashMap<String, HashMap<Integer, ArrayList<Station>>>();
+        lines = new HashMap<String, HashMap<String, ArrayList<Station>>>();
         var lineList = pathList.stream()
-                .map(p -> new Pair<String, Integer>(p.getLineName(), p.getVariant()))
+                .map(p -> new Pair<String, String>(p.getLineName(), p.getVariant()))
                 .distinct()
                 .toList();
-        for (Pair<String, Integer> pair : lineList) {
+        for (Pair<String, String> pair : lineList) {
             var lineName = pair.getKey();
             var variant = pair.getValue();
             if (!lines.containsKey(lineName))
-                lines.put(lineName, new HashMap<Integer, ArrayList<Station>>());
+                lines.put(lineName, new HashMap<String, ArrayList<Station>>());
             lines.get(lineName).put(variant, initVariant(lineName, variant, stationList));
 
         }
@@ -184,7 +220,7 @@ public class Network {
      * @param stationList la liste des stations
      * @return une liste de stations
      */
-    private ArrayList<Station> initVariant(String name, int variant, ArrayList<Station> stationList) {
+    private ArrayList<Station> initVariant(String name, String variant, ArrayList<Station> stationList) {
         var stationFromLine = stationList.stream()
                 .filter(s -> s.getInPath(name, variant).isPresent() || s.getOutPath(name, variant).isPresent())
                 .findFirst()
@@ -201,7 +237,15 @@ public class Network {
             line.add(nextPath.get().getDestination());
             nextPath = nextPath.get().getDestination().getOutPath(name, variant);
         }
-        System.out.println(line);
         return line;
     }
+
+    @Override
+    public boolean equals(Object arg0) {
+        return arg0 instanceof Network n &&
+                this.stationsByName.equals(n.stationsByName) &&
+                this.stationsByCoordinates.equals(n.stationsByCoordinates) &&
+                this.lines.equals(n.lines);
+    }
+
 }

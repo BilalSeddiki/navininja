@@ -10,9 +10,9 @@ import java.util.ArrayList;
 public class Path {
     /** Nom de la ligne sur laquelle se situe le chemin. */
     private String lineName;
-    /** Numéro de variant de la ligne sur laquelle se situe le chemin */
-    private int variant;
-    /** Horaires de passage des trains sur ce chemin, dans l'ordre si c'est un terminus. */
+    /** Nom du variant de la ligne sur laquelle se situe le chemin */
+    private String variant;
+    /** Horaires de passage des trains sur ce chemin, dans l'ordre. */
     private ArrayList<LocalTime> schedule;
     /** Durée du trajet jusqu'à la prochaine station. */
     private Duration travelDuration;
@@ -35,7 +35,7 @@ public class Path {
      * @param source la depuis laquelle part le chemin
      * @param destination la station vers laquelle mène le chemin
      */
-    public Path(String lineName, int variant, ArrayList<LocalTime> schedule, Duration travelDuration,
+    public Path(String lineName, String variant, ArrayList<LocalTime> schedule, Duration travelDuration,
             double travelDistance,
             Station source, Station destination) {
         this.lineName = lineName;
@@ -45,12 +45,12 @@ public class Path {
         this.travelDistance = travelDistance;
         this.source = source;
         this.destination = destination;
-        terminus=!(schedule.isEmpty());
+        terminus = !(schedule.isEmpty());
     }
 
-    public void setTerminus(ArrayList<LocalTime> schedule){
-        terminus=true;
-        this.schedule=schedule;
+    public void setTerminus(ArrayList<LocalTime> schedule) {
+        terminus = true;
+        this.schedule = schedule;
     }
 
     /**
@@ -59,26 +59,25 @@ public class Path {
      * @return l'heure du prochain départ
      */
     public LocalTime nextTrainDeparture(LocalTime from) {
-        if(terminus){
-            for(int i = 0; i < schedule.size(); i++) {
-                if(schedule.get(i).isAfter(from)) {
+        if (terminus) {
+            for (int i = 0; i < schedule.size(); i++) {
+                if (schedule.get(i).isAfter(from)) {
                     return schedule.get(i);
                 }
             }
-            if(schedule.size() > 0) {
+            if (schedule.size() > 0) {
                 return schedule.get(0);
             }
-        }else{
-            var tmp=source.getInPath(lineName,variant);
-            if(tmp.isPresent()){
-                var p=tmp.get();
+        } else {
+            var tmp = source.getInPath(lineName, variant);
+            if (tmp.isPresent()) {
+                var p = tmp.get();
                 return p.nextTrainDeparture(from.minus(p.getTravelDuration())).plus(p.getTravelDuration());
             }
         }
         return LocalTime.of(0, 0);
 
     }
-        
 
     /**
      * Calcule le temps pour arriver à la prochaine station à partir d'une heure donnée.
@@ -90,7 +89,7 @@ public class Path {
     public Duration totalDuration(LocalTime time) {
         LocalTime nextTrain = this.nextTrainDeparture(time);
         Duration waitingTime = Duration.between(time, nextTrain);
-        if(waitingTime.isNegative()) {
+        if (waitingTime.isNegative()) {
             Duration toMidnight = Duration.between(time, LocalTime.MAX);
             Duration fromMidnight = Duration.between(LocalTime.MIDNIGHT, nextTrain);
             waitingTime = toMidnight.plus(fromMidnight).plusNanos(1);
@@ -111,7 +110,7 @@ public class Path {
      * Renvoie le numéro de variant de la ligne sur laquelle se situe le chemin.
      * @return le numéro de variant
      */
-    public int getVariant() {
+    public String getVariant() {
         return variant;
     }
 
@@ -153,6 +152,18 @@ public class Path {
      */
     public Station getDestination() {
         return destination;
+    }
+
+    @Override
+    public boolean equals(Object arg0) {
+        return arg0 instanceof Path p &&
+                this.travelDistance == p.travelDistance &&
+                this.lineName.equals(p.lineName) &&
+                this.variant.equals(p.variant) &&
+                this.schedule.equals(p.schedule) &&
+                this.travelDuration.equals(p.travelDuration) &&
+                this.source.equalsNonRecursive(p.source) &&
+                this.destination.equalsNonRecursive(p.destination);
     }
 
 }

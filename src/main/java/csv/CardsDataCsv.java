@@ -20,20 +20,21 @@ public class CardsDataCsv extends CsvData<CardsDataCsv> {
 
     @CsvBindByPosition(position = 0)
     private String stationA;
-    
+
     @CsvBindAndSplitByPosition(position = 1, splitOn = ", ", elementType = Double.class)
     private List<Double> coordinatesA;
 
     @CsvBindByPosition(position = 2)
     private String stationB;
-    
+
     @CsvBindAndSplitByPosition(position = 3, splitOn = ", ", elementType = Double.class)
     private List<Double> coordinatesB;
-    
+
     @CsvBindAndSplitByPosition(position = 4, splitOn = " variant ", elementType = String.class)
     private List<String> line;
 
-    @CsvBindByPosition(position = 5) @CsvDate(value = "m:s")
+    @CsvBindByPosition(position = 5)
+    @CsvDate(value = "m:s")
     private Date duration;
 
     @CsvBindByPosition(position = 6)
@@ -59,8 +60,8 @@ public class CardsDataCsv extends CsvData<CardsDataCsv> {
         return line.get(0);
     }
 
-    public char getLineVariant() {
-        return line.get(1).charAt(0);
+    public String getLineVariant() {
+        return line.get(1);
     }
 
     public Duration getDuration() {
@@ -73,7 +74,8 @@ public class CardsDataCsv extends CsvData<CardsDataCsv> {
 
     @Override
     public String toString() {
-        return stationA + "; " + coordinatesA.get(0) + "," + coordinatesA.get(1) + "; " + stationB + "; " + coordinatesB.get(0) + "," + coordinatesB.get(1) + "; " + distance + "; " + duration;
+        return stationA + "; " + coordinatesA.get(0) + "," + coordinatesA.get(1) + "; " + stationB + "; "
+                + coordinatesB.get(0) + "," + coordinatesB.get(1) + "; " + distance + "; " + duration;
     }
 
     @Override
