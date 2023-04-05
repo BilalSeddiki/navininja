@@ -12,7 +12,7 @@ public class Path {
     private String lineName;
     /** Numéro de variant de la ligne sur laquelle se situe le chemin */
     private int variant;
-    /** Horaires de passage des trains sur ce chemin, dans l'ordre. */
+    /** Horaires de passage des trains sur ce chemin, dans l'ordre si c'est un terminus. */
     private ArrayList<LocalTime> schedule;
     /** Durée du trajet jusqu'à la prochaine station. */
     private Duration travelDuration;
@@ -22,12 +22,14 @@ public class Path {
     private Station source;
     /** Station vers laquelle mène le chemin. */
     private Station destination;
+    /** Indique si la source est un terminus */
+    private boolean terminus;
 
     /**
      * Construit un chemin jusqu'à une prochaine station
      * @param lineName le nom de la ligne sur laquelle se situe le chemin
      * @param variant le variant de la ligne sur laquelle se situe le chemin
-     * @param schedule les horaires de passage des trains sur ce chemin, dans l'ordre
+     * @param schedule les horaires de passage des trains sur ce chemin, dans l'ordre, a mettre uniquement dans le cas d'un terminus
      * @param travelDuration la durée du trajet jusqu'à la prochaine station
      * @param travelDistance la distance du trajet jusqu'à la prochaine station en km
      * @param source la depuis laquelle part le chemin
@@ -43,6 +45,12 @@ public class Path {
         this.travelDistance = travelDistance;
         this.source = source;
         this.destination = destination;
+        terminus=!(schedule.isEmpty());
+    }
+
+    public void setTerminus(ArrayList<LocalTime> schedule){
+        terminus=true;
+        this.schedule=schedule;
     }
 
     /**
@@ -51,16 +59,26 @@ public class Path {
      * @return l'heure du prochain départ
      */
     public LocalTime nextTrainDeparture(LocalTime from) {
-        for(int i = 0; i < schedule.size(); i++) {
-            if(schedule.get(i).isAfter(from)) {
-                return schedule.get(i);
+        if(terminus){
+            for(int i = 0; i < schedule.size(); i++) {
+                if(schedule.get(i).isAfter(from)) {
+                    return schedule.get(i);
+                }
+            }
+            if(schedule.size() > 0) {
+                return schedule.get(0);
+            }
+        }else{
+            var tmp=source.getInPath(lineName,variant);
+            if(tmp.isPresent()){
+                var p=tmp.get();
+                return p.nextTrainDeparture(from.minus(p.getTravelDuration())).plus(p.getTravelDuration());
             }
         }
-        if(schedule.size() > 0) {
-            return schedule.get(0);
-        }
         return LocalTime.of(0, 0);
+
     }
+        
 
     /**
      * Calcule le temps pour arriver à la prochaine station à partir d'une heure donnée.

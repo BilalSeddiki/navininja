@@ -111,6 +111,33 @@ public class TestPath {
         LocalTime depart = LocalTime.of(23, 30, 00);
         assertEquals(schedule.get(0), path.nextTrainDeparture(depart), "Le calcul du prochain départ est incorrect.");
     }
+    @Test
+    public void testPropagation(){
+        String lineName = "Test";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        schedule.add(LocalTime.of(8, 30, 00));
+        schedule.add(LocalTime.of(8, 40, 00));
+        schedule.add(LocalTime.of(8, 50, 00));
+        Station source = new Station("Source", new Double(0, 0));
+        Station s1 = new Station("Station 1", new Double(0, 0));
+        Station s2 = new Station("Station 2", new Double(0,0));
+        Station destination= new Station("Destination",new Double(0,0));
+        Duration t=Duration.ofMinutes(1);
+
+        Path path1 = new Path("Test", 0, schedule, t, 0, source, s1);
+        source.addOutPath(path1);
+        s1.addInPath(path1);
+        Path path2 = new Path("Test", 0, new ArrayList<LocalTime>(), t, 0, s1, s2);
+        s1.addOutPath(path2);
+        s2.addInPath(path2);
+        Path path3= new Path("Test", 0, new ArrayList<LocalTime>(), t, 0, s2, destination);
+        s2.addOutPath(path3);
+        destination.addInPath(path3);
+
+
+        LocalTime depart = LocalTime.of(8, 30, 00);
+        assertEquals(LocalTime.of(8,32,00), path3.nextTrainDeparture(depart), "Le calcul du prochain départ est incorrect.");
+    }
 
     @Test
     public void testNextTrainDepartureEmptySchedule() {
