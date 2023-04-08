@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import model.Network;
+
 import java.util.ArrayList;
 
 /**
@@ -31,10 +33,7 @@ public class FindARouteController extends Controller {
     TextField coordinatesAInput;
     @FXML
     TextField coordinatesBInput;
-    /**
-     * todo remove this list and replace it by the actual stations
-     */
-    ArrayList<String> stations = new ArrayList<>();
+
 
 
     /**
@@ -55,18 +54,15 @@ public class FindARouteController extends Controller {
             String minute = String.format("%02d", i);
             minutes.add(minute);
         }
-        //todo remove all of this
-        stations.add("BNF");
-        stations.add("place d'italie");
-        stations.add("nation");
-        stations.add("glacière");
-        stations.add("Gare de lyon");
+
+        final ObservableList<String> stations = FXCollections.observableArrayList(network.getStationsByName().keySet());
         hourComboBoxA.getItems().addAll(hours);
         hourComboBoxB.getItems().addAll(hours);
         minComboBoxA.getItems().addAll(minutes);
         minComboBoxB.getItems().addAll(minutes);
-        coordinatesAInput.textProperty().addListener(new TextFieldListener( coordinatesAInput, suggestionMenu, stations));
-        coordinatesBInput.textProperty().addListener( new TextFieldListener( coordinatesBInput, suggestionMenu, stations));
+
+        coordinatesAInput.textProperty().addListener(new TextFieldListener( coordinatesAInput, suggestionMenu, stations, network));
+        coordinatesBInput.textProperty().addListener( new TextFieldListener( coordinatesBInput, suggestionMenu, stations, network));
 
     }
 

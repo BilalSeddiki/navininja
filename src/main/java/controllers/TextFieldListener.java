@@ -1,22 +1,41 @@
 package controllers;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import model.Network;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TextFieldListener implements ChangeListener<String> {
-    private final ArrayList<String> stations;
+    private final ObservableList<String> stations;
     private final ContextMenu suggestionMenu;
     private final TextField textField;
-    public TextFieldListener(TextField textField, ContextMenu menu, ArrayList<String> stations) {
+    private final Network network;
+    private final ComboBox<String> lineComboBox ;
+    public TextFieldListener(TextField textField, ContextMenu menu, ObservableList<String> stations, Network network){
         this.stations  = stations;
         this.suggestionMenu = menu;
-       this.textField = textField;
+        this.textField = textField;
+        this.network = network;
+        lineComboBox = null;
+
+    }
+    public TextFieldListener(TextField textField, ContextMenu menu, ObservableList<String> stations, Network network, ComboBox<String> lineComboBox) {
+        this.stations  = stations;
+        this.suggestionMenu = menu;
+        this.textField = textField;
+        this.lineComboBox = lineComboBox;
+        this.network = network;
+
     }
 
     /**
@@ -34,6 +53,15 @@ public class TextFieldListener implements ChangeListener<String> {
             }
             if (!filteredSuggestions.isEmpty()) {
                 showCompletionList(suggestionMenu, filteredSuggestions, textField);
+                if(lineComboBox!=null){
+                    if(network.hasStation(newValue)){
+                        final ObservableList<String> lines = FXCollections.observableArrayList(network.getLinesByStation(newValue));
+                        lineComboBox.getItems().clear();
+                        lineComboBox.getItems().addAll(lines);
+                    }
+                }
+
+
             } else {
                 suggestionMenu.hide();
             }
@@ -68,5 +96,6 @@ public class TextFieldListener implements ChangeListener<String> {
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
         textFieldListener(newValue , textField);
+
     }
 }
