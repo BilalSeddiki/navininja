@@ -3,6 +3,8 @@ package controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import model.Network;
+
 import java.io.IOException;
 
 /**
@@ -26,9 +28,6 @@ public class MenuController extends Controller {
     @FXML
     Button scheduleBtn;
 
-    public MenuController(){
-        super();
-    }
 
     /**
      * Écouteur du bouton 'Find a route'
