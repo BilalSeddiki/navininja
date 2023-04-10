@@ -22,6 +22,9 @@ public class ScheduleDataCsv extends CsvData<ScheduleDataCsv> {
     @CsvBindByPosition(position = 2) @CsvDate(value = "H:m")
     private LocalTime departTime;
 
+    @CsvBindByPosition(position = 3)
+    private String variant;
+
     public String getDepartStation() {
         return departStation.trim();
     }
@@ -32,6 +35,10 @@ public class ScheduleDataCsv extends CsvData<ScheduleDataCsv> {
 
     public LocalTime getDepartTime() {
         return departTime;
+    }
+
+    public String getVariant() {
+        return variant;
     }
 
     @Override
