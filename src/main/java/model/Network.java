@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+import csv.CardsDataCsv;
 import javafx.util.Pair;
 import model.dijkstra.Node;
 import model.dijkstra.NodeDistanceComparator;
@@ -17,17 +18,17 @@ import model.dijkstra.NodeDistanceDurationComparator;
 import model.dijkstra.NodeDurationComparator;
 
 import java.awt.geom.Point2D.Double;
+import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalTime;
 
-/* TODO: Changer l'initialisation de lines après l'implémentation des horaires */
-/** Un réseau de stations. */
 public class Network {
     /** Ensemble de stations du réseau. <p> Une HashMap avec le nom des stations pour clé, et les stations pour valeur.*/
     private HashMap<String, Station> stationsByName;
     /** Ensemble de stations du réseau. <p> Une HashMap avec les coordonnées des stations pour clé, et les stations pour valeur.*/
     private HashMap<Double, Station> stationsByCoordinates;
     /** Ensemble des lignes du réseau. <p> Une HashMap à deux dimension avec le nom et le variant des lignes pour clé, et une liste de station pour valeur */
-    private HashMap<String, HashMap<Integer, ArrayList<Station>>> lines;
+    private HashMap<String, HashMap<String, ArrayList<Station>>> lines;
 
     /**
      * Construit un réseau de station.
@@ -44,13 +45,45 @@ public class Network {
     }
 
     /**
+     * Crée un réseau à partir de deux fichiers CSV.
+     * @param mapFile le nom d'un fichier CSV contenant les informations des chemins du réseau
+     * @param scheduleFile le nom d'un fichier CSV contenant les informations des horaires des lignes 
+     * @return un réseau
+     * @throws IOException si la lecture d'un des fichier echoue
+     */
+    public static Network fromCSV(String mapFile, String scheduleFile) throws IOException {
+        var list = new CardsDataCsv().readCSVFile(java.nio.file.Path.of(mapFile));
+        var stations = new HashMap<String, Station>();
+        var paths = new ArrayList<Path>();
+        for (CardsDataCsv item : list) {
+            String stationNameA = item.getStationA();
+            if (!stations.containsKey(stationNameA)) {
+                Double coordinatesA = item.getCoordinatesA();
+                Station stationA = new Station(stationNameA, coordinatesA);
+                stations.put(stationA.getName(), stationA);
+            }
+
+            String stationNameB = item.getStationB();
+            if (!stations.containsKey(stationNameB)) {
+                Double coordinatesB = item.getCoordinatesB();
+                Station stationB = new Station(stationNameB, coordinatesB);
+                stations.put(stationB.getName(), stationB);
+            }
+
+            paths.add(new Path(item.getLine(), item.getLineVariant(), new ArrayList<LocalTime>(), item.getDuration(),
+                    item.getDistance(), stations.get(stationNameA), stations.get(stationNameB)));
+        }
+        return new Network(new ArrayList<Station>(stations.values()), paths);
+    }
+
+    /**
      * Renvoie la liste de station constituant le variant d'une ligne
      * @param name le nom de la ligne
      * @param variant le variant de la ligne
      * @throws NoSuchElementException si le nom ou le variant ne correspond à aucune des lignes ou variant du réseau
      * @return une liste de station
      */
-    public ArrayList<Station> getLineVariant(String name, int variant) throws NoSuchElementException {
+    public ArrayList<Station> getLineVariant(String name, String variant) throws NoSuchElementException {
         var lineVariant = getLine(name).get(variant);
         if (lineVariant == null)
             throw new NoSuchElementException();
@@ -63,7 +96,7 @@ public class Network {
      * @throws NoSuchElementException si le nom ne correspond à aucune des lignes du réseau
      * @return une HashMap avec pour clé le numéro des variants et pour valeur la liste des stations de chaque variants
      */
-    public HashMap<Integer, ArrayList<Station>> getLine(String name) throws NoSuchElementException {
+    public HashMap<String, ArrayList<Station>> getLine(String name) throws NoSuchElementException {
         var line = lines.get(name);
         if (line == null)
             throw new NoSuchElementException();
@@ -119,13 +152,108 @@ public class Network {
     }
 
     /**
-     * Calcule un itinéraire d'une station à une autre de manière naïve.
+     * Calcule le meilleur itinéraire d'une station à une autre.
      * @param source la station de départ
      * @param destination la station d'arrivée
      * @return un itinéraire d'une station à une autre
      */
-    public Itinerary naivePath(Station source, Station destination) {
+    public Itinerary bestPath(Station source, Station destination) {
         return null;
+    }
+
+    /**
+     * Ajoute à chaque station ses chemins entrant et sortant
+     * <p>
+     * Cette méthode doit être utilisée après avoir initialisé stationByName
+     * @param pathList la liste des chemins
+     */
+    private void addPathsToStations(ArrayList<Path> pathList) {
+        pathList.stream().forEach(p -> {
+            stationsByName.get(p.getSource().getName()).addOutPath(p);
+            stationsByName.get(p.getDestination().getName()).addInPath(p);
+        });
+    }
+
+    /**
+     * Initialise l'attribut stationByName
+     * @param stationList la liste des stations
+     */
+    private void initStationByName(ArrayList<Station> stationList) {
+        stationsByName = new HashMap<String, Station>();
+        stationList.forEach(s -> {
+            stationsByName.put(s.getName(), s);
+        });
+    }
+
+    /**
+     * Initialise l'attribut stationByCoordinates
+     * @param stationList la liste des stations
+     */
+    private void initStationByCoordinates(ArrayList<Station> stationList) {
+        stationsByCoordinates = new HashMap<Double, Station>();
+        stationList.forEach(s -> {
+            stationsByCoordinates.put(s.getCoordinates(), s);
+        });
+    }
+
+    /**
+     * Initialise l'attribut lines
+     * <p>
+     * Cette méthode doit être utilisée après avoir ajouter les chemins aux stations via addPathToStations
+     * @param stationList la liste des stations
+     * @param pathList la liste des chemins
+     */
+    private void initLines(ArrayList<Station> stationList, ArrayList<Path> pathList) {
+        lines = new HashMap<String, HashMap<String, ArrayList<Station>>>();
+        var lineList = pathList.stream()
+                .map(p -> new Pair<String, String>(p.getLineName(), p.getVariant()))
+                .distinct()
+                .toList();
+        for (Pair<String, String> pair : lineList) {
+            var lineName = pair.getKey();
+            var variant = pair.getValue();
+            if (!lines.containsKey(lineName))
+                lines.put(lineName, new HashMap<String, ArrayList<Station>>());
+            lines.get(lineName).put(variant, initVariant(lineName, variant, stationList));
+
+        }
+    }
+
+    /**
+     * Initialise le variant d'une ligne
+     * <p>
+     * Cette méthode doit être utilisée après avoir ajouter les chemins aux stations via addPathToStations
+     * @param name le nom de la ligne
+     * @param variant le numéro de variant de la ligne
+     * @param stationList la liste des stations
+     * @return une liste de stations
+     */
+    private ArrayList<Station> initVariant(String name, String variant, ArrayList<Station> stationList) {
+        var stationFromLine = stationList.stream()
+                .filter(s -> s.getInPath(name, variant).isPresent() || s.getOutPath(name, variant).isPresent())
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException());
+        var line = new ArrayList<Station>();
+        line.add(stationFromLine);
+        var previousPath = stationFromLine.getInPath(name, variant);
+        while (previousPath.isPresent()) {
+            line.add(0, previousPath.get().getSource());
+            previousPath = previousPath.get().getSource().getInPath(name, variant);
+        }
+        var nextPath = stationFromLine.getOutPath(name, variant);
+        while (nextPath.isPresent()) {
+            line.add(nextPath.get().getDestination());
+            nextPath = nextPath.get().getDestination().getOutPath(name, variant);
+        }
+        return line;
+    }
+
+    @Override
+    public boolean equals(Object arg0) {
+        return arg0 instanceof Network n &&
+                this.stationsByName.equals(n.stationsByName) &&
+                this.stationsByCoordinates.equals(n.stationsByCoordinates) &&
+                this.lines.equals(n.lines);
     }
 
     public enum DijkstraComparator {
@@ -217,113 +345,17 @@ public class Network {
         Station station6 = new Station("6", null);
         ArrayList<Station> stations = new ArrayList<>(Arrays.asList(station1, station2, station3, station4, station5, station6));
         ArrayList<Path> paths = new ArrayList<>(Arrays.asList(
-            new Path("", 0, null, Duration.ofSeconds(7), 7, station1, station2),
-            new Path("", 0, null, Duration.ofSeconds(9), 9, station1, station3),
-            new Path("", 0, null, Duration.ofSeconds(14), 14, station1, station6),
-            new Path("", 0, null, Duration.ofSeconds(10), 10, station2, station3),
-            new Path("", 0, null, Duration.ofSeconds(15), 15, station2, station4),
-            new Path("", 0, null, Duration.ofSeconds(11), 11, station3, station4),
-            new Path("", 0, null, Duration.ofSeconds(2), 2, station3, station6),
-            new Path("", 0, null, Duration.ofSeconds(6), 6, station5, station4),
-            new Path("", 0, null, Duration.ofSeconds(9), 9, station6, station5)
+            new Path("", "", null, Duration.ofSeconds(7), 7, station1, station2),
+            new Path("", "", null, Duration.ofSeconds(9), 9, station1, station3),
+            new Path("", "", null, Duration.ofSeconds(14), 14, station1, station6),
+            new Path("", "", null, Duration.ofSeconds(10), 10, station2, station3),
+            new Path("", "", null, Duration.ofSeconds(15), 15, station2, station4),
+            new Path("", "", null, Duration.ofSeconds(11), 11, station3, station4),
+            new Path("", "", null, Duration.ofSeconds(2), 2, station3, station6),
+            new Path("", "", null, Duration.ofSeconds(6), 6, station5, station4),
+            new Path("", "", null, Duration.ofSeconds(9), 9, station6, station5)
         ));
         Network network = new Network(stations, paths);
         Itinerary itinerary = network.bestPath(station1, station5, DijkstraComparator.DURATION);
-    }
-
-    /**
-     * Ajoute à chaque station ses chemins entrant et sortant
-     * <p>
-     * Cette méthode doit être utilisée après avoir initialisé stationByName
-     * @param pathList la liste des chemins
-     */
-    private void addPathsToStations(ArrayList<Path> pathList) {
-        pathList.stream().forEach(p -> {
-            stationsByName.get(p.getSource().getName()).addOutPath(p);
-            stationsByName.get(p.getDestination().getName()).addInPath(p);
-        });
-    }
-
-    /**
-     * Initialise l'attribut stationByName
-     * @param stationList la liste des stations
-     */
-    private void initStationByName(ArrayList<Station> stationList) {
-        stationsByName = new HashMap<String, Station>();
-        stationList.forEach(s -> {
-            stationsByName.put(s.getName(), s);
-        });
-    }
-
-    /**
-     * Initialise l'attribut stationByCoordinates
-     * @param stationList la liste des stations
-     */
-    private void initStationByCoordinates(ArrayList<Station> stationList) {
-        stationsByCoordinates = new HashMap<Double, Station>();
-        stationList.forEach(s -> {
-            stationsByCoordinates.put(s.getCoordinates(), s);
-        });
-    }
-
-    /**
-     * Initialise l'attribut lines
-     * <p>
-     * Cette méthode doit être utilisée après avoir ajouter les chemins aux stations via addPathToStations
-     * @param stationList la liste des stations
-     * @param pathList la liste des chemins
-     */
-    private void initLines(ArrayList<Station> stationList, ArrayList<Path> pathList) {
-        lines = new HashMap<String, HashMap<Integer, ArrayList<Station>>>();
-        var lineList = pathList.stream()
-                .map(p -> new Pair<String, Integer>(p.getLineName(), p.getVariant()))
-                .distinct()
-                .toList();
-        for (Pair<String, Integer> pair : lineList) {
-            var lineName = pair.getKey();
-            var variant = pair.getValue();
-            if (!lines.containsKey(lineName))
-                lines.put(lineName, new HashMap<Integer, ArrayList<Station>>());
-            lines.get(lineName).put(variant, initVariant(lineName, variant, stationList));
-
-        }
-    }
-
-    /**
-     * Initialise le variant d'une ligne
-     * <p>
-     * Cette méthode doit être utilisée après avoir ajouter les chemins aux stations via addPathToStations
-     * @param name le nom de la ligne
-     * @param variant le numéro de variant de la ligne
-     * @param stationList la liste des stations
-     * @return une liste de stations
-     */
-    private ArrayList<Station> initVariant(String name, int variant, ArrayList<Station> stationList) {
-        var stationFromLine = stationList.stream()
-                .filter(s -> s.getInPath(name, variant).isPresent() || s.getOutPath(name, variant).isPresent())
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException());
-        var line = new ArrayList<Station>();
-        line.add(stationFromLine);
-        var previousPath = stationFromLine.getInPath(name, variant);
-        while (previousPath.isPresent()) {
-            line.add(0, previousPath.get().getSource());
-            previousPath = previousPath.get().getSource().getInPath(name, variant);
-        }
-        var nextPath = stationFromLine.getOutPath(name, variant);
-        while (nextPath.isPresent()) {
-            line.add(nextPath.get().getDestination());
-            nextPath = nextPath.get().getDestination().getOutPath(name, variant);
-        }
-        System.out.println(line);
-        return line;
-    }
-
-    @Override
-    public boolean equals(Object arg0) {
-        return arg0 instanceof Network n &&
-                this.stationsByName.equals(n.stationsByName) &&
-                this.stationsByCoordinates.equals(n.stationsByCoordinates) &&
-                this.lines.equals(n.lines);
     }
 }
