@@ -13,6 +13,7 @@ import java.util.Set;
 import javafx.util.Pair;
 import model.dijkstra.Node;
 import model.dijkstra.NodeDistanceComparator;
+import model.dijkstra.NodeDistanceDurationComparator;
 import model.dijkstra.NodeDurationComparator;
 
 import java.awt.geom.Point2D.Double;
@@ -131,7 +132,7 @@ public class Network {
 
         DISTANCE,
         DURATION, 
-        TIME
+        BOTH
     }
 
     /**
@@ -149,12 +150,9 @@ public class Network {
             case DURATION:
                 comparator = new NodeDurationComparator();
                 break;
-            case TIME:
-                // TODO
+            case BOTH:
+                comparator = new NodeDistanceDurationComparator();
                 break;
-            default:
-                break;
-
         }
         PriorityQueue<Node> queue = new PriorityQueue<>(comparator);
         Set<String> visitedStations = new HashSet<>();
@@ -187,8 +185,8 @@ public class Network {
                     case DURATION:
                         better = currentNode.getDuration().toSeconds() + path.getTravelDuration().toSeconds() <= adjacentNode.getDuration().toSeconds();
                         break;
-                    case TIME:
-                        better = currentNode.getDistance() + path.getTravelDistance() <= adjacentNode.getDistance();
+                    case BOTH:
+                        better = currentNode.getDistance() + currentNode.getDuration().toSeconds() + path.getTravelDistance() + path.getTravelDuration().toSeconds() <= adjacentNode.getDistance() + adjacentNode.getDuration().toSeconds();
                         break;
                 }
 
@@ -206,7 +204,7 @@ public class Network {
             }
             visitedStations.add(currentNode.getStation().getName());
         }
-        System.out.println(stationNodeMap.get(destination).getDistance() + " km");
+        System.out.println(stationNodeMap.get(destination));
         return new Itinerary(null, stationNodeMap.get(destination).getShortestPath());
     }
 
@@ -219,21 +217,18 @@ public class Network {
         Station station6 = new Station("6", null);
         ArrayList<Station> stations = new ArrayList<>(Arrays.asList(station1, station2, station3, station4, station5, station6));
         ArrayList<Path> paths = new ArrayList<>(Arrays.asList(
-            new Path("", 0, null, null, 7, station1, station2),
-            new Path("", 0, null, null, 9, station1, station3),
-            new Path("", 0, null, null, 14, station1, station6),
-            new Path("", 0, null, null, 10, station2, station3),
-            new Path("", 0, null, null, 15, station2, station4),
-            new Path("", 0, null, null, 11, station3, station4),
-            new Path("", 0, null, null, 2, station3, station6),
-            new Path("", 0, null, null, 6, station5, station4),
-            new Path("", 0, null, null, 9, station6, station5)
+            new Path("", 0, null, Duration.ofSeconds(7), 7, station1, station2),
+            new Path("", 0, null, Duration.ofSeconds(9), 9, station1, station3),
+            new Path("", 0, null, Duration.ofSeconds(14), 14, station1, station6),
+            new Path("", 0, null, Duration.ofSeconds(10), 10, station2, station3),
+            new Path("", 0, null, Duration.ofSeconds(15), 15, station2, station4),
+            new Path("", 0, null, Duration.ofSeconds(11), 11, station3, station4),
+            new Path("", 0, null, Duration.ofSeconds(2), 2, station3, station6),
+            new Path("", 0, null, Duration.ofSeconds(6), 6, station5, station4),
+            new Path("", 0, null, Duration.ofSeconds(9), 9, station6, station5)
         ));
         Network network = new Network(stations, paths);
-        Itinerary itinerary = network.bestPath(station1, station5, DijkstraComparator.DISTANCE);
-        for (Path path : itinerary.getPaths()) {
-            System.out.println(path.getSource().getName() + " -> " + path.getDestination().getName()); 
-        }
+        Itinerary itinerary = network.bestPath(station1, station5, DijkstraComparator.DURATION);
     }
 
     /**

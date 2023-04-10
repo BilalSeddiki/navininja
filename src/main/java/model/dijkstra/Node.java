@@ -63,4 +63,21 @@ public class Node {
         this.shortestPath.addAll(node.getShortestPath());
         this.shortestPath.add(path);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(station.getName());
+        stringBuilder.append(" (");
+        stringBuilder.append(distance);
+        stringBuilder.append(" km) (");
+        stringBuilder.append(duration.toSeconds());
+        stringBuilder.append(" seconds)\n");
+        for (Path path : shortestPath) {
+            stringBuilder.append(path);
+            stringBuilder.append(", ");
+        }
+        stringBuilder.append(station.getName());
+        return stringBuilder.toString();
+    }
 }
