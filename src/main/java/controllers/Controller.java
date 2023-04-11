@@ -20,7 +20,7 @@ public class Controller {
 
     public Controller() {
         try {
-            this.network =  Network.fromCSV(Globals.pathToRessources("map_data.csv"), "");
+            this.network =  Network.fromCSV(Globals.pathToRessources("map_data.csv"), Globals.pathToRessources("timetables.csv"));
         } catch (IOException e) {
             e.printStackTrace();
         }
