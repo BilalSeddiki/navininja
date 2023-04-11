@@ -41,6 +41,7 @@ public class Path {
             Station source, Station destination) {
         this.lineName = lineName;
         this.variant = variant;
+        schedule.sort(LocalTime::compareTo);
         this.schedule = schedule;
         this.travelDuration = travelDuration;
         this.travelDistance = travelDistance;
