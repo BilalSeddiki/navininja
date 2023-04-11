@@ -3,6 +3,7 @@ package model;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 
 /* Note : Pour implémenter les chemins à pied, on pourra créer une interface implémentée par Path et une nouvelle classe pour la marche à pied */
 
@@ -118,7 +119,14 @@ public class Path {
      * Renvoie les horaires de passage des trains sur ce chemin dans l'ordre.
      * @return les horaires de passage des trains
      */
-    public ArrayList<LocalTime> getSchedule() {
+    public List<LocalTime> getSchedule() {
+        if (terminus)
+            return schedule;
+        var tmp = source.getInPath(lineName, variant);
+        if (tmp.isPresent()) {
+            var p = tmp.get();
+            return p.getSchedule().stream().map(t -> t.plus(travelDuration)).toList();
+        }
         return schedule;
     }
 
