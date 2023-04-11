@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.awt.geom.Point2D.Double;
 import java.time.LocalTime;
@@ -116,6 +117,15 @@ public class Station {
         return inPaths.stream()
                 .filter(path -> path.getLineName().equals(lineName) && path.getVariant().equals(variant))
                 .findFirst();
+    }
+
+    /**
+     * Renvoie l'ensemble des chemins partant de la station et appartenant à la ligne spécifié. 
+     * @param lineName un nom de ligne
+     * @return Une liste de chemins
+     */
+    public List<Path> getOutPathsFromLine(String lineName) {
+        return outPaths.stream().filter(path -> path.getLineName().equals(lineName)).toList();
     }
 
     /**
