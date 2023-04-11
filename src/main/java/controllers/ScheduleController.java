@@ -13,6 +13,9 @@ import model.Station;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Controlleur de la vue trouver un itinéraire
@@ -47,7 +50,7 @@ public class ScheduleController extends Controller {
         final ObservableList<String> lines = FXCollections.observableArrayList(network.getLines().keySet());
         lineComboBox.getItems().addAll(lines);
         busScheduleTable.setVisible(false);
-        //TODO mettre ici la bonne liste d'horaires
+
 
     }
     /**
@@ -69,10 +72,12 @@ public class ScheduleController extends Controller {
         String stationName = stationInput.getText().trim();
         if(!stationName.equals("") && !lineComboBox.getValue().equals("") ){
              if(network.hasStation(stationName)){
-                 for (Path p: network.getStation(stationName).getInPaths()){
-                     System.out.println();
-                     //todo afficher les horaire ici
-                     //schedules.add(new Schedule(p.getDestination().getName(), p.getSchedule().get(0).toString()));
+                 List<Path> paths = network.getStation(stationName).getOutPathsFromLine(lineComboBox.getValue());
+                 for (Path p: paths ){
+                     for(LocalTime lt : p.getSchedule()){
+                         if(lt.isAfter(LocalTime.now()))
+                             schedules.add(new Schedule(network.getEndTerminus(lineComboBox.getValue(), p.getVariant()).getName() + " "+p.getVariant()  , lt.format(dtf)));
+                     }
                  }
                  scheduleList = FXCollections.observableArrayList(schedules);
                  directionColumn.setCellValueFactory(new PropertyValueFactory<>("directionAsSimpleString"));
