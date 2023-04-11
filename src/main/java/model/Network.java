@@ -214,6 +214,17 @@ public class Network {
     }
 
     /**
+     * Renvoie la derniere station du variant d'une ligne.
+     * @param line le nom de la ligne
+     * @param variant le nom du variant de la ligne
+     * @return une station
+     */
+    public Station getEndTerminus(String line, String variant) {
+        var list = getLineVariant(line, variant);
+        return list.get(list.size() - 1);
+    }
+
+    /**
      * Ajoute à chaque station ses chemins entrant et sortant
      * <p>
      * Cette méthode doit être utilisée après avoir initialisé stationByName
