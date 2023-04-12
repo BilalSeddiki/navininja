@@ -7,15 +7,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
+import java.util.Scanner;
 import java.util.Set;
 
 import csv.CardsDataCsv;
+import csv.ScheduleDataCsv;
 import javafx.util.Pair;
 import model.dijkstra.Node;
 import model.dijkstra.NodeDistanceComparator;
 import model.dijkstra.NodeDistanceDurationComparator;
 import model.dijkstra.NodeDurationComparator;
 import model.dijkstra.NodeTimeComparator;
+import utils.Globals;
 
 import java.awt.geom.Point2D.Double;
 import java.io.IOException;
@@ -51,11 +54,23 @@ public class Network {
      * @return un réseau
      * @throws IOException si la lecture d'un des fichier echoue
      */
-    public static Network fromCSV(String map, String time) throws IOException {
-        var list = new CardsDataCsv().readCSVFile(java.nio.file.Path.of(map));
+    public static Network fromCSV(String mapFile, String scheduleFile) throws IOException {
+        var schedules = new HashMap<String, HashMap<String, HashMap<String, ArrayList<LocalTime>>>>();
+        var csvSchedules = new ScheduleDataCsv().readCSVFile(java.nio.file.Path.of(scheduleFile));
+
+        for (var item : csvSchedules) {
+            schedules
+                    .computeIfAbsent(item.getDepartStation(),
+                            k -> new HashMap<String, HashMap<String, ArrayList<LocalTime>>>())
+                    .computeIfAbsent(item.getLine(), k -> new HashMap<String, ArrayList<LocalTime>>())
+                    .computeIfAbsent(item.getVariant(), k -> new ArrayList<LocalTime>());
+            schedules.get(item.getDepartStation()).get(item.getLine()).get(item.getVariant()).add(item.getDepartTime());
+        }
+
+        var csvPaths = new CardsDataCsv().readCSVFile(java.nio.file.Path.of(mapFile));
         var stations = new HashMap<String, Station>();
         var paths = new ArrayList<Path>();
-        for (CardsDataCsv item : list) {
+        for (CardsDataCsv item : csvPaths) {
             String stationNameA = item.getStationA();
             if (!stations.containsKey(stationNameA)) {
                 Double coordinatesA = item.getCoordinatesA();
@@ -70,11 +85,16 @@ public class Network {
                 stations.put(stationB.getName(), stationB);
             }
 
-            paths.add(new Path(item.getLine(), item.getLineVariant(), new ArrayList<LocalTime>(), item.getDuration(),
+            var schedule = schedules.getOrDefault(stationNameA, new HashMap<>())
+                    .getOrDefault(item.getLine(), new HashMap<>())
+                    .getOrDefault(item.getLineVariant(), new ArrayList<LocalTime>());
+
+            paths.add(new Path(item.getLine(), item.getLineVariant(), schedule, item.getDuration(),
                     item.getDistance(), stations.get(stationNameA), stations.get(stationNameB)));
         }
         return new Network(new ArrayList<Station>(stations.values()), paths);
     }
+
 
     /**
      * Renvoie la liste de station constituant le variant d'une ligne
@@ -170,6 +190,8 @@ public class Network {
      * Calcule le meilleur itinéraire d'une station à une autre.
      * @param source la station de départ
      * @param destination la station d'arrivée
+     * @param startTime l'heure à laquelle le trajet commence
+     * @param valueToCompare la manière de déterminer le trajet le plus court
      * @return un itinéraire d'une station à une autre
      */
     public Itinerary bestPath(Station source, Station destination, LocalTime startTime, DijkstraComparator valueToCompare) {
@@ -247,6 +269,10 @@ public class Network {
         }
         System.out.println(stationNodeMap.get(destination));
         return new Itinerary(startTime, stationNodeMap.get(destination).getShortestPath());
+    }
+
+    public Itinerary bestPath(Station source, Station destination, LocalTime startTime) {
+        return bestPath(source, destination, startTime, DijkstraComparator.TIME);
     }
 
     /**
