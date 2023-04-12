@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -52,8 +51,8 @@ public class Network {
      * @return un réseau
      * @throws IOException si la lecture d'un des fichier echoue
      */
-    public static Network fromCSV() throws IOException {
-        var list = new CardsDataCsv().readCSVFile();
+    public static Network fromCSV(String map, String time) throws IOException {
+        var list = new CardsDataCsv().readCSVFile(java.nio.file.Path.of(map));
         var stations = new HashMap<String, Station>();
         var paths = new ArrayList<Path>();
         for (CardsDataCsv item : list) {
@@ -152,16 +151,6 @@ public class Network {
         return station;
     }
 
-    /**
-     * Calcule un itinéraire d'une station à une autre de manière naïve.
-     * @param source la station de départ
-     * @param destination la station d'arrivée
-     * @return un itinéraire d'une station à une autre
-     */
-    public Itinerary naivePath(Station source, Station destination) {
-        return null;
-    }
-
     public enum DijkstraComparator {
 
         /** Voyage qui parcourt le moins de distance */
@@ -197,6 +186,7 @@ public class Network {
                 break;
             case TIME:
                 comparator = new NodeTimeComparator();
+                break;
         }
         PriorityQueue<Node> queue = new PriorityQueue<>(comparator);
         Set<String> visitedStations = new HashSet<>();
@@ -255,34 +245,8 @@ public class Network {
             }
             visitedStations.add(currentNode.getStation().getName());
         }
-        System.out.println(stationNodeMap.get(destination).getDistance() + " km");
-        return new Itinerary(null, stationNodeMap.get(destination).getShortestPath());
-    }
-
-    public static void main(String[] args) {
-        Station station1 = new Station("1", null);
-        Station station2 = new Station("2", null);
-        Station station3 = new Station("3", null);
-        Station station4 = new Station("4", null);
-        Station station5 = new Station("5", null);
-        Station station6 = new Station("6", null);
-        ArrayList<Station> stations = new ArrayList<>(Arrays.asList(station1, station2, station3, station4, station5, station6));
-        ArrayList<Path> paths = new ArrayList<>(Arrays.asList(
-            new Path("", 0, null, null, 7, station1, station2),
-            new Path("", 0, null, null, 9, station1, station3),
-            new Path("", 0, null, null, 14, station1, station6),
-            new Path("", 0, null, null, 10, station2, station3),
-            new Path("", 0, null, null, 15, station2, station4),
-            new Path("", 0, null, null, 11, station3, station4),
-            new Path("", 0, null, null, 2, station3, station6),
-            new Path("", 0, null, null, 6, station5, station4),
-            new Path("", 0, null, null, 9, station6, station5)
-        ));
-        Network network = new Network(stations, paths);
-        Itinerary itinerary = network.bestPath(station1, station5, DijkstraComparator.DISTANCE);
-        for (Path path : itinerary.getPaths()) {
-            System.out.println(path.getSource().getName() + " -> " + path.getDestination().getName()); 
-        }
+        System.out.println(stationNodeMap.get(destination));
+        return new Itinerary(startTime, stationNodeMap.get(destination).getShortestPath());
     }
 
     /**
