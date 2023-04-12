@@ -76,7 +76,7 @@ public class ScheduleController extends Controller {
                  for (Path p: paths ){
                      for(LocalTime lt : p.getSchedule()){
                          if(lt.isAfter(LocalTime.now()))
-                             schedules.add(new Schedule(network.getEndTerminus(lineComboBox.getValue(), p.getVariant()).getName() + " "+p.getVariant()  , lt.format(dtf)));
+                             schedules.add(new Schedule(network.getEndTerminus(lineComboBox.getValue(), p.getVariant()).getName()  , lt.format(dtf)));
                      }
                  }
                  scheduleList = FXCollections.observableArrayList(schedules);
