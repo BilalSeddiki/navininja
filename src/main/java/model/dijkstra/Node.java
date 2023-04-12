@@ -1,6 +1,7 @@
 package model.dijkstra;
 
 import java.time.Duration;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,17 +14,19 @@ public class Node {
     private final Station station;
     private double distance;
     private Duration duration;
+    private LocalTime time;
     private List<Path> shortestPath;
 
-    public Node(Station station, double distance, Duration duration) {
+    public Node(Station station, double distance, Duration duration, LocalTime time) {
         this.station = station;
         this.distance = distance;
         this.duration = duration;
+        this.time = time;
         this.shortestPath = new ArrayList<>();
     }
 
     public Node(Station station) {
-        this(station, Double.MAX_VALUE, ChronoUnit.FOREVER.getDuration());
+        this(station, Double.MAX_VALUE, ChronoUnit.FOREVER.getDuration(), LocalTime.MAX);
     }
 
     public void translateDistance(double distance) {
@@ -54,6 +57,14 @@ public class Node {
         this.duration = duration;
     }
 
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
+
     public List<Path> getShortestPath() {
         return shortestPath;
     }
@@ -72,7 +83,9 @@ public class Node {
         stringBuilder.append(distance);
         stringBuilder.append(" km) (");
         stringBuilder.append(duration.toSeconds());
-        stringBuilder.append(" seconds)\n");
+        stringBuilder.append(" seconds) (");
+        stringBuilder.append(time);
+        stringBuilder.append(")\n");
         for (Path path : shortestPath) {
             stringBuilder.append(path);
             stringBuilder.append(", ");

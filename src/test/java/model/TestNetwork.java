@@ -199,7 +199,7 @@ public class TestNetwork {
                 100.92811590723446, stationList.get(4), stationList.get(5)));
         Network actual;
         try {
-            actual = Network.fromCSV(filePath.toString(), fileSchedule.toString());
+            actual = Network.fromCSV();
             var expected = new Network(stationList, pathList);
             assertEquals(expected, actual);
         } catch (IOException e) {
