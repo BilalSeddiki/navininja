@@ -5,9 +5,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import model.Network;
+import javafx.scene.control.cell.PropertyValueFactory;
+import model.Itinerary;
+import model.Path;
 
-import java.util.ArrayList;
+import java.time.Duration;
+import java.time.LocalTime;
+import java.util.List;
 
 /**
  * Controlleur de la vue trouver un itinéraire
@@ -16,15 +20,13 @@ import java.util.ArrayList;
 public class FindARouteController extends Controller {
 
     @FXML
+    TableColumn<Path, String> lineColumn;
+    @FXML
     Button goBackBtn;
     @FXML
     ComboBox<String> hourComboBoxA;
     @FXML
     ComboBox<String> minComboBoxA;
-    @FXML
-    ComboBox<String> hourComboBoxB;
-    @FXML
-    ComboBox<String> minComboBoxB;
     @FXML
     Button searchBtn;
     @FXML
@@ -33,6 +35,14 @@ public class FindARouteController extends Controller {
     TextField coordinatesAInput;
     @FXML
     TextField coordinatesBInput;
+    @FXML
+    TableView<Path> itineraryTable;
+    @FXML
+    TableColumn<Path, String> startColumn;
+    @FXML
+    TableColumn<Path, String> endColumn;
+    @FXML
+    TableColumn<Path, Duration> durationColumn;
 
 
 
@@ -57,13 +67,15 @@ public class FindARouteController extends Controller {
 
         final ObservableList<String> stations = FXCollections.observableArrayList(network.getStationsByName().keySet());
         hourComboBoxA.getItems().addAll(hours);
-        hourComboBoxB.getItems().addAll(hours);
         minComboBoxA.getItems().addAll(minutes);
-        minComboBoxB.getItems().addAll(minutes);
+
+        hourComboBoxA.setValue(String.valueOf(LocalTime.now().getHour()));
+        minComboBoxA.setValue(String.valueOf(LocalTime.now().getMinute()));
 
         coordinatesAInput.textProperty().addListener(new TextFieldListener( coordinatesAInput, suggestionMenu, stations, network));
         coordinatesBInput.textProperty().addListener( new TextFieldListener( coordinatesBInput, suggestionMenu, stations, network));
-
+        itineraryTable.getColumns().clear();
+        itineraryTable.setVisible(false);
     }
 
 
@@ -75,6 +87,47 @@ public class FindARouteController extends Controller {
      */
     public void searchPathListener(ActionEvent actionEvent) {
         //todo implement search action
+        String stationAName = coordinatesAInput.getText();
+        String stationBName = coordinatesBInput.getText();
+        LocalTime time = LocalTime.of(Integer.parseInt(hourComboBoxA.getValue()),Integer.parseInt(minComboBoxA.getValue()));
+
+        if( network.hasStation(stationAName) && network.hasStation(stationBName)){
+           Itinerary it = network.bestPath(network.getStation(stationAName), network.getStation(stationBName), time );
+            List<Path> paths = it.getPaths();
+
+            startColumn.setCellValueFactory(new PropertyValueFactory<>("source"));
+            endColumn.setCellValueFactory(new PropertyValueFactory<>("destination"));
+            lineColumn.setCellValueFactory(new PropertyValueFactory<>("lineName"));
+            // Define a cell factory for the duration column
+            durationColumn.setCellValueFactory(new PropertyValueFactory<>("travelDuration"));
+            durationColumn.setCellFactory(column -> {
+                TableCell<Path, Duration> cell = new TableCell<Path, Duration>() {
+                    @Override
+                    protected void updateItem(Duration duration, boolean empty) {
+                        super.updateItem(duration, empty);
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            long hours = duration.toHours();
+                            long minutes = duration.toMinutes() % 60;
+                            long seconds = duration.getSeconds() % 60;
+                            setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+                        }
+                    }
+                };
+                return cell;
+            });
+
+
+
+            itineraryTable.getColumns().clear();
+            itineraryTable.getColumns().addAll(startColumn, endColumn, lineColumn, durationColumn);
+
+            ObservableList<Path> data = FXCollections.observableList(paths);
+            itineraryTable.setItems(data);
+            itineraryTable.setVisible(true);
+        }
+
     }
 
     /**
