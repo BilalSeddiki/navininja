@@ -175,4 +175,8 @@ public class Path {
                 this.destination.equalsNonRecursive(p.destination);
     }
 
+    @Override
+    public String toString() {
+        return source.getName() + " -> " + destination.getName();
+    }
 }

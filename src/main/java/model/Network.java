@@ -1,20 +1,30 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.PriorityQueue;
+import java.util.Scanner;
+import java.util.Set;
+
 import csv.CardsDataCsv;
 import csv.ScheduleDataCsv;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
-
 import javafx.util.Pair;
+import model.dijkstra.Node;
+import model.dijkstra.NodeDistanceComparator;
+import model.dijkstra.NodeDistanceDurationComparator;
+import model.dijkstra.NodeDurationComparator;
+import model.dijkstra.NodeTimeComparator;
+import utils.Globals;
 
 import java.awt.geom.Point2D.Double;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalTime;
 
-/* TODO: Changer l'initialisation de lines après l'implémentation des horaires */
-/** Un réseau de stations. */
 public class Network {
     /** Ensemble de stations du réseau. <p> Une HashMap avec le nom des stations pour clé, et les stations pour valeur.*/
     private HashMap<String, Station> stationsByName;
@@ -128,6 +138,7 @@ public class Network {
         return stationsByCoordinates;
     }
 
+
     /**
      * Renvoie la liste de station constituant le variant d'une ligne
      * @param name le nom de la ligne
@@ -203,14 +214,108 @@ public class Network {
         return station;
     }
 
+    public enum DijkstraComparator {
+
+        /** Voyage qui parcourt le moins de distance */
+        DISTANCE,
+
+        /** Voyage avec le moins de temps dans les transports */
+        DURATION,
+
+        /** Voyage qui parcourt le moins de distance et avec le moins de temps dans les transports */
+        DISTANCE_PLUS_DURATION,
+
+        /** Voyage qui prend le moins de temps */
+        TIME
+    }
+
     /**
      * Calcule le meilleur itinéraire d'une station à une autre.
      * @param source la station de départ
      * @param destination la station d'arrivée
+     * @param startTime l'heure à laquelle le trajet commence
+     * @param valueToCompare la manière de déterminer le trajet le plus court
      * @return un itinéraire d'une station à une autre
      */
-    public Itinerary bestPath(Station source, Station destination) {
-        return null;
+    public Itinerary bestPath(Station source, Station destination, LocalTime startTime, DijkstraComparator valueToCompare) {
+        Comparator<? super Node> comparator = null;
+        switch (valueToCompare) {
+            case DISTANCE:
+                comparator = new NodeDistanceComparator();
+                break;
+            case DURATION:
+                comparator = new NodeDurationComparator();
+                break;
+            case DISTANCE_PLUS_DURATION:
+                comparator = new NodeDistanceDurationComparator();
+                break;
+            case TIME:
+                comparator = new NodeTimeComparator();
+                break;
+        }
+        PriorityQueue<Node> queue = new PriorityQueue<>(comparator);
+        Set<String> visitedStations = new HashSet<>();
+        Map<Station, Node> stationNodeMap = new HashMap<>();
+        
+        Node initialNode = new Node(source, 0, Duration.ZERO, startTime);
+        stationNodeMap.put(source, initialNode);
+        queue.add(initialNode);
+
+        while (!queue.isEmpty()) {
+            Node currentNode = queue.remove();
+            if (visitedStations.contains(currentNode.getStation().getName())) {
+                System.out.println("Node déjà visitée = " + currentNode.getStation().getName());
+                continue;
+            }
+            System.out.println("Node actuelle = " + currentNode.getStation().getName());
+            for (Path path : currentNode.getStation().getOutPaths()) {
+                if (visitedStations.contains(path.getDestination().getName())) {
+                    continue;
+                }
+                Node adjacentNode = stationNodeMap.getOrDefault(
+                    path.getDestination(),
+                    new Node(path.getDestination())
+                );
+                double newDistance = currentNode.getDistance() + path.getTravelDistance();
+                Duration newDuration = currentNode.getDuration().plus(path.getTravelDuration());
+                LocalTime newTime = path.nextTrainDeparture(currentNode.getTime()).plus(path.getTravelDuration());
+                boolean better = false;
+                switch (valueToCompare) {
+                    case DISTANCE:
+                        better = newDistance <= adjacentNode.getDistance();
+                        break;
+                    case DURATION:
+                        better = newDuration.minus(adjacentNode.getDuration()).isNegative();
+                        break;
+                    case DISTANCE_PLUS_DURATION:
+                        better = newDistance + newDuration.toSeconds() <= adjacentNode.getDistance() + adjacentNode.getDuration().toSeconds();
+                        break;
+                    case TIME:
+                        better = newTime.isBefore(adjacentNode.getTime());
+                        break;
+                }
+
+                if (better) {
+                    adjacentNode.setDistance(newDistance);
+                    adjacentNode.setDuration(newDuration);
+                    adjacentNode.setTime(newTime);
+                    adjacentNode.setShortestPath(currentNode, path);
+                    stationNodeMap.put(path.getDestination(), adjacentNode);
+                    System.out.println("Optimal = " + currentNode.getStation() + " -> " + adjacentNode.getStation());
+                }
+                else {
+                    System.out.println("Pas optimal = " + currentNode.getStation() + " -> " + adjacentNode.getStation());
+                }
+                queue.add(adjacentNode);
+            }
+            visitedStations.add(currentNode.getStation().getName());
+        }
+        System.out.println(stationNodeMap.get(destination));
+        return new Itinerary(startTime, stationNodeMap.get(destination).getShortestPath());
+    }
+
+    public Itinerary bestPath(Station source, Station destination, LocalTime startTime) {
+        return bestPath(source, destination, startTime, DijkstraComparator.TIME);
     }
 
     /**
@@ -318,5 +423,4 @@ public class Network {
                 this.stationsByCoordinates.equals(n.stationsByCoordinates) &&
                 this.lines.equals(n.lines);
     }
-
 }
