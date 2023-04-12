@@ -379,29 +379,4 @@ public class Network {
                 this.stationsByCoordinates.equals(n.stationsByCoordinates) &&
                 this.lines.equals(n.lines);
     }
-
-    public static void main(String[] args) throws IOException {
-        Network network = Network.fromCSV();
-        network.bestPath(network.getStation("Lourmel"), network.getStation("Filles du Calvaire"), LocalTime.of(8, 0, 0), DijkstraComparator.DURATION);
-        /* Station station1 = new Station("1", null);
-        Station station2 = new Station("2", null);
-        Station station3 = new Station("3", null);
-        Station station4 = new Station("4", null);
-        Station station5 = new Station("5", null);
-        Station station6 = new Station("6", null);
-        ArrayList<Station> stations = new ArrayList<>(Arrays.asList(station1, station2, station3, station4, station5, station6));
-        ArrayList<Path> paths = new ArrayList<>(Arrays.asList(
-            new Path("", "", null, Duration.ofSeconds(7), 7, station1, station2),
-            new Path("", "", null, Duration.ofSeconds(9), 9, station1, station3),
-            new Path("", "", null, Duration.ofSeconds(14), 14, station1, station6),
-            new Path("", "", null, Duration.ofSeconds(10), 10, station2, station3),
-            new Path("", "", null, Duration.ofSeconds(15), 15, station2, station4),
-            new Path("", "", null, Duration.ofSeconds(11), 11, station3, station4),
-            new Path("", "", null, Duration.ofSeconds(2), 2, station3, station6),
-            new Path("", "", null, Duration.ofSeconds(6), 6, station5, station4),
-            new Path("", "", null, Duration.ofSeconds(9), 9, station6, station5)
-        ));
-        Network network = new Network(stations, paths);
-        Itinerary itinerary = network.bestPath(station1, station5, LocalTime.of(12, 00), DijkstraComparator.DURATION); */
-    }
 }
