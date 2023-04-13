@@ -1,0 +1,46 @@
+package csv;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.List;
+
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+
+public abstract class CsvData<T extends CsvData<?>> {
+
+    @SuppressWarnings("unchecked")
+    private List<T> readCSV(Reader reader) throws IOException {
+        CsvToBean<T> csvToBean = new CsvToBeanBuilder<T>(reader).withType((Class<? extends T>) getClass()).withSeparator(';').withIgnoreEmptyLine(true).withIgnoreLeadingWhiteSpace(true).build();
+        List<T> data = csvToBean.parse();
+        reader.close();
+        return data;
+    }
+
+    /**
+     * 
+     * @param path Le chemin vers le fichier CSV à parser
+     * @return La liste d'instance décrit par le fichier CSV donné en argument
+     * @throws IOException if the named file does not exist, is a directory rather than a regular file, or for some other reason cannot be opened for reading.
+     */
+    public List<T> readCSVFile(Path path) throws IOException {
+        FileReader reader = new FileReader(path.toString(), StandardCharsets.UTF_8);
+        return readCSV(reader);
+    }
+
+    public List<T> readCSVString(String text) throws IOException {
+        StringReader reader = new StringReader(text);
+        return readCSV(reader);
+    }
+
+    /**
+     * Méthode utilitaire afin à ne pas avoir à préciser le chemin vers le fichier CSV correspondant.
+     * @return <T> La liste d'instance décrit par le fichier CSV correspondant contenu dans resources/
+     * @throws IOException
+     */
+    public abstract List<T> readCSVFile() throws IOException;
+}

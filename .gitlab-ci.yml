@@ -1,0 +1,16 @@
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+before_script:
+  - apt-get update -qq && apt-get install -y -qq gradle openjdk-17-jdk
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+java:
+  stage: test
+  script:
+  - ./gradlew test
+  artifacts:
+    reports:
+      junit: build/test-results/test/TEST-*.xml
+
+  

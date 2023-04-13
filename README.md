@@ -4,11 +4,11 @@ NaviNinja
 
 ## Groupe 5
 
-Martini Reen
-Rochier Marie
-Falguerolle Elliott
-Guinard Océane
-Seddiki Bilal
-Ngoy John
+Martini Reen  
+Rochier Marie  
+Falguerolle Elliott  
+Guinard Océane  
+Seddiki Bilal  
+Ngoy John  
 
 ##

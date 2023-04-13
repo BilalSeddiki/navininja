@@ -1,6 +1,10 @@
 # Gradle
 .gradle
 build
+bin
 
 # Java
 *.class
+
+# VSCode
+.vscode
