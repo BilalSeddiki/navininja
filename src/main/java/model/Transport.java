@@ -5,6 +5,10 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Transport {
-    
+/** TODO */
+public interface Transport {
+
+    public double getTravelDistance();
+
+    public Duration getTravelDuration();
 }
