@@ -8,7 +8,7 @@ import java.util.List;
 /* Note : Pour implémenter les chemins à pied, on pourra créer une interface implémentée par Path et une nouvelle classe pour la marche à pied */
 
 /** Un chemin jusqu'à une prochaine station. */
-public class Path {
+public class Path implements Transport {
     /** Nom de la ligne sur laquelle se situe le chemin. */
     private String lineName;
     /** Nom du variant de la ligne sur laquelle se situe le chemin */
