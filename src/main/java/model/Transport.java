@@ -8,7 +8,9 @@ import java.util.List;
 /** TODO */
 public interface Transport {
 
+    /** TODO */
     public double getTravelDistance();
 
+    /** TODO */
     public Duration getTravelDuration();
 }

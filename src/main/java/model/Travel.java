@@ -43,13 +43,11 @@ public class Travel {
      * Transport: Path actuel
      */
 
-    /*
     public Itinerary fromStationToStation(Network network) {
         if(this.departureStation != null && this.arrivalStation != null) {
-            return network.bestPath(this.departureStation, this.arrivalStation, this.departureTime);
+            //return network.bestPath(this.departureStation, this.arrivalStation, this.departureTime);
         }
     }
-    */
 
     public void fromCoordinatesToCoordinates() {
         /* TODO */
