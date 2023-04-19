@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Itinerary;
 import model.Path;
+import shortestpath.Dijkstra;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -92,7 +93,7 @@ public class FindARouteController extends Controller {
         LocalTime time = LocalTime.of(Integer.parseInt(hourComboBoxA.getValue()),Integer.parseInt(minComboBoxA.getValue()));
 
         if( network.hasStation(stationAName) && network.hasStation(stationBName)){
-           Itinerary it = network.bestPath(network.getStation(stationAName), network.getStation(stationBName), time );
+           Itinerary it = new Dijkstra(network).bestPath(network.getStation(stationAName), network.getStation(stationBName), time );
             List<Path> paths = it.getPaths();
 
             startColumn.setCellValueFactory(new PropertyValueFactory<>("source"));
