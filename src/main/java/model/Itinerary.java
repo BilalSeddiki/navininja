@@ -10,6 +10,8 @@ public class Itinerary {
     private LocalTime departureTime;
     /** L'ensemble des chemins constituant l'itinéraire */
     private List<Path> paths;
+    /** L'ensemble des chemins et trajets à pied constituant l'itinéraire (Temporaire) */
+    private List<Transport> completeItinerary;
 
     /**
      * Construit un itinéraire. 
