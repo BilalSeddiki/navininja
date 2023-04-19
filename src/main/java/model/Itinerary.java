@@ -61,4 +61,14 @@ public class Itinerary {
         }
         return total;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder(departureTime.toString());
+        for (Path path : paths) {
+            stringBuilder.append("\n");
+            stringBuilder.append(path);
+        }
+        return stringBuilder.toString();
+    }
 }
