@@ -36,8 +36,8 @@ public class Path {
      * @param source la depuis laquelle part le chemin
      * @param destination la station vers laquelle mène le chemin
      */
-    public Path(String lineName, String variant, ArrayList<LocalTime> schedule, Duration travelDuration,
-            double travelDistance,
+    public Path(String lineName, String variant, ArrayList<LocalTime> schedule, 
+            Duration travelDuration, double travelDistance,
             Station source, Station destination) {
         this.lineName = lineName;
         this.variant = variant;
@@ -47,12 +47,18 @@ public class Path {
         this.travelDistance = travelDistance;
         this.source = source;
         this.destination = destination;
-        terminus = !(schedule.isEmpty());
+        this.terminus = !(schedule.isEmpty());
     }
 
+    /**
+     * Fixe la liste des horaires de passage.
+     * @param schedule les horaires de passage des trains.
+     */
     public void setTerminus(ArrayList<LocalTime> schedule) {
-        terminus = true;
-        this.schedule = schedule;
+        if(!(schedule.isEmpty())) {
+            terminus = true;
+            this.schedule = schedule;
+        }
     }
 
     /**
@@ -163,16 +169,28 @@ public class Path {
         return destination;
     }
 
+    /**
+     * Renvoie le booleen indiquant si la source est un terminus.
+     * @return vrai si la source est un terminus, faux sinon.
+     */
+    public boolean getTerminus() {
+        return terminus;
+    }
+
     @Override
     public boolean equals(Object arg0) {
         return arg0 instanceof Path p &&
-                this.travelDistance == p.travelDistance &&
-                this.lineName.equals(p.lineName) &&
-                this.variant.equals(p.variant) &&
-                this.schedule.equals(p.schedule) &&
-                this.travelDuration.equals(p.travelDuration) &&
-                this.source.equalsNonRecursive(p.source) &&
-                this.destination.equalsNonRecursive(p.destination);
+            this.travelDistance == p.travelDistance &&
+            this.lineName.equals(p.lineName) &&
+            this.variant.equals(p.variant) &&
+            this.schedule.equals(p.schedule) &&
+            this.travelDuration.equals(p.travelDuration) &&
+            this.source.equalsNonRecursive(p.source) &&
+            this.destination.equalsNonRecursive(p.destination);
     }
 
+    @Override
+    public String toString() {
+        return source.getName() + " -> " + destination.getName();
+    }
 }
