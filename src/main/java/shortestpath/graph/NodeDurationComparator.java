@@ -1,4 +1,4 @@
-package model.dijkstra;
+package shortestpath.graph;
 
 import java.util.Comparator;
 
