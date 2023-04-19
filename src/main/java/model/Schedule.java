@@ -36,4 +36,22 @@ public class Schedule {
     public String getPassingTimeAsSimpleString() {
         return this.passingTime.get();
     }
+
+    public String serial(){
+        char a=(char)direction.getValue().length();
+        char b=(char)passingTime.getValue().length();
+        String ret="";
+        ret.concat(String.valueOf(a));
+        ret.concat(direction.getValue());
+        ret.concat(String.valueOf(b));
+        ret.concat(passingTime.getValue());
+        return ret;
+    }
+    public Schedule deserial(String a){
+        int i1=a.charAt(0);
+        String d=a.substring(1,i1);
+        int i2=a.charAt(i1);
+        String p=a.substring(i1+1,i2);
+        return new Schedule(d,p);
+    }
 }
