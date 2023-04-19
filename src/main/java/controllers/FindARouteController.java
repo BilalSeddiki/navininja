@@ -69,10 +69,6 @@ public class FindARouteController extends Controller {
 
 
 
-    /**
-     * Écouteur du bouton 'Search' : lance la recherche d'itinéraire
-     * @param actionEvent événement détécté
-     */
     public void searchPathListener(ActionEvent actionEvent) {
         //todo implement search action
     }

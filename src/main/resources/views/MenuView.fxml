@@ -30,19 +30,6 @@
          </LinearGradient>
       </fill>
    </SVGPath>
-   <Button fx:id="networkPlanBtn" ellipsisString="" layoutX="416.0" layoutY="279.0" mnemonicParsing="false" onAction="#networkPlanListener" prefHeight="60.0" prefWidth="250.0" styleClass="primary-button" text="Network plan" textAlignment="CENTER" textFill="WHITE">
-
-      <effect>
-         <DropShadow height="15.0" radius="7.0" width="15.0">
-            <color>
-               <Color opacity="0.7533460855484009" />
-            </color>
-         </DropShadow>
-      </effect>
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor>
-   </Button>
    <Button fx:id="findARouteBtn" ellipsisString="" layoutX="416.0" layoutY="435.0" mnemonicParsing="false" onAction="#findARouteListener" prefHeight="60.0" prefWidth="250.0" styleClass="primary-button" text="Find a route" textAlignment="CENTER" textFill="WHITE">
 
       <effect>
