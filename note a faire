@@ -1,0 +1,10 @@
+demande un chemin ligne 95 find a route controller
+demande les horaire a une station ligne 79 schedule controller
+
+serialisation itinerary
+serialisation schedule
+
+message de l'interface : bp taille(uint64) arg
+hs taille(uint64) arg
+
+taille(uint64) serialisation
