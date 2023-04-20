@@ -34,7 +34,7 @@ public class MenuController extends Controller {
      * @param actionEvent événement
      */
     public void findARouteListener(ActionEvent actionEvent) throws IOException {
-        navigationController.navigateTo("findARouteView");
+        navigationController.navigateTo("FindARouteView");
     }
 
     /**
@@ -48,7 +48,7 @@ public class MenuController extends Controller {
      * @param actionEvent événement
      */
     public void scheduleListener(ActionEvent actionEvent) {
-        navigationController.navigateTo("scheduleView");
+        navigationController.navigateTo("ScheduleView");
 
     }
 }

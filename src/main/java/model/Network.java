@@ -70,13 +70,6 @@ public class Network {
 
     /**
      * Getter
-     * @return retourne la liste des lignes du réseau
-     */
-    public HashMap<String, HashMap<String, ArrayList<Station>>> getLines() {
-        return lines;
-    }
-    /**
-     * Getter
      * @return retourne la liste des stations par nom
      */
     public HashMap<String, Station> getStationsByName() {
@@ -90,8 +83,14 @@ public class Network {
     public HashMap<Double, Station> getStationsByCoordinates() {
         return stationsByCoordinates;
     }
+    /**
+     * Returns a mapping of each station to the list of lines passing by that station.
+     * @return a HashMap with each station as key and the list of lines passing by that station as value
+     */
 
-
+    public HashMap<String, HashMap<String, ArrayList<Station>>> getLines() {
+        return lines;
+    }
     /**
      * Renvoie la liste de station constituant le variant d'une ligne
      * @param name le nom de la ligne
