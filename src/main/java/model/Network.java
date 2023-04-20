@@ -70,13 +70,6 @@ public class Network {
 
     /**
      * Getter
-     * @return retourne la liste des lignes du réseau
-     */
-    public HashMap<String, HashMap<String, ArrayList<Station>>> getLines() {
-        return lines;
-    }
-    /**
-     * Getter
      * @return retourne la liste des stations par nom
      */
     public HashMap<String, Station> getStationsByName() {
@@ -94,47 +87,10 @@ public class Network {
      * Returns a mapping of each station to the list of lines passing by that station.
      * @return a HashMap with each station as key and the list of lines passing by that station as value
      */
-    public  ArrayList<String> getLinesByStation(String stationName) {
-        ArrayList<String> linesByStation = new ArrayList<>();
-        Station station = getStation(stationName);
-        for (Path p : station.getInPaths()) {
-            if(!linesByStation.contains(p.getLineName())) {
-                linesByStation.add(p.getLineName());
-            }
-        }
-        for (Path p : station.getOutPaths()) {
-            if(!linesByStation.contains(p.getLineName())){
-                linesByStation.add(p.getLineName());
 
-            }
-        }
-        return linesByStation;
-    }
-
-    /**
-     * Getter
-     * @return retourne la liste des lignes du réseau
-     */
     public HashMap<String, HashMap<String, ArrayList<Station>>> getLines() {
         return lines;
     }
-    /**
-     * Getter
-     * @return retourne la liste des stations par nom
-     */
-    public HashMap<String, Station> getStationsByName() {
-        return stationsByName;
-    }
-
-    /**
-     * Getter
-     * @return retourne la liste des stations par coordonnées
-     */
-    public HashMap<Double, Station> getStationsByCoordinates() {
-        return stationsByCoordinates;
-    }
-
-
     /**
      * Renvoie la liste de station constituant le variant d'une ligne
      * @param name le nom de la ligne
@@ -312,17 +268,6 @@ public class Network {
 
     public Itinerary bestPath(Station source, Station destination, LocalTime startTime) {
         return bestPath(source, destination, startTime, DijkstraComparator.TIME);
-    }
-
-    /**
-     * Renvoie la derniere station du variant d'une ligne.
-     * @param line le nom de la ligne
-     * @param variant le nom du variant de la ligne
-     * @return une station
-     */
-    public Station getEndTerminus(String line, String variant) {
-        var list = getLineVariant(line, variant);
-        return list.get(list.size() - 1);
     }
 
     /**
