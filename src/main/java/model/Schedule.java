@@ -51,7 +51,7 @@ public class Schedule {
         int i1=a.charAt(0);
         String d=a.substring(1,i1);
         int i2=a.charAt(i1);
-        String p=a.substring(i1+1,i2);
+        String p=a.substring(i1+1,i1+i2);
         return new Schedule(d,p);
     }
 }
