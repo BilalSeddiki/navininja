@@ -29,31 +29,3 @@ taille Nom(string) taille variant(String) terminus(boolean) source(Station) dest
 le serveur accepte une connexion, traite la demande et la ferme
 
 51312
-demande un chemin ligne 95 find a route controller
-demande les horaire a une station ligne 79 schedule controller
-
-serialisation itinerary
-serialisation schedule
-
-message de l'interface : bp taille(uint64) arg
-hs taille(uint64) arg
-
-taille(uint64) serialisation 
-
-
-pour liste schedule
-un schedule:
-taille(uint64) SimpleStringProperty(string) taille(uint64) SimpleStringProperty(string)
-avec le message total
-taille listeschedule
-
-pour itinerary
-Localtime taille listtransport
-transport
-type taille args
-walk:
-coord coord
-Path
-taille Nom(string) taille variant(String) terminus(boolean) source(Station) destination(Station) travelDistance(double) travelDuration(Duration) schedule(ArrayList)(si terminus=false inexistant)
-
-
