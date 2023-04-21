@@ -4,7 +4,7 @@ demande les horaire a une station ligne 79 schedule controller
 serialisation itinerary
 serialisation schedule
 
-message de l'interface : bp taille(uint64) arg
+message de l'interface : bp taille string1 taille string2 taille string3
 hs taille(uint64) arg
 
 taille(uint64) serialisation 
@@ -26,3 +26,4 @@ Path
 taille Nom(string) taille variant(String) terminus(boolean) source(Station) destination(Station) travelDistance(double) travelDuration(Duration) schedule(ArrayList)(si terminus=false inexistant)
 
 
+le serveur accepte une connexion, traite la demande et la ferme
