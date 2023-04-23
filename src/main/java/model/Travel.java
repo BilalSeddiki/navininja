@@ -47,6 +47,7 @@ public class Travel {
         if(this.departureStation != null && this.arrivalStation != null) {
             //return network.bestPath(this.departureStation, this.arrivalStation, this.departureTime);
         }
+        return null; // todo: à retirer (il faut return qqchose)
     }
 
     public void fromCoordinatesToCoordinates() {

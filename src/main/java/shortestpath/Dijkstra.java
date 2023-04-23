@@ -27,7 +27,7 @@ public class Dijkstra extends ShortestPathAlgorithm {
     }
 
     @Override
-    public Itinerary bestPath(Station source, Station destination, LocalTime startTime, NodeSize size) {
+    public Itinerary bestPath(Station source, Station destination, LocalTime startTime, NodeSize size) throws IllegalArgumentException {
         Comparator<? super Node> comparator = size.getComparator();
         PriorityQueue<Node> queue = new PriorityQueue<>(comparator);
         Set<String> visitedStations = new HashSet<>();
@@ -43,7 +43,7 @@ public class Dijkstra extends ShortestPathAlgorithm {
                 continue;
             }
             for (Path path : currentNode.getStation().getOutPaths()) {
-                if (visitedStations.contains(path.getDestination().getName())) {
+                if (!isPathLegal(path, visitedStations, startTime)) {
                     continue;
                 }
                 Node adjacentNode = stationNodeMap.getOrDefault(path.getDestination(), new Node(path.getDestination()));
@@ -55,6 +55,18 @@ public class Dijkstra extends ShortestPathAlgorithm {
             visitedStations.add(currentNode.getStation().getName());
         }
         return new Itinerary(startTime, stationNodeMap.get(destination).getShortestPath());
+    }
+
+    private boolean isPathLegal(Path path, Set<String> visitedStations, LocalTime startTime) {
+        if (visitedStations.contains(path.getDestination().getName())) {
+            return false;
+        }
+        for (LocalTime time : path.getSchedule()) {
+            if (time.isAfter(startTime)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -97,6 +109,4 @@ public class Dijkstra extends ShortestPathAlgorithm {
         Station endingPosition = createHumanEndStation(endingCoordinates);
         return bestPath(currentPosition, endingPosition, startTime, size);
     }
-
-
 }
