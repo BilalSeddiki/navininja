@@ -3,15 +3,12 @@ package shortestpath;
 import java.awt.geom.Point2D.Double;
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import model.Itinerary;
 import model.Network;
@@ -27,7 +24,7 @@ public class Dijkstra extends ShortestPathAlgorithm {
     }
 
     @Override
-    public Itinerary bestPath(Station source, Station destination, LocalTime startTime, NodeSize size) throws IllegalArgumentException {
+    public Itinerary bestPath(Station source, Station destination, LocalTime startTime, NodeSize size) {
         Comparator<? super Node> comparator = size.getComparator();
         PriorityQueue<Node> queue = new PriorityQueue<>(comparator);
         Set<String> visitedStations = new HashSet<>();
@@ -53,6 +50,9 @@ public class Dijkstra extends ShortestPathAlgorithm {
                 queue.add(adjacentNode);
             }
             visitedStations.add(currentNode.getStation().getName());
+        }
+        if (!stationNodeMap.containsKey(destination)) {
+            throw new IllegalArgumentException();
         }
         return new Itinerary(startTime, stationNodeMap.get(destination).getShortestPath());
     }
@@ -105,8 +105,11 @@ public class Dijkstra extends ShortestPathAlgorithm {
 
     @Override
     public Itinerary bestPath(Double startingCoordinates, Double endingCoordinates, LocalTime startTime, NodeSize size) {
-        Station currentPosition = createHumanBeginStation(startingCoordinates, startTime);
-        Station endingPosition = createHumanEndStation(endingCoordinates);
-        return bestPath(currentPosition, endingPosition, startTime, size);
+        return null;
+    }
+
+    @Override
+    public Itinerary bestPathWalking(Double startingCoordinates, Double endingCoordinates, LocalTime startTime, NodeSize size) {
+        throw new UnsupportedOperationException("Unimplemented method 'bestPathWalking'");
     }
 }

@@ -39,6 +39,8 @@ public abstract class ShortestPathAlgorithm {
     }
 
     public abstract Itinerary bestPath(Double startingCoordinates, Double endingCoordinates, LocalTime startTime, NodeSize size);
+    
+    public abstract Itinerary bestPathWalking(Double startingCoordinates, Double endingCoordinates, LocalTime startTime, NodeSize size);
 
     protected Station createHumanBeginStation(Double coordinates, LocalTime startTime) {
         try {
