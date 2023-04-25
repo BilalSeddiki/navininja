@@ -63,7 +63,7 @@ public class TestPath {
         Path path = new Path(lineName, variant, schedule, travelDuration, travelDistance, source, destination);
         assertSame(lineName, path.getLineName(), "L'attribut lineName est incorrect.");
         assertSame(variant, path.getVariant(), "L'attribut variant est incorrect.");
-        assertSame(schedule, path.getSchedule(), "L'attribut schedule est incorrect.");
+        assertTrue(schedule.equals(path.getSchedule()), "L'attribut schedule est incorrect.");
         assertSame(travelDuration, path.getTravelDuration(), "L'attribut travelDuration est incorrect.");
         assertEquals(travelDistance, path.getTravelDistance(), "L'attribut travelDistance est incorrect.");
         assertSame(source, path.getSource(), "L'attribut source est incorrect.");
