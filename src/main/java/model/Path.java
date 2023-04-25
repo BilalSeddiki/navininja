@@ -36,13 +36,13 @@ public class Path implements Transport {
      * @param source la depuis laquelle part le chemin
      * @param destination la station vers laquelle mène le chemin
      */
-    public Path(String lineName, String variant, ArrayList<LocalTime> schedule, 
+    public Path(String lineName, String variant, List<LocalTime> schedule, 
             Duration travelDuration, double travelDistance,
             Station source, Station destination) {
         this.lineName = lineName;
         this.variant = variant;
-        schedule.sort(LocalTime::compareTo);
-        this.schedule = schedule;
+        this.schedule = new ArrayList<>(schedule);
+        this.schedule.sort(LocalTime::compareTo);
         this.travelDuration = travelDuration;
         this.travelDistance = travelDistance;
         this.source = source;
