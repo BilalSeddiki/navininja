@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 
 /** TODO */
@@ -67,5 +68,20 @@ public class Walk implements Transport {
     @Override
     public String toString() {
         return "TODO";
+    }
+
+    @Override
+    public Point2D.Double getInCoordinates() {
+        return departureCoordinates;
+    }
+
+    @Override
+    public Point2D.Double getOutCoordinates() {
+       return arrivalCoordinates;
+    }
+
+    @Override
+    public LocalTime nextDeparture(LocalTime from) {
+        return from;
     }
 }

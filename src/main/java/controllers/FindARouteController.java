@@ -93,7 +93,7 @@ public class FindARouteController extends Controller {
         LocalTime time = LocalTime.of(Integer.parseInt(hourComboBoxA.getValue()),Integer.parseInt(minComboBoxA.getValue()));
 
         if( network.hasStation(stationAName) && network.hasStation(stationBName)){
-           Itinerary it = new Dijkstra(network).bestPath(network.getStation(stationAName), network.getStation(stationBName), time );
+           Itinerary it = new Dijkstra(network).bestPath(network.getStation(stationAName), network.getStation(stationBName), time, true);
             List<Path> paths = it.getPaths();
 
             startColumn.setCellValueFactory(new PropertyValueFactory<>("source"));

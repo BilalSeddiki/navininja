@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.geom.Point2D;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class Path implements Transport {
      * @param from l'heure depuis laquelle calculer le prochain départ
      * @return l'heure du prochain départ
      */
-    public LocalTime nextTrainDeparture(LocalTime from) {
+    public LocalTime nextDeparture(LocalTime from) {
         if (terminus) {
             for (int i = 0; i < schedule.size(); i++) {
                 if (schedule.get(i).isAfter(from)) {
@@ -80,7 +81,7 @@ public class Path implements Transport {
             var tmp = source.getInPath(lineName, variant);
             if (tmp.isPresent()) {
                 var p = tmp.get();
-                return p.nextTrainDeparture(from.minus(p.getTravelDuration())).plus(p.getTravelDuration());
+                return p.nextDeparture(from.minus(p.getTravelDuration())).plus(p.getTravelDuration());
             }
         }
         return LocalTime.of(0, 0);
@@ -95,7 +96,7 @@ public class Path implements Transport {
      * @return la durée du trajet
      */
     public Duration totalDuration(LocalTime time) {
-        LocalTime nextTrain = this.nextTrainDeparture(time);
+        LocalTime nextTrain = this.nextDeparture(time);
         Duration waitingTime = Duration.between(time, nextTrain);
         if (waitingTime.isNegative()) {
             Duration toMidnight = Duration.between(time, LocalTime.MAX);
@@ -191,6 +192,16 @@ public class Path implements Transport {
 
     @Override
     public String toString() {
-        return source.getName() + " -> " + destination.getName();
+        return source.getName() + " -> " + destination.getName() + " (" + lineName + " variant " + variant + ")";
+    }
+
+    @Override
+    public Point2D.Double getInCoordinates() {
+        return source.getCoordinates();
+    }
+
+    @Override
+    public Point2D.Double getOutCoordinates() {
+        return destination.getCoordinates();
     }
 }
