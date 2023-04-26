@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Dijkstra extends ShortestPathAlgorithm {
         PriorityQueue<Node> queue = new PriorityQueue<>(comparator);
         Set<String> visitedStations = new HashSet<>();
         Map<Station, Node> stationNodeMap = new HashMap<>();
-        
+
         Node initialNode = new Node(source, 0, Duration.ZERO, startTime);
         stationNodeMap.put(source, initialNode);
         queue.add(initialNode);
@@ -82,7 +83,10 @@ public class Dijkstra extends ShortestPathAlgorithm {
     private boolean processAdjacentNode(Path path, Node currentNode, Node adjacentNode, NodeSize size) {
         double newDistance = currentNode.getDistance() + path.getTravelDistance();
         Duration newDuration = currentNode.getDuration().plus(path.getTravelDuration());
-        LocalTime newTime = path.nextTrainDeparture(currentNode.getTime().plus(path.getTravelDuration()));
+        Optional<LocalTime> newTimeOpt = path.nextTrainDeparture(currentNode.getTime().plus(path.getTravelDuration()));
+        if (newTimeOpt.isEmpty())
+            return false;
+        var newTime = newTimeOpt.get();
         boolean better = false;
         switch (size) {
             case DISTANCE:
@@ -106,12 +110,14 @@ public class Dijkstra extends ShortestPathAlgorithm {
     }
 
     @Override
-    public Itinerary bestPath(Double startingCoordinates, Double endingCoordinates, LocalTime startTime, NodeSize size) {
+    public Itinerary bestPath(Double startingCoordinates, Double endingCoordinates, LocalTime startTime,
+            NodeSize size) {
         return null;
     }
 
     @Override
-    public Itinerary bestPathWalking(Double startingCoordinates, Double endingCoordinates, LocalTime startTime, NodeSize size) {
+    public Itinerary bestPathWalking(Double startingCoordinates, Double endingCoordinates, LocalTime startTime,
+            NodeSize size) {
         throw new UnsupportedOperationException("Unimplemented method 'bestPathWalking'");
     }
 }
