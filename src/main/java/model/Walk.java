@@ -67,7 +67,7 @@ public class Walk implements Transport {
     /** TODO */
     @Override
     public String toString() {
-        return "TODO";
+        return "WALK: " + departureCoordinates + " ; " + arrivalCoordinates + " (" + getTravelDistance() + " ; " + getTravelDuration() + ")";
     }
 
     @Override
@@ -83,5 +83,10 @@ public class Walk implements Transport {
     @Override
     public LocalTime nextDeparture(LocalTime from) {
         return from;
+    }
+
+    @Override
+    public Duration totalDuration(LocalTime departure) {
+        return getTravelDuration(); 
     }
 }

@@ -18,4 +18,6 @@ public interface Transport {
     public Point2D.Double getOutCoordinates();
 
     public LocalTime nextDeparture(LocalTime from);
+
+    public Duration totalDuration(LocalTime departure);
 }

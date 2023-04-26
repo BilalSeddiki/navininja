@@ -56,8 +56,8 @@ public class Itinerary {
     public Duration getDuration() {
         Duration total = Duration.ZERO;
         LocalTime newDeparture = departureTime;
-        for(int i = 0; i < this.paths.size(); i++) {
-            Duration pathDuration = paths.get(i).totalDuration(newDeparture);
+        for(int i = 0; i < this.completeItinerary.size(); i++) {
+            Duration pathDuration = completeItinerary.get(i).totalDuration(newDeparture);
             total = total.plus(pathDuration);
             newDeparture = newDeparture.plus(pathDuration);
         }
@@ -67,6 +67,8 @@ public class Itinerary {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder(departureTime.toString());
+        stringBuilder.append("\n");
+        stringBuilder.append(getDuration());
         for (Transport path : completeItinerary) {
             stringBuilder.append("\n");
             stringBuilder.append(path);

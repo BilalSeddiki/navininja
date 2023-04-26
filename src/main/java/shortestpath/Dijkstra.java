@@ -58,6 +58,7 @@ public class Dijkstra extends ShortestPathAlgorithm {
                 }
             }
             for (Transport path : transportList) {
+                System.out.println(path);
                 if (!isPathLegal(path, visitedStations, startTime)) {
                     continue;
                 }
@@ -74,18 +75,21 @@ public class Dijkstra extends ShortestPathAlgorithm {
         }
         return new Itinerary(startTime, stationNodeMap.get(destination.getCoordinates()).getShortestPath());
     }
-
+    
     private boolean isPathLegal(Transport transport, Set<Point2D.Double> visitedStations, LocalTime startTime) {
         if (visitedStations.contains(transport.getOutCoordinates())) {
             return false;
         }
         if (transport instanceof Path) {
             Path path = (Path) transport;
-            List<LocalTime> schedule = path.getSchedule();
+            /* List<LocalTime> schedule = path.getSchedule();
             for (LocalTime time : schedule) {
                 if (time.isAfter(startTime)) {
                     return true;
                 }
+            } */
+            if (!path.nextDeparture(startTime).equals(LocalTime.of(0, 0))) {
+                return true;
             }
         }
         else {
@@ -142,7 +146,7 @@ public class Dijkstra extends ShortestPathAlgorithm {
     public static void main(String[] args) throws IOException {
         Network network =  Network.fromCSV(Globals.pathToRessources("map_data.csv"), Globals.pathToRessources("timetables.csv"));
         Dijkstra dijkstra = new Dijkstra(network);
-        Itinerary itinerary = dijkstra.bestPath(network.getStation("Gare de Lyon"), network.getStation("Châtelet"), LocalTime.now(), false);
+        Itinerary itinerary = dijkstra.bestPath(network.getStation("Bibliothèque François Mitterrand"), network.getStation("Châtelet"), LocalTime.now(), false);
         System.out.println(itinerary);
         // CA MARCHE PAS PARCE QUE GARE DE LYON SON SCHEDULE EST VIDE
     }
