@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /* Note : Pour implémenter les chemins à pied, on pourra créer une interface implémentée par Path et une nouvelle classe pour la marche à pied */
 
@@ -36,7 +37,7 @@ public class Path implements Transport {
      * @param source la depuis laquelle part le chemin
      * @param destination la station vers laquelle mène le chemin
      */
-    public Path(String lineName, String variant, List<LocalTime> schedule, 
+    public Path(String lineName, String variant, List<LocalTime> schedule,
             Duration travelDuration, double travelDistance,
             Station source, Station destination) {
         this.lineName = lineName;
@@ -55,7 +56,7 @@ public class Path implements Transport {
      * @param schedule les horaires de passage des trains.
      */
     public void setTerminus(ArrayList<LocalTime> schedule) {
-        if(!(schedule.isEmpty())) {
+        if (!(schedule.isEmpty())) {
             terminus = true;
             this.schedule = schedule;
         }
@@ -66,25 +67,25 @@ public class Path implements Transport {
      * @param from l'heure depuis laquelle calculer le prochain départ
      * @return l'heure du prochain départ
      */
-    public LocalTime nextTrainDeparture(LocalTime from) {
+    public Optional<LocalTime> nextTrainDeparture(LocalTime from) {
         if (terminus) {
             for (int i = 0; i < schedule.size(); i++) {
                 if (schedule.get(i).isAfter(from)) {
-                    return schedule.get(i);
+                    return Optional.of(schedule.get(i));
                 }
             }
             if (schedule.size() > 0) {
-                return schedule.get(0);
-            }
-        } else {
-            var tmp = source.getInPath(lineName, variant);
-            if (tmp.isPresent()) {
-                var p = tmp.get();
-                return p.nextTrainDeparture(from.minus(p.getTravelDuration())).plus(p.getTravelDuration());
+                return Optional.of(schedule.get(0));
             }
         }
-        return LocalTime.of(0, 0);
-
+        var tmp = source.getInPath(lineName, variant);
+        if (tmp.isPresent()) {
+            var p = tmp.get();
+            var ntd = p.nextTrainDeparture(from.minus(p.getTravelDuration()));
+            if (ntd.isPresent())
+                return Optional.of(ntd.get().plus(p.getTravelDuration()));
+        }
+        return Optional.empty();
     }
 
     /**
@@ -94,16 +95,18 @@ public class Path implements Transport {
      * @param time l'heure de départ
      * @return la durée du trajet
      */
-    public Duration totalDuration(LocalTime time) {
-        LocalTime nextTrain = this.nextTrainDeparture(time);
-        Duration waitingTime = Duration.between(time, nextTrain);
+    public Optional<Duration> totalDuration(LocalTime time) {
+        var nextTrain = this.nextTrainDeparture(time);
+        if (nextTrain.isEmpty())
+            return Optional.empty();
+        Duration waitingTime = Duration.between(time, nextTrain.get());
         if (waitingTime.isNegative()) {
             Duration toMidnight = Duration.between(time, LocalTime.MAX);
-            Duration fromMidnight = Duration.between(LocalTime.MIDNIGHT, nextTrain);
+            Duration fromMidnight = Duration.between(LocalTime.MIDNIGHT, nextTrain.get());
             waitingTime = toMidnight.plus(fromMidnight).plusNanos(1);
         }
         Duration totalDuration = waitingTime.plus(this.travelDuration);
-        return totalDuration;
+        return Optional.of(totalDuration);
     }
 
     /**
@@ -180,13 +183,13 @@ public class Path implements Transport {
     @Override
     public boolean equals(Object arg0) {
         return arg0 instanceof Path p &&
-            this.travelDistance == p.travelDistance &&
-            this.lineName.equals(p.lineName) &&
-            this.variant.equals(p.variant) &&
-            this.schedule.equals(p.schedule) &&
-            this.travelDuration.equals(p.travelDuration) &&
-            this.source.equalsNonRecursive(p.source) &&
-            this.destination.equalsNonRecursive(p.destination);
+                this.travelDistance == p.travelDistance &&
+                this.lineName.equals(p.lineName) &&
+                this.variant.equals(p.variant) &&
+                this.schedule.equals(p.schedule) &&
+                this.travelDuration.equals(p.travelDuration) &&
+                this.source.equalsNonRecursive(p.source) &&
+                this.destination.equalsNonRecursive(p.destination);
     }
 
     @Override
