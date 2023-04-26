@@ -54,10 +54,10 @@ public abstract class ShortestPathAlgorithm {
      * @param size
      * @return
      */
-    public abstract Itinerary bestPath(Station source, Station destination, LocalTime startTime, NodeSize size);
+    public abstract Itinerary bestPath(Station source, Station destination, LocalTime startTime, NodeSize size, boolean walking);
 
-    public Itinerary bestPath(Station source, Station destination, LocalTime startTime) {
-        return bestPath(source, destination, startTime, NodeSize.TIME);
+    public Itinerary bestPath(Station source, Station destination, LocalTime startTime, boolean walking) {
+        return bestPath(source, destination, startTime, NodeSize.TIME, walking);
     }
 
     public abstract Itinerary bestPath(Double startingCoordinates, Double endingCoordinates, LocalTime startTime, NodeSize size);

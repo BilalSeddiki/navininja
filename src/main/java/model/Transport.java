@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.geom.Point2D;
 import java.time.Duration;
 import java.time.LocalTime;
 
@@ -26,4 +27,10 @@ public interface Transport {
      * @return une option parmi les moyen de transports possibles.
      */
     TransportationMethod getTransportMethod();
+
+    public Point2D.Double getInCoordinates();
+
+    public Point2D.Double getOutCoordinates();
+
+    public LocalTime nextDeparture(LocalTime from);
 }

@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.geom.Point2D;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -211,6 +212,16 @@ public class Path implements Transport {
 
     @Override
     public String toString() {
-        return source.getName() + " -> " + destination.getName();
+        return source.getName() + " -> " + destination.getName() + " (" + lineName + " variant " + variant + ")";
+    }
+
+    @Override
+    public Point2D.Double getInCoordinates() {
+        return source.getCoordinates();
+    }
+
+    @Override
+    public Point2D.Double getOutCoordinates() {
+        return destination.getCoordinates();
     }
 }
