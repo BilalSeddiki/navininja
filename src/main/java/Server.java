@@ -5,6 +5,7 @@ import netnavi.ServerMsg;
 import java.util.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.time.*;
 
 public class Server{
     public static void main(String[] args) {
@@ -21,6 +22,20 @@ public class Server{
                     tmp=network.traitementSchedule(msg.substring(2,msg.length())); 
                     ServerMsg.sendSchedules(clientSocket,tmp);
                     clientSocket.close();
+                }else if(msg.charAt(0)=='b' && msg.charAt(1)=='p'){
+                    int current0=2;
+                    int l=msg.charAt(current0);
+                    String source=msg.substring(current0+1,current0+l+1);
+                    current0=current0+l+1;
+                    l=msg.charAt(current0);
+                    String destination=msg.substring(current0+1,current0+l+1);
+                    current0=current0+l+1;
+                    l=msg.charAt(current0);
+                    String tmp=msg.substring(current0+1,current0+l+1);
+                    current0=current0+l+1;
+                    LocalTime time=LocalTime.parse(tmp);
+                    Itinerary a=network.bestPath(network.getStation(source), network.getStation(destination),time);
+                    ServerMsg.sendBestPath(clientSocket,a);
                 }else{
                     clientSocket.close();
                 }

@@ -29,3 +29,9 @@ taille Nom(string) taille variant(String) terminus(boolean) source(Station) dest
 le serveur accepte une connexion, traite la demande et la ferme
 
 51312
+
+
+faire un path unique avec 
+source destination line variant duration
+line peut etre marche ou une ligne
+source ou destination coord gps
