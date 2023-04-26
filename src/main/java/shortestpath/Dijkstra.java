@@ -61,7 +61,6 @@ public class Dijkstra extends ShortestPathAlgorithm {
                 }
             }
             for (Transport path : transportList) {
-                System.out.println(path);
                 if (!isPathLegal(path, visitedStations, startTime)) {
                     continue;
                 }
@@ -79,7 +78,7 @@ public class Dijkstra extends ShortestPathAlgorithm {
         }
         return new Itinerary(startTime, stationNodeMap.get(destination.getCoordinates()).getShortestPath());
     }
-
+    
     private boolean isPathLegal(Transport transport, Set<Point2D.Double> visitedStations, LocalTime startTime) {
         if (visitedStations.contains(transport.getOutCoordinates())) {
             return false;

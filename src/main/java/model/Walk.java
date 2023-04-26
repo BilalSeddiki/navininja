@@ -102,7 +102,7 @@ public class Walk implements Transport {
 
     @Override
     public String toString() {
-        return departureCoordinates.toString() + " -> " + arrivalCoordinates.toString();
+        return "WALK: " + departureCoordinates + " ; " + arrivalCoordinates + " (" + getTravelDistance() + " ; " + getTravelDuration() + ")";
     }
 
     @Override
@@ -118,5 +118,10 @@ public class Walk implements Transport {
     @Override
     public LocalTime nextDeparture(LocalTime from) {
         return from;
+    }
+
+    @Override
+    public Duration totalDuration(LocalTime departure) {
+        return getTravelDuration(); 
     }
 }

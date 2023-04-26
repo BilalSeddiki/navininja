@@ -97,6 +97,8 @@ public class Itinerary {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder(departureTime.toString());
+        stringBuilder.append("\n");
+        stringBuilder.append(getDuration());
         for (Transport transport : transports) {
             stringBuilder.append("\n");
             stringBuilder.append(transport);
