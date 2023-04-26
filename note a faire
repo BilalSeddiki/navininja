@@ -5,7 +5,7 @@ serialisation itinerary
 serialisation schedule
 
 message de l'interface : bp taille string1 taille string2 taille string3
-hs taille(uint64) arg
+hs taille(uint64) arg 
 
 taille(uint64) serialisation 
 
@@ -27,3 +27,5 @@ taille Nom(string) taille variant(String) terminus(boolean) source(Station) dest
 
 
 le serveur accepte une connexion, traite la demande et la ferme
+
+51312

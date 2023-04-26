@@ -6,12 +6,14 @@ import csv.ScheduleDataCsv;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
+import java.util.List;
 
 import javafx.util.Pair;
 
 import java.awt.geom.Point2D.Double;
 import java.io.IOException;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /* TODO: Changer l'initialisation de lines après l'implémentation des horaires */
 /** Un réseau de stations. */
@@ -168,6 +170,32 @@ public class Network {
      */
     public Itinerary bestPath(Station source, Station destination) {
         return null;
+    }
+
+    public ArrayList<Schedule> traitementSchedule(String msg){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        int current0=0;
+        int sl=msg.charAt(current0);
+        String name=msg.substring(current0+1,current0+sl+1);
+        current0=current0+sl+1;
+        int ltl=msg.charAt(current0);
+        String lttmp=msg.substring(current0+1,current0+ltl+1);
+        current0=current0+ltl+1;
+        LocalTime time=LocalTime.parse(lttmp);
+        int ll=msg.charAt(current0);
+        String line=msg.substring(current0+1,current0+ll+1);
+        ArrayList<Schedule> schedulestmp=new ArrayList<Schedule>();
+        if(hasStation(name)){
+            List<Path> paths = getStation(name).getOutPathsFromLine(line);
+            for (Path p: paths ){
+                for(LocalTime lt : p.getSchedule()){
+                    if(lt.isAfter(time))
+                        schedulestmp.add(new Schedule(getEndTerminus(line, p.getVariant()).getName()  , lt.format(dtf)));
+                }
+            }
+        }
+        return schedulestmp;
+
     }
 
     /**
