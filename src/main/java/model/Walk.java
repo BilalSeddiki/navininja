@@ -4,11 +4,13 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 
 /** TODO */
 public class Walk implements Transport {
-    
+
     /** Coordonnées GPS de départ. */
     private Double departureCoordinates;
 
@@ -59,13 +61,34 @@ public class Walk implements Transport {
     @Override
     public boolean equals(Object arg0) {
         return arg0 instanceof Walk w &&
-            this.departureCoordinates == w.departureCoordinates &&
-            this.arrivalCoordinates == w.arrivalCoordinates;
+                this.departureCoordinates == w.departureCoordinates &&
+                this.arrivalCoordinates == w.arrivalCoordinates;
     }
 
     /** TODO */
     @Override
     public String toString() {
-        return "TODO";
+        return "WALK: " + departureCoordinates + " ; " + arrivalCoordinates + " (" + getTravelDistance() + " ; "
+                + getTravelDuration() + ")";
+    }
+
+    @Override
+    public Point2D.Double getInCoordinates() {
+        return departureCoordinates;
+    }
+
+    @Override
+    public Point2D.Double getOutCoordinates() {
+        return arrivalCoordinates;
+    }
+
+    @Override
+    public Optional<LocalTime> nextDeparture(LocalTime from) {
+        return Optional.of(from);
+    }
+
+    @Override
+    public Optional<Duration> totalDuration(LocalTime departure) {
+        return Optional.of(getTravelDuration());
     }
 }

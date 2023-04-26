@@ -116,7 +116,7 @@ public class TestPath {
     public void testNextTrainDepartureSameDay() {
         Path path = createPathWithScheduleAndTravelDuration();
         LocalTime depart = LocalTime.of(8, 37, 00);
-        assertEquals(path.getSchedule().get(1), path.nextTrainDeparture(depart).get(),
+        assertEquals(path.getSchedule().get(1), path.nextDeparture(depart).get(),
                 "Le calcul du prochain depart est incorrect.");
     }
 
@@ -128,7 +128,7 @@ public class TestPath {
     public void testNextTrainDepartureNextDay() {
         Path path = createPathWithScheduleAndTravelDuration();
         LocalTime depart = LocalTime.of(23, 30, 00);
-        assertEquals(path.getSchedule().get(0), path.nextTrainDeparture(depart).get(),
+        assertEquals(path.getSchedule().get(0), path.nextDeparture(depart).get(),
                 "Le calcul du prochain depart est incorrect.");
     }
 
@@ -140,7 +140,7 @@ public class TestPath {
     public void testNextTrainDepartureEmptySchedule() {
         Path path = createPathWithDefaultValues();
         LocalTime depart = LocalTime.of(14, 30, 00);
-        assertEquals(Optional.empty(), path.nextTrainDeparture(depart),
+        assertEquals(Optional.empty(), path.nextDeparture(depart),
                 "Le calcul du prochain départ est incorrect.");
     }
 
@@ -170,7 +170,7 @@ public class TestPath {
         destination.addInPath(path3);
 
         LocalTime depart = LocalTime.of(8, 30, 00);
-        assertEquals(LocalTime.of(8, 32, 00), path3.nextTrainDeparture(depart).get(),
+        assertEquals(LocalTime.of(8, 32, 00), path3.nextDeparture(depart).get(),
                 "Le calcul du prochain départ est incorrect.");
     }
 

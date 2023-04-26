@@ -8,6 +8,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Itinerary;
 import model.Path;
+import model.Transport;
+import model.Travel;
 import shortestpath.Dijkstra;
 
 import java.time.Duration;
@@ -21,7 +23,7 @@ import java.util.List;
 public class FindARouteController extends Controller {
 
     @FXML
-    TableColumn<Path, String> lineColumn;
+    TableColumn<Transport, String> lineColumn;
     @FXML
     Button goBackBtn;
     @FXML
@@ -37,23 +39,20 @@ public class FindARouteController extends Controller {
     @FXML
     TextField coordinatesBInput;
     @FXML
-    TableView<Path> itineraryTable;
+    TableView<Transport> itineraryTable;
     @FXML
-    TableColumn<Path, String> startColumn;
+    TableColumn<Transport, String> startColumn;
     @FXML
-    TableColumn<Path, String> endColumn;
+    TableColumn<Transport, String> endColumn;
     @FXML
-    TableColumn<Path, Duration> durationColumn;
-
-
+    TableColumn<Transport, Duration> durationColumn;
 
     /**
      * Liste contenant les heures de la journée
      */
     private final ObservableList<String> hours = FXCollections.observableArrayList(
             "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12",
-            "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"
-    );
+            "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23");
     /**
      * Liste contenant les minutes
      */
@@ -73,14 +72,13 @@ public class FindARouteController extends Controller {
         hourComboBoxA.setValue(String.valueOf(LocalTime.now().getHour()));
         minComboBoxA.setValue(String.valueOf(LocalTime.now().getMinute()));
 
-        coordinatesAInput.textProperty().addListener(new TextFieldListener( coordinatesAInput, suggestionMenu, stations, network));
-        coordinatesBInput.textProperty().addListener( new TextFieldListener( coordinatesBInput, suggestionMenu, stations, network));
+        coordinatesAInput.textProperty()
+                .addListener(new TextFieldListener(coordinatesAInput, suggestionMenu, stations, network));
+        coordinatesBInput.textProperty()
+                .addListener(new TextFieldListener(coordinatesBInput, suggestionMenu, stations, network));
         itineraryTable.getColumns().clear();
         itineraryTable.setVisible(false);
     }
-
-
-
 
     /**
      * Écouteur du bouton 'Search' : lance la recherche d'itinéraire
@@ -90,11 +88,13 @@ public class FindARouteController extends Controller {
         //todo implement search action
         String stationAName = coordinatesAInput.getText();
         String stationBName = coordinatesBInput.getText();
-        LocalTime time = LocalTime.of(Integer.parseInt(hourComboBoxA.getValue()),Integer.parseInt(minComboBoxA.getValue()));
+        LocalTime time = LocalTime.of(Integer.parseInt(hourComboBoxA.getValue()),
+                Integer.parseInt(minComboBoxA.getValue()));
 
-        if( network.hasStation(stationAName) && network.hasStation(stationBName)){
-           Itinerary it = new Dijkstra(network).bestPath(network.getStation(stationAName), network.getStation(stationBName), time );
-            List<Path> paths = it.getPaths();
+        if (network.hasStation(stationAName) && network.hasStation(stationBName)) {
+            Itinerary it = new Dijkstra(network).bestPath(network.getStation(stationAName),
+                    network.getStation(stationBName), time, true);
+            List<Transport> paths = it.getPaths();
 
             startColumn.setCellValueFactory(new PropertyValueFactory<>("source"));
             endColumn.setCellValueFactory(new PropertyValueFactory<>("destination"));
@@ -102,7 +102,7 @@ public class FindARouteController extends Controller {
             // Define a cell factory for the duration column
             durationColumn.setCellValueFactory(new PropertyValueFactory<>("travelDuration"));
             durationColumn.setCellFactory(column -> {
-                TableCell<Path, Duration> cell = new TableCell<Path, Duration>() {
+                TableCell<Transport, Duration> cell = new TableCell<Transport, Duration>() {
                     @Override
                     protected void updateItem(Duration duration, boolean empty) {
                         super.updateItem(duration, empty);
@@ -119,12 +119,10 @@ public class FindARouteController extends Controller {
                 return cell;
             });
 
-
-
             itineraryTable.getColumns().clear();
             itineraryTable.getColumns().addAll(startColumn, endColumn, lineColumn, durationColumn);
 
-            ObservableList<Path> data = FXCollections.observableList(paths);
+            ObservableList<Transport> data = FXCollections.observableList(paths);
             itineraryTable.setItems(data);
             itineraryTable.setVisible(true);
         }
@@ -139,5 +137,3 @@ public class FindARouteController extends Controller {
         navigationController.navigateBack();
     }
 }
-
-

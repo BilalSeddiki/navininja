@@ -9,16 +9,14 @@ public class Itinerary {
     /** Heure de départ de l'itinéraire. */
     private LocalTime departureTime;
     /** L'ensemble des chemins constituant l'itinéraire */
-    private List<Path> paths;
-    /** L'ensemble des chemins et trajets à pied constituant l'itinéraire (Temporaire) */
-    private List<Transport> completeItinerary;
+    private List<Transport> paths;
 
     /**
      * Construit un itinéraire. 
      * @param departureTime l'heure de départ de l'itinéraire
      * @param paths l'ensemble des chemins constituant l'itinéraire
      */
-    public Itinerary(LocalTime departureTime, List<Path> paths) {
+    public Itinerary(LocalTime departureTime, List<Transport> paths) {
         this.departureTime = departureTime;
         this.paths = paths;
     }
@@ -27,7 +25,7 @@ public class Itinerary {
      * Renvoie l'ensemble des chemins constituant l'itinéraire
      * @return une liste de chemins
      */
-    public List<Path> getPaths() {
+    public List<Transport> getPaths() {
         return paths;
     }
 
@@ -68,7 +66,9 @@ public class Itinerary {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder(departureTime.toString());
-        for (Path path : paths) {
+        stringBuilder.append("\n");
+        stringBuilder.append(getDuration());
+        for (Transport path : paths) {
             stringBuilder.append("\n");
             stringBuilder.append(path);
         }

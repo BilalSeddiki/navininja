@@ -13,7 +13,7 @@ public class TestItinerary {
     @Test
     public void testConstructorAndGetters() {
         LocalTime departureTime = LocalTime.of(0, 0);
-        ArrayList<Path> paths = new ArrayList<Path>();
+        ArrayList<Transport> paths = new ArrayList<Transport>();
 
         Itinerary itinerary = new Itinerary(departureTime, paths);
         assertEquals(departureTime, itinerary.getDepartureTime(), "L'attribut departureTime est incorrect.");
@@ -34,7 +34,7 @@ public class TestItinerary {
     @Test
     public void testGetDuration() {
         LocalTime departureTime = LocalTime.of(8, 30, 00);
-        ArrayList<Path> paths = new ArrayList<Path>();
+        ArrayList<Transport> paths = new ArrayList<Transport>();
         paths.add(helperPath(Duration.ofMinutes(5)));
         paths.add(helperPath(Duration.ofMinutes(10)));
         Itinerary itinerary = new Itinerary(departureTime, paths);
@@ -47,7 +47,7 @@ public class TestItinerary {
     @Test
     public void testGetArrivalTime() {
         LocalTime departureTime = LocalTime.of(8, 30, 00);
-        ArrayList<Path> paths = new ArrayList<Path>();
+        ArrayList<Transport> paths = new ArrayList<Transport>();
         paths.add(helperPath(Duration.ofMinutes(5)));
         paths.add(helperPath(Duration.ofMinutes(10)));
         Itinerary itinerary = new Itinerary(departureTime, paths);

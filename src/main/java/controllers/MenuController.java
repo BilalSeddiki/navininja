@@ -28,13 +28,12 @@ public class MenuController extends Controller {
     @FXML
     Button scheduleBtn;
 
-
     /**
      * Écouteur du bouton 'Find a route'
      * @param actionEvent événement
      */
     public void findARouteListener(ActionEvent actionEvent) throws IOException {
-        navigationController.navigateTo("findARouteView");
+        navigationController.navigateTo("FindARouteView");
     }
 
     /**
@@ -43,12 +42,13 @@ public class MenuController extends Controller {
      */
     public void networkPlanListener(ActionEvent actionEvent) {
     }
+
     /**
      * Écouteur du bouton 'Schedule'
      * @param actionEvent événement
      */
     public void scheduleListener(ActionEvent actionEvent) {
-        navigationController.navigateTo("scheduleView");
+        navigationController.navigateTo("ScheduleView");
 
     }
 }
