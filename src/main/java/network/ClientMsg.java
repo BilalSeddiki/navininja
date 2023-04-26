@@ -46,6 +46,7 @@ public class ClientMsg {
             current0=current0+i1+i2+1;
             ret.add(new Schedule(d,p));
         }
+        return ret;
 
     }
 }
