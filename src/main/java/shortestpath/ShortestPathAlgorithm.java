@@ -23,6 +23,11 @@ public abstract class ShortestPathAlgorithm {
     public ShortestPathAlgorithm(Network network) {
         this.network = network;
     }
+
+    /** TODO */
+    public Network getNetwork() {
+        return this.network;
+    }
     
     /**
      * Renvoie le meilleur chemin entre deux stations, à l'heure indiquée

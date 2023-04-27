@@ -63,9 +63,8 @@ public class Walk implements Transport {
             this.arrivalCoordinates == w.arrivalCoordinates;
     }
 
-    /** TODO */
     @Override
     public String toString() {
-        return "TODO";
+        return departureCoordinates.toString() + " -> " + arrivalCoordinates.toString();
     }
 }
