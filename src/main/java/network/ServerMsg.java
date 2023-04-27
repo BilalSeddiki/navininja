@@ -2,7 +2,7 @@ package netnavi;
 
 import java.net.*;
 import java.io.*;
-import netnavi.NetUtil;
+import netnavi.*;
 import java.time.LocalTime;
 import model.*;
 import java.util.*;
@@ -42,6 +42,21 @@ public class ServerMsg {
             msg=msg.concat(d);
         }
         NetUtil.send(c,msg);
+    }
+    public static void sendStations(Socket clientSocket,ArrayList<MinimalStation>stations){
+        String msg="";
+        char size=(char)stations.size();
+        msg=msg.concat(String.valueOf(size));
+        for(var s:stations){
+            msg=msg.concat(String.valueOf((char)s.getName().length()));
+            msg=msg.concat(s.getName());
+            ArrayList<String> lignes=s.getLignes();
+            for(var l:lignes){
+                msg=msg.concat(String.valueOf((char)l.length()));
+                msg=msg.concat(l);
+            }
+        }
+        NetUtil.send(clientSocket,msg);
     }
     
 }

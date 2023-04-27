@@ -6,6 +6,7 @@ import java.util.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.time.*;
+import netnavi.MinimalStation;
 
 public class Server{
     public static void main(String[] args) {
@@ -36,6 +37,10 @@ public class Server{
                     LocalTime time=LocalTime.parse(tmp);
                     Itinerary a=network.bestPath(network.getStation(source), network.getStation(destination),time);
                     ServerMsg.sendBestPath(clientSocket,a);
+                }else if(msg.charAt(0)=='l' && msg.charAt(1)=='p'){
+                    ArrayList<MinimalStation> stations=network.allStation();
+                    ServerMsg.sendStations(clientSocket,stations);
+                    clientSocket.close();
                 }else{
                     clientSocket.close();
                 }

@@ -2,7 +2,7 @@ package netnavi;
 
 import java.net.*;
 import java.io.*;
-import netnavi.NetUtil;
+import netnavi.*;
 import java.time.LocalTime;
 import model.*;
 import java.util.*;
@@ -33,22 +33,22 @@ public class ClientMsg {
         NetUtil.send(s,msg);
         String msg2=NetUtil.receive(s);
         List<MinimalPath> ret=new ArrayList<MinimalPath>();
-        int size=msg2.charAt(0);
-        int current0=0;
+        int size=(int)msg2.charAt(0);
+        int current0=1;
         for(int i=0;i<size;i++){
-            int i1=msg2.charAt(current0);
+            int i1=(int)msg2.charAt(current0);
             String source2=msg2.substring(current0+1,current0+i1+1);
             current0=current0+i1+1;
-            i1=msg2.charAt(current0);
+            i1=(int)msg2.charAt(current0);
             String destination2=msg2.substring(current0+1,current0+i1+1);
             current0=current0+i1+1;
-            i1=msg2.charAt(current0);
+            i1=(int)msg2.charAt(current0);
             String lineName=msg2.substring(current0+1,current0+i1+1);
             current0=current0+i1+1;
-            i1=msg2.charAt(current0);
+            i1=(int)msg2.charAt(current0);
             String variant=msg2.substring(current0+1,current0+i1+1);
             current0=current0+i1+1;
-            i1=msg2.charAt(current0);
+            i1=(int)msg2.charAt(current0);
             String duration=msg2.substring(current0+1,current0+i1+1);
             current0=current0+i1+1;
             ret.add(new MinimalPath(source2,destination2,lineName,variant,duration));
@@ -76,18 +76,51 @@ public class ClientMsg {
         NetUtil.send(s,msg);
         String msg2=NetUtil.receive(s);
         ArrayList<Schedule> ret=new ArrayList<Schedule>();
-        int size=msg2.charAt(0);
-        int current0=0;
+        int size=(int)msg2.charAt(0);
+        int current0=1;
         for(int i=0;i<size;i++){
-            int i1=msg2.charAt(current0);
+            int i1=(int)msg2.charAt(current0);
             String d=msg2.substring(current0+1,current0+i1+1);
             current0=current0+i1+1;
-            int i2=msg2.charAt(current0);
+            int i2=(int)msg2.charAt(current0);
             String p=msg2.substring(current0+1,current0+i2+1);
             current0=current0+i2+1;
             ret.add(new Schedule(d,p));
         }
         return ret;
 
+    }
+    public static ArrayList<MinimalStation> listeStations(String ip){
+        try{
+            Socket s=new Socket(ip,51312);
+            return listeStations(s);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static ArrayList<MinimalStation> listeStations(Socket s){
+        String msg="ls";
+        NetUtil.send(s,msg);
+        String msg2=NetUtil.receive(s);
+        ArrayList<MinimalStation> ret=new ArrayList<MinimalStation>();
+        int size=(int)msg2.charAt(0);
+        int current0=1;
+        for( int i=0;i<size;i++){
+            int i1=(int)msg2.charAt(current0);
+            String n=msg2.substring(current0+1,current0+i1+1);
+            current0=current0+i1+1;
+            int li=(int)msg2.charAt(current0);
+            current0=current0+1;
+            ArrayList<String> lignes=new ArrayList<String>();
+            for(int j=0;i<li;i++){
+                int li1=(int)msg2.charAt(current0);
+                String l=msg2.substring(current0+1,current0+li1+1);
+                current0=current0+li1+1;
+                lignes.add(l);
+            }
+            ret.add(new MinimalStation(n,lignes));
+        }
+        return ret;
     }
 }
