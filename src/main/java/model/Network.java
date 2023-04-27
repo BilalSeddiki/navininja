@@ -212,6 +212,9 @@ public class Network {
     public TreeMap<java.lang.Double, Station> getClosestStations(Double coordinates) {
         TreeMap<java.lang.Double, Station> map = new TreeMap<>();
         for (Station station : stationsByCoordinates.values()) {
+            if (coordinates.equals(station.getCoordinates())) {
+                continue;
+            }
             double distanceX = Math.abs(coordinates.getX()) - Math.abs(station.getCoordinates().getX());
             double distanceY = Math.abs(coordinates.getY()) - Math.abs(station.getCoordinates().getY());
             double distance = Math.abs(Math.abs(distanceX) - Math.abs(distanceY));
