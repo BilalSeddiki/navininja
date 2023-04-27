@@ -1,11 +1,14 @@
 package netnavi;
 
 public class MinimalPath{
-    String source;
-    String destination;
-    String lineName;
-    String variant;
-    String duration;
+    public String source;
+    public String destination;
+    public String lineName;
+    public String variant;
+    public String duration;
+    /**
+     * un path minimal entre Deux station/deux point de coord gps
+     */
     public MinimalPath(String s,String d,String ln,String v,String dura){
         source=s;
         destination=d;

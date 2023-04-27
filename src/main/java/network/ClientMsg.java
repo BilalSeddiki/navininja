@@ -10,6 +10,13 @@ import java.util.*;
 /* la classe qui gèrent les message reseaux de l'interface */
 public class ClientMsg {
 
+    /**
+     * renvoie une ArrayList de minimal Station
+     * @param ip l'adress ip du serv
+     * @param source le nom de la station de depart/ ou les coordonnée quand best path pourra prendre les coordonné
+     * @param destination l'arrivé 
+     * @param time l'heure de depart
+    */
     public static List<MinimalPath> bestPath(String ip,String source,String destination,LocalTime time){
         try{
             Socket s=new Socket(ip,51312);
@@ -55,6 +62,12 @@ public class ClientMsg {
         }
         return ret;
     }
+    /**
+     * renvoie la liste de schedule après l'heure donné a une station pour une ligne
+     * @param ip l'adress du serv
+     * @param station la station
+     * @param time le temp a partir duquel on veut les schedule
+     */
     public static ArrayList<Schedule> schedule(String ip,String station,LocalTime time,String line){
         try{
             Socket s=new Socket(ip,51312);
@@ -90,6 +103,10 @@ public class ClientMsg {
         return ret;
 
     }
+    /**
+     * renvoie une ArrayList de minimal Station
+     * @param ip l'adress ip du serv
+    */
     public static ArrayList<MinimalStation> listeStations(String ip){
         try{
             Socket s=new Socket(ip,51312);
