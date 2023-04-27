@@ -33,8 +33,7 @@ public class Dijkstra extends ShortestPathAlgorithm {
     }
 
     @Override
-    public Itinerary bestPath(Station source, Station destination, LocalTime startTime, NodeSize size,
-            boolean walking) {
+    public Itinerary bestPath(Station source, Station destination, LocalTime startTime, NodeSize size, boolean walking) {
         Comparator<? super Node> comparator = size.getComparator();
         PriorityQueue<Node> queue = new PriorityQueue<>(comparator);
         Set<Point2D.Double> visitedStations = new HashSet<>();
@@ -138,25 +137,14 @@ public class Dijkstra extends ShortestPathAlgorithm {
     }
 
     @Override
-    public Itinerary bestPath(Double startingCoordinates, Double endingCoordinates, LocalTime startTime,
-            NodeSize size) {
+    public Itinerary bestPath(Double startingCoordinates, Double endingCoordinates, LocalTime startTime, NodeSize size) {
         return null;
-    }
-
-    @Override
-
-    public Itinerary bestPathWalking(Double startingCoordinates, Double endingCoordinates, LocalTime startTime,
-            NodeSize size) {
-        return null;
-
     }
 
     public static void main(String[] args) throws IOException {
-        Network network = Network.fromCSV(Globals.pathToRessources("map_data.csv"),
-                Globals.pathToRessources("timetables.csv"));
+        Network network = Network.fromCSV(Globals.pathToRessources("map_data.csv"), Globals.pathToRessources("timetables.csv"));
         Dijkstra dijkstra = new Dijkstra(network);
-        Itinerary itinerary = dijkstra.bestPath(network.getStation("Bibliothèque François Mitterrand"),
-                network.getStation("Châtelet"), LocalTime.now(), false);
+        Itinerary itinerary = dijkstra.bestPath(network.getStation("Châtelet"), network.getStation("Gare de Lyon"), LocalTime.now(), false);
         System.out.println(itinerary);
         // CA MARCHE PAS PARCE QUE GARE DE LYON SON SCHEDULE EST VIDE
     }
