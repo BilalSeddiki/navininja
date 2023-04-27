@@ -12,6 +12,8 @@ import javafx.util.Pair;
 import java.awt.geom.Point2D.Double;
 import java.time.format.DateTimeFormatter;
 
+import netnavi.MinimalStation;
+
 public class Network {
     /** Ensemble de stations du réseau. <p> Une HashMap avec le nom des stations pour clé, et les stations pour valeur.*/
     private HashMap<String, Station> stationsByName;
@@ -212,6 +214,16 @@ public class Network {
 
     }
 
+    public ArrayList<MinimalStation> allStation(){
+        Set<String> a=stationsByName.keySet();
+        ArrayList<MinimalStation> ret=new ArrayList<MinimalStation>();
+        for( var s:a){
+            ArrayList<String> tmp=getLinesByStation(s);
+            ret.add(new MinimalStation(s,tmp));
+        }
+        return ret;
+    }
+
 
 
     /**
@@ -271,6 +283,8 @@ public class Network {
 
         }
     }
+
+    
 
     /**
      * Initialise le variant d'une ligne
