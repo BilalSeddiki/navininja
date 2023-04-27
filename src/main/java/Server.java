@@ -9,6 +9,10 @@ import java.time.*;
 import netnavi.MinimalStation;
 
 public class Server{
+    /**
+     * Le serveur qui gerent les appel au modèle  
+     * La logique est qu'il prend une demande de connexion, la traite, la ferme et en attend une autre
+     * */ 
     public static void main(String[] args) {
         try{
             var network = Network.fromCSV(Globals.pathToRessources("map_data.csv"), Globals.pathToRessources("timetables.csv"));

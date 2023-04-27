@@ -7,17 +7,18 @@ import java.time.LocalTime;
 import model.*;
 import java.util.*;
 
-/* la classe qui gèrent les message reseaux de l'interface */
+/* La classe qui gèrent les messages reseaux que l'interface graphique peut envoyer et les reponse du serveur*/
 public class ClientMsg {
 
     /**
-     * renvoie une ArrayList de minimal Station
-     * @param ip l'adress ip du serv
-     * @param source le nom de la station de depart/ ou les coordonnée quand best path pourra prendre les coordonné
-     * @param destination l'arrivé 
-     * @param time l'heure de depart
+     * Fait une demande de bestPath au serveur et renvoie la reponse sous un format de liste de MinimalPath
+     * @param ip l'adresse ip du serveur
+     * @param source le nom de la station de depart ou les coordonnée GPS du depart
+     * @param destination le nom de la station d'arrivée ou les coordonnée GPS de l'arrivée
+     * @param time l'heure de départ
+     * @return une ArrayList de MinimalPath
     */
-    public static List<MinimalPath> bestPath(String ip,String source,String destination,LocalTime time){
+    public static ArrayList<MinimalPath> bestPath(String ip,String source,String destination,LocalTime time){
         try{
             Socket s=new Socket(ip,51312);
             return bestPath(s,source,destination,time);
@@ -27,8 +28,15 @@ public class ClientMsg {
         return null;
     }
    
-
-    public static List<MinimalPath> bestPath(Socket s, String source, String destination,LocalTime time){
+    /**
+     * Fait une demande de bestPath au serveur et renvoie la reponse sous un format de liste de MinimalPath
+     * @param s Le Socket reseau connecté au serveur
+     * @param source Le nom de la station de depart ou les coordonnée GPS du depart
+     * @param destination Le nom de la station d'arrivée ou les coordonnée GPS de l'arrivée
+     * @param time L'heure de départ
+     * @return une ArrayList de MinimalPath
+    */
+    public static ArrayList<MinimalPath> bestPath(Socket s, String source, String destination,LocalTime time){
         String msg="bp";
         String tmp=time.toString();
         msg=msg.concat(String.valueOf((char)source.length()));
@@ -39,7 +47,7 @@ public class ClientMsg {
         msg=msg.concat(tmp);
         NetUtil.send(s,msg);
         String msg2=NetUtil.receive(s);
-        List<MinimalPath> ret=new ArrayList<MinimalPath>();
+        ArrayList<MinimalPath> ret=new ArrayList<MinimalPath>();
         int size=(int)msg2.charAt(0);
         int current0=1;
         for(int i=0;i<size;i++){
@@ -62,11 +70,15 @@ public class ClientMsg {
         }
         return ret;
     }
+
+
     /**
-     * renvoie la liste de schedule après l'heure donné a une station pour une ligne
-     * @param ip l'adress du serv
-     * @param station la station
-     * @param time le temp a partir duquel on veut les schedule
+     * Fait une demande de Schedule au serveur pour une ligne a une station precise et renvoie la reponse sous un format de liste de Schedule
+     * @param ip l'adresse ip du serveur
+     * @param station la station demandée
+     * @param time le temps a partir du quel, les schedules sont demandés
+     * @param line la ligne demandée
+     * @return une ArrayList de Schedule
      */
     public static ArrayList<Schedule> schedule(String ip,String station,LocalTime time,String line){
         try{
@@ -77,6 +89,14 @@ public class ClientMsg {
         }
         return null;
     }
+    /**
+     * Fait une demande de Schedule au serveur pour une ligne a une station precise et renvoie la reponse sous un format de liste de Schedule
+     * @param s Le Socket reseau connecté au serveur
+     * @param station la station demandée
+     * @param time le temps a partir du quel, les schedules sont demandés
+     * @param line la ligne demandée
+     * @return une ArrayList de Schedule
+     */
     public static ArrayList<Schedule> schedule(Socket s,String station,LocalTime time, String line){
         String msg="hs";
         String tmp=time.toString();
@@ -104,8 +124,9 @@ public class ClientMsg {
 
     }
     /**
-     * renvoie une ArrayList de minimal Station
-     * @param ip l'adress ip du serv
+     * renvoie une liste de toute les stations du reseau de transport avec les lignes qui y correspondent
+     * @param ip l'adresse ip du serveur
+     * @return une ArrayList de MinimalStation 
     */
     public static ArrayList<MinimalStation> listeStations(String ip){
         try{
@@ -116,6 +137,11 @@ public class ClientMsg {
         }
         return null;
     }
+    /**
+     * renvoie une liste de toute les stations du reseau de transport avec les lignes qui y correspondent
+     * @param s le Socket reseau connecté au serveur
+     * @return une ArrayList de MinimalStation 
+    */
     public static ArrayList<MinimalStation> listeStations(Socket s){
         String msg="ls";
         NetUtil.send(s,msg);
