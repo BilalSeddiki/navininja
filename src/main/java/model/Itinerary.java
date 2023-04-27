@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
 
+import java.util.ArrayList;
+
 /** Un itinéraire d'une station à une autre. */
 public class Itinerary {
     /** Heure de départ de l'itinéraire. */
@@ -11,7 +13,7 @@ public class Itinerary {
     /** L'ensemble des chemins constituant l'itinéraire */
     private List<Path> paths;
     /** L'ensemble des chemins et trajets à pied constituant l'itinéraire (Temporaire) */
-    private List<Transport> completeItinerary;
+    private List<Transport> transports;
 
     /**
      * Construit un itinéraire. 
@@ -21,6 +23,11 @@ public class Itinerary {
     public Itinerary(LocalTime departureTime, List<Path> paths) {
         this.departureTime = departureTime;
         this.paths = paths;
+        //this.transports = transports;
+        this.transports = new ArrayList<Transport>();
+        for(int i = 0; i < paths.size(); i++) {
+            transports.add(paths.get(i));
+        }
     }
 
     /**
@@ -29,6 +36,14 @@ public class Itinerary {
      */
     public List<Path> getPaths() {
         return paths;
+    }
+
+    /**
+     * Renvoie l'ensemble des chemins et trajets à pieds constituant l'itinéraire
+     * @return une liste de chemins et trajets à pieds
+     */
+    public List<Transport> getTransports() {
+        return transports;
     }
 
     /**
@@ -62,6 +77,18 @@ public class Itinerary {
             newDeparture = newDeparture.plus(pathDuration);
         }
         return total;
+    }
+
+    /** TODO */
+    public void addToItineraryWithIndex(int index, Transport transport) {
+        if(index >= 0 && index < this.transports.size()) {
+            this.transports.add(transport);
+        }
+    }
+
+    /** TODO */
+    public void addToItinerary(Transport transport) {
+        this.transports.add(transport);
     }
 
     @Override
