@@ -187,7 +187,13 @@ public class Network {
         var list = getLineVariant(line, variant);
         return list.get(list.size() - 1);
     }
-
+    /**
+     * necessite un refactor
+     * <p>
+     * renvoie la liste des schedule de la station pour une ligne a l'horaire donnée
+     * @param msg le message de l'interface Graphique qui contient les information
+     * @return ArrayList<Schedule> qui contient les Schedules demandés
+     */
     public ArrayList<Schedule> traitementSchedule(String msg){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
         int current0=0;
@@ -213,7 +219,10 @@ public class Network {
         return schedulestmp;
 
     }
-
+    /**
+     * Renvoie une liste de MinimalStation qui contient les noms des stations et des lignes qui y passent
+     * @return ArrayList<MinimalStation> 
+     */
     public ArrayList<MinimalStation> allStation(){
         Set<String> a=stationsByName.keySet();
         ArrayList<MinimalStation> ret=new ArrayList<MinimalStation>();

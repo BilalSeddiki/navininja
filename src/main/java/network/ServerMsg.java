@@ -8,9 +8,14 @@ import model.*;
 import java.util.*;
 import java.time.Duration;
 
-/* la classe qui gèrent les message reseaux du server*/
+/* La classe qui gèrent les messages reseaux que peut envoyer le serveur*/
 public class ServerMsg {
 
+    /**
+     * Envoie les Schedules demandés a l'interface Graphique
+     * @param c Le Socket de l'interface Graphique
+     * @param s L'ArrayList de Schedule a envoyer a l'interface Graphique
+     */
     public static void sendSchedules(Socket c, ArrayList<Schedule> s){
         String msg="";
         char size=(char)s.size();
@@ -20,6 +25,12 @@ public class ServerMsg {
         }
         NetUtil.send(c,msg);
     }
+
+    /**
+     * Envoie le chemin le plus court a l'interface graphique
+     * @param c Le Socket reseau de l'interface graphique
+     * @param a L'itineraire a envoyer a l'interface graphique
+     */
     public static void sendBestPath(Socket c, Itinerary a){
         String msg="";
         var tmp=a.getPaths();
@@ -43,6 +54,11 @@ public class ServerMsg {
         }
         NetUtil.send(c,msg);
     }
+    /**
+     * Envoie la listes des station avec les lignes qui y passent a l'interface graphique
+     * @param clientSocket Le socket reseau de l'interface graphique
+     * @param stations L'Arraylist qui contient les stations a envoyer
+     */
     public static void sendStations(Socket clientSocket,ArrayList<MinimalStation>stations){
         String msg="";
         char size=(char)stations.size();
