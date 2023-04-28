@@ -52,14 +52,14 @@ public class Dijkstra extends ShortestPathAlgorithm {
             List<Transport> transportList = new ArrayList<>();
             transportList.addAll(network.getStation(currentNode.getCoordinates()).getOutPaths());
             if (walking) {
-                List<Pair<java.lang.Double, Station>> map = network.getClosestStations(currentNode.getCoordinates());
-                for (int i = 0; i < 5; i++) {
-                    Walk walk = new Walk(currentNode.getCoordinates(), map.get(0).getValue().getCoordinates());
+                List<Pair<java.lang.Double, Station>> list = network.getClosestStations(currentNode.getCoordinates());
+                for (int i = 0; i < list.size(); i++) {
+                    Walk walk = new Walk(currentNode.getCoordinates(), list.get(0).getValue().getCoordinates());
                     if (walk.getTravelDistance() > 0.001) {
-                        continue;
+                        break;
                     }
                     transportList.add(walk);
-                    map.remove(0);
+                    list.remove(0);
                 }
             }
             for (Transport path : transportList) {
