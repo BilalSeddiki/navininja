@@ -105,6 +105,11 @@ public class Path implements Transport {
         Duration totalDuration = waitingTime.plus(this.travelDuration);
         return totalDuration;
     }
+    
+    /** TODO */
+    public Duration getTransportDuration(LocalTime departure) {
+        return this.totalDuration(departure);
+    }
 
     /**
      * Renvoie le nom de la ligne sur laquelle se situe le chemin.

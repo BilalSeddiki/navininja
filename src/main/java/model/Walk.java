@@ -56,6 +56,11 @@ public class Walk implements Transport {
         return duration;
     }
 
+    /** TODO */
+    public Duration getTransportDuration(LocalTime departure) {
+        return this.getTravelDuration();
+    }
+
     @Override
     public boolean equals(Object arg0) {
         return arg0 instanceof Walk w &&

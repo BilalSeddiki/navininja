@@ -47,6 +47,7 @@ public abstract class ShortestPathAlgorithm {
     
     public abstract Itinerary bestPathWalking(Double startingCoordinates, Double endingCoordinates, LocalTime startTime, NodeSize size);
 
+    /*
     protected Station createHumanBeginStation(Double coordinates, LocalTime startTime) {
         try {
             return network.getStation(coordinates);
@@ -86,4 +87,5 @@ public abstract class ShortestPathAlgorithm {
         }
         return currentPosition;
     }
+    */
 }
