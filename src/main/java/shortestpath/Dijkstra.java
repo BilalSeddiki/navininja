@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.List;
 
 import javafx.util.Pair;
+import javafx.util.Pair;
 import model.Itinerary;
 import model.Network;
 import model.Path;
