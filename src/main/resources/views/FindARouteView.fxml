@@ -83,7 +83,7 @@
             <Tooltip text="Navigate back" />
          </tooltip>
       </Button>
-      <TableView fx:id="itineraryTable" layoutX="197.0" layoutY="438.0" prefHeight="400.0" prefWidth="639.0" AnchorPane.leftAnchor="197.0" AnchorPane.rightAnchor="198.0">
+      <TableView fx:id="itineraryTable" layoutX="197.0" layoutY="488.0" prefHeight="400.0" prefWidth="639.0" AnchorPane.leftAnchor="197.0" AnchorPane.rightAnchor="198.0">
          <columns>
             <TableColumn fx:id="startColumn" prefWidth="160.0" text="Start">
                <cellValueFactory>
@@ -108,6 +108,8 @@
             </TableColumn>
          </columns>
       </TableView>
+      <Label fx:id="titleTotalDuration" layoutX="197.0" layoutY="448.0" prefHeight="23.0" prefWidth="156.0" styleClass="title" stylesheets="@style/style.css" text="Total trip duration : " />
+      <Label fx:id="labelTotalDuration" layoutX="353.0" layoutY="448.0" prefHeight="17.0" prefWidth="142.0" styleClass="title" stylesheets="@style/style.css" text="00:00" />
 
    </AnchorPane>
 </ScrollPane>
