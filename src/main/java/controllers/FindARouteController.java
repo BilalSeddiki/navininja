@@ -8,8 +8,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Itinerary;
 import model.Path;
+import model.Transport;
 import shortestpath.Dijkstra;
 
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
@@ -20,8 +22,7 @@ import java.util.List;
  */
 public class FindARouteController extends Controller {
 
-    @FXML
-    TableColumn<Path, String> lineColumn;
+
     @FXML
     Button goBackBtn;
     @FXML
@@ -37,13 +38,15 @@ public class FindARouteController extends Controller {
     @FXML
     TextField coordinatesBInput;
     @FXML
-    TableView<Path> itineraryTable;
+    TableView<Transport> itineraryTable;
     @FXML
-    TableColumn<Path, String> startColumn;
+    TableColumn<Transport, String> startColumn;
     @FXML
-    TableColumn<Path, String> endColumn;
+    TableColumn<Transport, String> endColumn;
     @FXML
-    TableColumn<Path, Duration> durationColumn;
+    TableColumn<Transport, String> lineColumn;
+    @FXML
+    TableColumn<Transport, Duration> durationColumn;
 
 
 
@@ -94,7 +97,7 @@ public class FindARouteController extends Controller {
 
         if(network.hasStation(stationAName) && network.hasStation(stationBName)){
             Itinerary it = new Dijkstra(network).bestPath(network.getStation(stationAName), network.getStation(stationBName), time );
-            List<Path> paths = it.getPaths();
+            List<Transport> paths = it.getTransports();
             //List<Transport> transports = it.getTransports();
 
             startColumn.setCellValueFactory(new PropertyValueFactory<>("source"));
@@ -103,7 +106,7 @@ public class FindARouteController extends Controller {
             // Define a cell factory for the duration column
             durationColumn.setCellValueFactory(new PropertyValueFactory<>("travelDuration"));
             durationColumn.setCellFactory(column -> {
-                TableCell<Path, Duration> cell = new TableCell<Path, Duration>() {
+                TableCell<Transport, Duration> cell = new TableCell<Transport, Duration>() {
                     @Override
                     protected void updateItem(Duration duration, boolean empty) {
                         super.updateItem(duration, empty);
@@ -125,7 +128,7 @@ public class FindARouteController extends Controller {
             itineraryTable.getColumns().clear();
             itineraryTable.getColumns().addAll(startColumn, endColumn, lineColumn, durationColumn);
 
-            ObservableList<Path> data = FXCollections.observableList(paths);
+            ObservableList<Transport> data = FXCollections.observableList(paths);
             itineraryTable.setItems(data);
             itineraryTable.setVisible(true);
         }
