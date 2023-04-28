@@ -16,6 +16,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javafx.util.Pair;
 import model.Itinerary;
 import model.Network;
 import model.Path;
@@ -51,11 +52,14 @@ public class Dijkstra extends ShortestPathAlgorithm {
             List<Transport> transportList = new ArrayList<>();
             transportList.addAll(network.getStation(currentNode.getCoordinates()).getOutPaths());
             if (walking) {
-                TreeMap<java.lang.Double, Station> map = network.getClosestStations(currentNode.getCoordinates());
+                List<Pair<java.lang.Double, Station>> map = network.getClosestStations(currentNode.getCoordinates());
                 for (int i = 0; i < 5; i++) {
-                    Walk walk = new Walk(currentNode.getCoordinates(), map.firstEntry().getValue().getCoordinates());
+                    Walk walk = new Walk(currentNode.getCoordinates(), map.get(0).getValue().getCoordinates());
+                    if (walk.getTravelDistance() > 0.001) {
+                        continue;
+                    }
                     transportList.add(walk);
-                    map.remove(map.firstKey());
+                    map.remove(0);
                 }
             }
             for (Transport path : transportList) {
@@ -73,7 +77,7 @@ public class Dijkstra extends ShortestPathAlgorithm {
             visitedStations.add(currentNode.getCoordinates());
         }
         if (!stationNodeMap.containsKey(destination.getCoordinates())) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Aucun chemin n'a été trouvé.");
         }
         return new Itinerary(startTime, stationNodeMap.get(destination.getCoordinates()).getShortestPath());
     }
@@ -144,7 +148,7 @@ public class Dijkstra extends ShortestPathAlgorithm {
     public static void main(String[] args) throws IOException {
         Network network = Network.fromCSV(Globals.pathToRessources("map_data.csv"), Globals.pathToRessources("timetables.csv"));
         Dijkstra dijkstra = new Dijkstra(network);
-        Itinerary itinerary = dijkstra.bestPath(network.getStation("Châtelet"), network.getStation("Gare de Lyon"), LocalTime.now(), false);
+        Itinerary itinerary = dijkstra.bestPath(network.getStation("Châtelet"), network.getStation("Bibliothèque François Mitterrand"), LocalTime.now(), true);
         System.out.println(itinerary);
         // CA MARCHE PAS PARCE QUE GARE DE LYON SON SCHEDULE EST VIDE
     }
