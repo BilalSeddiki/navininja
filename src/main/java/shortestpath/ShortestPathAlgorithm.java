@@ -13,6 +13,7 @@ import model.Itinerary;
 import model.Network;
 import model.Path;
 import model.Station;
+import model.Transport;
 import shortestpath.graph.NodeSize;
 import java.awt.geom.Point2D.Double;
 
@@ -27,6 +28,15 @@ public abstract class ShortestPathAlgorithm {
     /** TODO */
     public Network getNetwork() {
         return this.network;
+    }
+
+    /** TODO */
+    public List<Transport> pathIntoTransport(List<Path> paths) {
+        List<Transport> transports = new ArrayList<Transport>();
+        for(int i = 0; i < paths.size(); i++) {
+            transports.add(paths.get(i));
+        }
+        return transports;
     }
     
     /**
