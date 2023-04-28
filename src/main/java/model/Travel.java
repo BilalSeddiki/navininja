@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import javafx.util.Pair;
+
 import java.awt.geom.Point2D.Double;
 
 import shortestpath.Dijkstra;
@@ -88,7 +91,7 @@ public class Travel {
 
     /** TODO */
     private Itinerary fromCoordinatesToStation() {
-        TreeMap<java.lang.Double, Station> tree = this.algorithm.getNetwork().getClosestStations(this.departureCoordinates);
+        List<Pair<java.lang.Double, Station>> tree = this.algorithm.getNetwork().getClosestStations(this.departureCoordinates);
         System.out.println(this.algorithm.getNetwork().getStationsByName().size());
         SortedMap<java.lang.Double, Station> map = tree.headMap(tree.firstKey() + SEARCH_LIMIT);
         
