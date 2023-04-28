@@ -19,9 +19,11 @@ import java.awt.geom.Point2D.Double;
 public abstract class ShortestPathAlgorithm {
 
     protected final Network network;
+    protected double maxWalkingDistance;
 
     public ShortestPathAlgorithm(Network network) {
         this.network = network;
+        maxWalkingDistance = 0.001;
     }
     
     /**
@@ -40,4 +42,8 @@ public abstract class ShortestPathAlgorithm {
     }
 
     public abstract Itinerary bestPath(Double startingCoordinates, Double endingCoordinates, LocalTime startTime, NodeSize size);
+
+    public void setWalkingDistance(double distance) {
+        this.maxWalkingDistance = distance;
+    }
 }

@@ -55,7 +55,7 @@ public class Dijkstra extends ShortestPathAlgorithm {
                 List<Pair<java.lang.Double, Station>> list = network.getClosestStations(currentNode.getCoordinates());
                 for (int i = 0; i < list.size(); i++) {
                     Walk walk = new Walk(currentNode.getCoordinates(), list.get(0).getValue().getCoordinates());
-                    if (walk.getTravelDistance() > 0.001) {
+                    if (walk.getTravelDistance() > maxWalkingDistance) {
                         break;
                     }
                     transportList.add(walk);
