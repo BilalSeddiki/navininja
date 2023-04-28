@@ -161,15 +161,26 @@ public class Network {
         return station;
     }
 
-    public TreeMap<java.lang.Double, Station> getClosestStations(Double coordinates) {
-        TreeMap<java.lang.Double, Station> map = new TreeMap<>();
+    public List<Pair<java.lang.Double, Station>> getClosestStations(Double coordinates) {
+        List<Pair<java.lang.Double, Station>> list = new ArrayList<>();
         for (Station station : stationsByCoordinates.values()) {
-            double distanceX = Math.abs(coordinates.getX()) - Math.abs(station.getCoordinates().getX());
-            double distanceY = Math.abs(coordinates.getY()) - Math.abs(station.getCoordinates().getY());
-            double distance = Math.abs(Math.abs(distanceX) - Math.abs(distanceY));
-            map.put(distance, station);
+            if (station.getCoordinates().equals(coordinates)) {
+                continue;
+            }
+            double distance = Math.sqrt(
+                Math.pow(station.getCoordinates().getX() - coordinates.getX(), 2) + 
+                Math.pow(station.getCoordinates().getX() - coordinates.getX(), 2));
+            list.add(new Pair<>(distance, station));
         }
-        return map;
+        list.sort(new Comparator<Pair<java.lang.Double, Station>>() {
+
+            @Override
+            public int compare(Pair<java.lang.Double, Station> o1, Pair<java.lang.Double, Station> o2) {
+                return o1.getKey().compareTo(o2.getKey());
+            }
+            
+        });
+        return list;
     }
 
     /**
