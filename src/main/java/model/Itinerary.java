@@ -71,8 +71,8 @@ public class Itinerary {
     public Duration getDuration() {
         Duration total = Duration.ZERO;
         LocalTime newDeparture = departureTime;
-        for(int i = 0; i < this.paths.size(); i++) {
-            Duration pathDuration = paths.get(i).totalDuration(newDeparture);
+        for(int i = 0; i < this.transports.size(); i++) {
+            Duration pathDuration = transports.get(i).getTransportDuration(newDeparture);
             total = total.plus(pathDuration);
             newDeparture = newDeparture.plus(pathDuration);
         }
@@ -80,14 +80,12 @@ public class Itinerary {
     }
 
     /** TODO */
-    public void addToItineraryWithIndex(int index, Transport transport) {
-        if(index >= 0 && index < this.transports.size()) {
-            this.transports.add(transport);
-        }
+    public void addToTransportsBeginning(Transport transport) {
+        this.transports.add(0, transport);
     }
 
     /** TODO */
-    public void addToItinerary(Transport transport) {
+    public void addToTransportsEnding(Transport transport) {
         this.transports.add(transport);
     }
 

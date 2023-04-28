@@ -9,8 +9,5 @@ import java.util.List;
 public interface Transport {
 
     /** TODO */
-    public double getTravelDistance();
-
-    /** TODO */
-    public Duration getTravelDuration();
+    public Duration getTransportDuration(LocalTime departureTime);
 }

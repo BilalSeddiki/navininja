@@ -35,12 +35,13 @@ public class Main {
 
     public static void main(String[] args) {
         var stationList = new ArrayList<Station>();
-        Station s0 = new Station("Station 0", new Double(0, 0));
-        Station s1 = new Station("Station 1", new Double(1, 1));
-        Station s2 = new Station("Station 2", new Double(2, 2));
-        Station s3 = new Station("Station 3", new Double(3, 3));
-        Station s4 = new Station("Station 4", new Double(4, 4));
-        Station s5 = new Station("Station 5", new Double(5, 5));
+        Station s0 = new Station("Station 0", new Double(48.858093, 2.294694));
+        Station s1 = new Station("Station 1", new Double(48.858203, 2.295068));
+        Station s2 = new Station("Station 2", new Double(48.857126, 2.296561)); //48.857946, 2.295365
+        Station s3 = new Station("Station 3", new Double(48.857689, 2.295063));
+        Station s4 = new Station("Station 4", new Double(48.857756, 2.294634));
+        Station s5 = new Station("Station 5", new Double(48.858029, 2.294400));
+        //Station s6 = new Station("Station 6", new Double(48.858841, 2.292953));
         stationList.add(s0);
         stationList.add(s1);
         stationList.add(s2);
@@ -70,16 +71,31 @@ public class Main {
         var network = new Network(stationList, pathList);
         Dijkstra algorithm = new Dijkstra(network);
 
-        Travel travel = 
-            new Travel
-                .Builder(algorithm)
-                //.setDepartureStation(s0)
-                .setDepartureCoordinates(new Double(0, 0))
-                .setArrivalStation(s0)
-                .setDepartureTime(LocalTime.of(8, 20))
-                .build();
+        Double d = new Double(48.858370, 2.294532);
+
+        /*
+        Travel travel = new Travel
+            .Builder(algorithm)
+            //.setDepartureStation(s0)
+            .setDepartureCoordinates(d)
+            .setArrivalStation(s2)
+            .setDepartureTime(LocalTime.of(8, 20))
+            .build();
         Itinerary itinerary = travel.createItinerary();
-        System.out.println(itinerary.getDuration());
-        System.out.println(itinerary.getTransports().get(0).toString());
+        System.out.println("durée: " + itinerary.getDuration());
+        //System.out.println(itinerary.getArrivalTime());
+        System.out.println("itinerarire final: \n" + itinerary.getTransports().toString());
+        */
+
+        Travel travel = new Travel
+            .Builder(algorithm)
+            .setDepartureStation(s2)
+            .setArrivalCoordinates(d)
+            .setDepartureTime(LocalTime.of(8, 20))
+            .build();
+        Itinerary itinerary = travel.createItinerary();
+        System.out.println("durée: " + itinerary.getDuration());
+        //System.out.println(itinerary.getArrivalTime());
+        System.out.println("itinerarire final: \n" + itinerary.getTransports().toString());
     }
 }
