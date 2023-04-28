@@ -10,37 +10,22 @@ import java.util.ArrayList;
 public class Itinerary {
     /** Heure de départ de l'itinéraire. */
     private LocalTime departureTime;
-    /** L'ensemble des chemins constituant l'itinéraire */
-    private List<Path> paths;
-    /** L'ensemble des chemins et trajets à pied constituant l'itinéraire (Temporaire) */
+    /** L'ensemble des chemins et trajets à pied constituant l'itinéraire */
     private List<Transport> transports;
 
     /**
      * Construit un itinéraire. 
      * @param departureTime l'heure de départ de l'itinéraire
-     * @param paths l'ensemble des chemins constituant l'itinéraire
+     * @param transports l'ensemble des chemins et trajets à pied constituant l'itinéraire
      */
-    public Itinerary(LocalTime departureTime, List<Path> paths) {
+    public Itinerary(LocalTime departureTime, List<Transport> transports) {
         this.departureTime = departureTime;
-        this.paths = paths;
-        //this.transports = transports;
-        this.transports = new ArrayList<Transport>();
-        for(int i = 0; i < paths.size(); i++) {
-            transports.add(paths.get(i));
-        }
+        this.transports = transports;
     }
 
     /**
-     * Renvoie l'ensemble des chemins constituant l'itinéraire
-     * @return une liste de chemins
-     */
-    public List<Path> getPaths() {
-        return paths;
-    }
-
-    /**
-     * Renvoie l'ensemble des chemins et trajets à pieds constituant l'itinéraire
-     * @return une liste de chemins et trajets à pieds
+     * Renvoie l'ensemble des chemins et trajets à pied constituant l'itinéraire
+     * @return une liste de chemins et trajets à pied
      */
     public List<Transport> getTransports() {
         return transports;
@@ -92,9 +77,9 @@ public class Itinerary {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder(departureTime.toString());
-        for (Path path : paths) {
+        for (Transport transport : transports) {
             stringBuilder.append("\n");
-            stringBuilder.append(path);
+            stringBuilder.append(transports);
         }
         return stringBuilder.toString();
     }

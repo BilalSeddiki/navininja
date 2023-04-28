@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.List;
 
 import model.Itinerary;
 import model.Network;
@@ -54,7 +55,8 @@ public class Dijkstra extends ShortestPathAlgorithm {
         if (!stationNodeMap.containsKey(destination)) {
             throw new IllegalArgumentException();
         }
-        return new Itinerary(startTime, stationNodeMap.get(destination).getShortestPath());
+        List<Path> paths = stationNodeMap.get(destination).getShortestPath();
+        return new Itinerary(startTime, this.pathIntoTransport(paths));
     }
 
     private boolean isPathLegal(Path path, Set<String> visitedStations, LocalTime startTime) {

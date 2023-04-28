@@ -72,8 +72,7 @@ public class Travel {
 
     /** TODO */
     public Itinerary createEmptyItinerary() {
-        //List<Transport> transport = new ArrayList<Transport>();
-        List<Path> transport = new ArrayList<Path>(); //TODO: Temporaire
+        List<Transport> transport = new ArrayList<Transport>();
         Itinerary empty = new Itinerary(this.departureTime, transport);
         return empty;
     }
