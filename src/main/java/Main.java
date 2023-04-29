@@ -41,7 +41,6 @@ public class Main {
         Station s3 = new Station("Station 3", new Double(48.857689, 2.295063));
         Station s4 = new Station("Station 4", new Double(48.857756, 2.294634));
         Station s5 = new Station("Station 5", new Double(48.858029, 2.294400));
-        //Station s6 = new Station("Station 6", new Double(48.858841, 2.292953));
         stationList.add(s0);
         stationList.add(s1);
         stationList.add(s2);
@@ -71,7 +70,9 @@ public class Main {
         var network = new Network(stationList, pathList);
         Dijkstra algorithm = new Dijkstra(network);
 
-        Double d = new Double(48.858370, 2.294532);
+        //Double d = new Double(48.858370, 2.294532);
+        Double d = new Double(48.857126, 2.296561);
+        Double c = new Double(48.858841, 2.292953);
 
         /*
         Travel travel = new Travel
@@ -87,12 +88,22 @@ public class Main {
         System.out.println("itinerarire final: \n" + itinerary.getTransports().toString());
         */
 
+        /*
         Travel travel = new Travel
             .Builder(algorithm)
             .setDepartureStation(s2)
             .setArrivalCoordinates(d)
             .setDepartureTime(LocalTime.of(8, 20))
             .build();
+        */
+
+        Travel travel = new Travel
+            .Builder(algorithm)
+            .setDepartureCoordinates(d)
+            .setArrivalCoordinates(c)
+            .setDepartureTime(LocalTime.of(8, 20))
+            .build();
+
         Itinerary itinerary = travel.createItinerary();
         System.out.println("durée: " + itinerary.getDuration());
         //System.out.println(itinerary.getArrivalTime());
