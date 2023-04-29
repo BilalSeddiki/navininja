@@ -122,3 +122,14 @@
 .table-row-cell:odd:filled:selected {
   -fx-background: -fx-control-inner-background-alt ;
 }
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color:  #eef0f2;
+    -fx-pref-width: 10px;
+    -fx-pref-height: 10px;
+}
+
+.scroll-bar:vertical .thumb, .scroll-bar:horizontal .thumb{
+
+-fx-background-color:linear-gradient(#82AFFC 0%, #8399FB 100%);
+}
+
