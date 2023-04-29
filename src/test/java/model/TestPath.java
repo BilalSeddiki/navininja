@@ -70,43 +70,6 @@ public class TestPath {
         assertSame(destination, path.getDestination(), "L'attribut destination est incorrect.");
     }
 
-    /* TODO: Discuter de l'utilite de ces tests. */
-    @Test
-    public void testConstructorLineNameNotEmpty() {
-        Path path = createPathWithDefaultValues();
-        //assertFalse(path.getLineName().isEmpty(), "L'attribut lineName ne peut pas être vide.");
-    }
-
-    @Test
-    public void testConstructorScheduleNotEmpty() {
-        Path path = createPathWithDefaultValues();
-        //assertFalse(path.getSchedule().isEmpty(), "L'attribut schedule ne peut pas être vide.");
-    }
-
-    @Test
-    public void testConstructorTravelDurationNotZero() {
-        Path path = createPathWithDefaultValues();
-        //assertNotEquals(path.getTravelDuration(), Duration.ZERO, "L'attribut travelDuration ne peut pas valoir zéro.");
-    }
-
-    @Test
-    public void testConstructorTravelDistanceNotZero() {
-        Path path = createPathWithDefaultValues();
-        //assertNotEquals(path.getTravelDistance(), 0, "L'attribut travelDistance ne peut pas valoir zéro.");
-    }
-
-    @Test
-    public void testConstructorSourceNotNull() {
-        Path path = createPathWithDefaultValues();
-        assertNotNull(path.getSource(), "L'attribut source ne peut pas être nul.");
-    }
-
-    @Test
-    public void testConstructorNextStationNotNull() {
-        Path path = createPathWithDefaultValues();
-        assertNotNull(path.getDestination(), "L'attribut destination ne peut pas être nul.");
-    }
-
     /**
      * Teste la fonction nextTrainDeparture dans le cas ou le prochain train
      * arrive le jour même.
