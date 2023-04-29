@@ -13,11 +13,11 @@ public class TestItinerary {
     @Test
     public void testConstructorAndGetters() {
         LocalTime departureTime = LocalTime.of(0, 0);
-        ArrayList<Path> paths = new ArrayList<Path>();
+        ArrayList<Transport> transports = new ArrayList<Transport>();
 
-        Itinerary itinerary = new Itinerary(departureTime, paths);
+        Itinerary itinerary = new Itinerary(departureTime, transports);
         assertEquals(departureTime, itinerary.getDepartureTime(), "L'attribut departureTime est incorrect.");
-        assertEquals(paths, itinerary.getPaths(), "L'attribut paths est incorrect.");
+        assertEquals(transports, itinerary.getTransports(), "L'attribut paths est incorrect.");
     }
 
     public Path helperPath(Duration duration) {
@@ -34,10 +34,10 @@ public class TestItinerary {
     @Test
     public void testGetDuration() {
         LocalTime departureTime = LocalTime.of(8, 30, 00);
-        ArrayList<Path> paths = new ArrayList<Path>();
-        paths.add(helperPath(Duration.ofMinutes(5)));
-        paths.add(helperPath(Duration.ofMinutes(10)));
-        Itinerary itinerary = new Itinerary(departureTime, paths);
+        ArrayList<Transport> transports = new ArrayList<Transport>();
+        transports.add(helperPath(Duration.ofMinutes(5)));
+        transports.add(helperPath(Duration.ofMinutes(10)));
+        Itinerary itinerary = new Itinerary(departureTime, transports);
 
         Duration duration = itinerary.getDuration();
         Duration supposedDuration = Duration.ofMinutes(30);
@@ -47,10 +47,10 @@ public class TestItinerary {
     @Test
     public void testGetArrivalTime() {
         LocalTime departureTime = LocalTime.of(8, 30, 00);
-        ArrayList<Path> paths = new ArrayList<Path>();
-        paths.add(helperPath(Duration.ofMinutes(5)));
-        paths.add(helperPath(Duration.ofMinutes(10)));
-        Itinerary itinerary = new Itinerary(departureTime, paths);
+        ArrayList<Transport> transports = new ArrayList<Transport>();
+        transports.add(helperPath(Duration.ofMinutes(5)));
+        transports.add(helperPath(Duration.ofMinutes(10)));
+        Itinerary itinerary = new Itinerary(departureTime, transports);
 
         LocalTime arrivalTime = itinerary.getArrivalTime();
         LocalTime supposedArrivalTime = LocalTime.of(9, 00, 00);
