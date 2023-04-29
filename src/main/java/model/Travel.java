@@ -90,28 +90,28 @@ public class Travel {
 
     /** TODO */
     private Itinerary fromCoordinatesToStation() {
-        Pair<Walk, Itinerary> result = 
-            this.bestItineraryWithCoordinatesAndStation(
+        Pair<Itinerary, Walk> result = 
+            this.bestItineraryWithCoordinates(
                 this.departureCoordinates, this.arrivalStation, true
             );
-        Walk walk = result.getKey();
-        Itinerary itinerary = result.getValue();
+        Itinerary itinerary = result.getKey();
+        Walk walk = result.getValue();
         if(walk != null) {
-            itinerary.addToTransportsBeginning(result.getKey());
+            itinerary.addToTransportsBeginning(walk);
         }
         return itinerary;
     }
 
     /** TODO */
     private Itinerary fromStationToCoordinates() {
-        Pair<Walk, Itinerary> result = 
-            this.bestItineraryWithCoordinatesAndStation(
+        Pair<Itinerary, Walk> result = 
+            this.bestItineraryWithCoordinates(
                 this.arrivalCoordinates, this.departureStation, false
             );
-        Walk walk = result.getKey();
-        Itinerary itinerary = result.getValue();
+        Itinerary itinerary = result.getKey();
+        Walk walk = result.getValue();
         if(walk != null) {
-            itinerary.addToTransportsEnding(result.getKey());
+            itinerary.addToTransportsEnding(walk);
         }
         return itinerary;
     }
@@ -122,36 +122,35 @@ public class Travel {
     }
 
     /** TODO */
-    private Pair<Walk, Itinerary> bestItineraryWithCoordinatesAndStation(Double coordinates, Station station, boolean direction) {
+    private Pair<Itinerary, Walk> bestItineraryWithCoordinates(Double coordinates, Station station, boolean direction) {
         List<Pair<java.lang.Double, Station>> list = this.algorithm.getNetwork().getClosestStations(coordinates);
         
         if(list.size() == 0) {
-            return new Pair<Walk, Itinerary>(null, this.createEmptyItinerary());
+            return new Pair<Itinerary, Walk>(this.createEmptyItinerary(), null);
         }
         if(list.size() < this.SEARCH_LIMIT) {
             this.SEARCH_LIMIT = list.size();
         }
 
+        Pair<Itinerary, Station> min = this.searchBestItinerary(list, station, direction);
+        Itinerary itineraryMin = min.getKey();
+        Station stationMin = min.getValue();
+        
+        Walk walk = this.walkWithDirection(coordinates, stationMin.getCoordinates(), direction);
+        Pair<Itinerary, Walk> result = new Pair<Itinerary, Walk>(itineraryMin, walk);
+        return result;
+    }
+
+    /** TODO */
+    private Pair<Itinerary, Station> searchBestItinerary(List<Pair<java.lang.Double, Station>> list, Station station, boolean direction) {
         Station stationMin = list.get(0).getValue();
-        Itinerary itineraryMin;
-        if(direction) {
-            itineraryMin = this.bestItinerary(stationMin, station);
-        }
-        else {
-            itineraryMin = this.bestItinerary(station, stationMin);
-        }
+        Itinerary itineraryMin = this.itineraryWithDirection(stationMin, station, direction);
         Duration durationMin = itineraryMin.getDuration();
 
         for(int i = 1; i < this.SEARCH_LIMIT; i++) {
             Pair<java.lang.Double, Station> pair = list.get(i);
             Station stationLoop = pair.getValue();
-            Itinerary itineraryLoop;
-            if(direction) {
-                itineraryLoop = this.bestItinerary(stationLoop, station);
-            }
-            else {
-                itineraryLoop = this.bestItinerary(station, stationLoop);
-            }
+            Itinerary itineraryLoop = this.itineraryWithDirection(stationLoop, station, direction);
             Duration durationLoop = itineraryLoop.getDuration();
             if(durationLoop.compareTo(durationMin) < 0) {
                 Walk walkDifference = new Walk(stationMin.getCoordinates(), stationLoop.getCoordinates());
@@ -163,17 +162,31 @@ public class Travel {
                 }
             }
         }
-        Walk walk;
-        if(direction) {
-            walk = new Walk(coordinates, stationMin.getCoordinates());
-        }
-        else {
-            walk = new Walk(stationMin.getCoordinates(), coordinates);
-        }
-        Pair<Walk, Itinerary> result = new Pair<Walk, Itinerary>(walk, itineraryMin);
+        Pair<Itinerary, Station> result = new Pair<Itinerary, Station>(itineraryMin, stationMin);
         return result;
     }
 
+    /** TODO */
+    private Itinerary itineraryWithDirection(Station station1, Station station2, boolean direction) {
+        if(direction) {
+            return this.bestItinerary(station1, station2);
+        }
+        else {
+            return this.bestItinerary(station2, station1);
+        }
+    }
+
+    /** TODO */
+    private Walk walkWithDirection(Double coordinates1, Double coordinates2, boolean direction) {
+        if(direction) {
+            return new Walk(coordinates1, coordinates2);
+        }
+        else {
+            return new Walk(coordinates2, coordinates1);
+        }
+    }
+
+    /** TODO */
     public static class Builder {
         private ShortestPathAlgorithm algorithm;
         private LocalTime departureTime;

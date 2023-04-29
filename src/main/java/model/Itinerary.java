@@ -65,6 +65,16 @@ public class Itinerary {
     }
 
     /** TODO */
+    public boolean isEmpty() {
+        if(this.transports.size() == 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /** TODO */
     public void addToTransportsBeginning(Transport transport) {
         this.transports.add(0, transport);
     }
