@@ -98,7 +98,7 @@ public class Itinerary {
         StringBuilder stringBuilder = new StringBuilder(departureTime.toString());
         for (Transport transport : transports) {
             stringBuilder.append("\n");
-            stringBuilder.append(transports);
+            stringBuilder.append(transport);
         }
         return stringBuilder.toString();
     }
