@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.geom.Point2D.Double;
 
-/** TODO */
+/** Un trajet à pied d'un point à un autre. */
 public class Walk implements Transport {
     
     /** Coordonnées GPS de départ. */
@@ -15,23 +15,36 @@ public class Walk implements Transport {
     /** Coordonnées GPS d'arrivée. */
     private Double arrivalCoordinates;
 
-    /** TODO */
+    /**
+     * Construit une trajet à pied d'un point à un autre.
+     * @param departureCoordinates coordonnées GPS de départ
+     * @param arrivalCoordinates coordonnées GPS d'arrivée
+     */
     public Walk(Double departureCoordinates, Double arrivalCoordinates) {
         this.departureCoordinates = departureCoordinates;
         this.arrivalCoordinates = arrivalCoordinates;
     }
 
-    /** TODO */
+    /**
+     * Renvoie les coordonnées GPS du point de départ.
+     * @return coordonnées GPS du point de départ.
+     */
     public Double getDepartureCoordinates() {
         return this.departureCoordinates;
     }
 
-    /** TODO */
+    /**
+     * Renvoie les coordonnées GPS du point d'arrivée.
+     * @return coordonnées GPS du point d'arrivée.
+     */
     public Double getArrivalCoordinates() {
         return this.arrivalCoordinates;
     }
 
-    /** TODO */
+    /**
+     * Calcule la distance entre les deux points GPS en mètres.
+     * @return distance entre les deux points GPS en mètres.
+     */
     public double getTravelDistance() {
         double x1_rad = Math.toRadians(this.departureCoordinates.getX());
         double y1 = this.departureCoordinates.getY();
@@ -46,7 +59,11 @@ public class Walk implements Transport {
         return distance;
     }
 
-    /** TODO */
+    /** 
+     * Calcule la durée du trajet à pied entre deux points GPS.
+     * La vitesse moyenne considérée est 5 km/h.
+     * @return la durée du trajet à pied entre deux points GPS.
+     */
     public Duration getTravelDuration() {
         double speed = 5.0 * 1000;
         double distance = this.getTravelDistance() * 60;
@@ -56,7 +73,13 @@ public class Walk implements Transport {
         return duration;
     }
 
-    /** TODO */
+    /**
+     * {@inheritDoc}
+     * Renvoie la durée du trajet à pied d'un point à un autre.
+     * @param departureTime l'heure de départ du trajet (inutilisée)
+     * @return la durée du trajet à pied
+     */
+    @Override
     public Duration getTransportDuration(LocalTime departure) {
         return this.getTravelDuration();
     }

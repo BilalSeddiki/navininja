@@ -5,6 +5,7 @@ import utils.Globals;
 import controllers.*;
 
 import model.*;
+import utils.*;
 import shortestpath.*;
 import java.time.Duration;
 import java.time.LocalTime;
@@ -97,6 +98,7 @@ public class Main {
             .build();
         */
 
+        /*
         Travel travel = new Travel
             .Builder(algorithm)
             .setDepartureCoordinates(d)
@@ -108,5 +110,23 @@ public class Main {
         System.out.println("durée: " + itinerary.getDuration());
         //System.out.println(itinerary.getArrivalTime());
         System.out.println("itinerarire final: \n" + itinerary.getTransports().toString());
+        */
+
+        try {
+            Travel travel = new Travel
+            .Builder(algorithm)
+            .setDepartureCoordinates(d)
+            .setArrivalCoordinates(c)
+            .setDepartureTime(LocalTime.of(8, 20))
+            .build();
+
+            Itinerary itinerary = travel.createItinerary();
+            System.out.println("durée: " + itinerary.getDuration());
+            System.out.println("itinerarire final: \n" + itinerary.getTransports().toString());
+
+        }
+        catch (IllegalTravelException e) {
+
+        }
     }
 }

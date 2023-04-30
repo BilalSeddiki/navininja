@@ -25,12 +25,19 @@ public abstract class ShortestPathAlgorithm {
         this.network = network;
     }
 
-    /** TODO */
+    /**
+     * Renvoie le réseau sur lequel appliqué l'algorithme.
+     * @return le réseau
+     */
     public Network getNetwork() {
         return this.network;
     }
 
-    /** TODO */
+    /** 
+     * Renvoie une liste de modes de transport basée sur la liste de chemins.
+     * @param paths liste de chemins
+     * @return liste de modes de transport contenant les chemins
+     */
     public List<Transport> pathIntoTransport(List<Path> paths) {
         List<Transport> transports = new ArrayList<Transport>();
         for(int i = 0; i < paths.size(); i++) {
@@ -57,6 +64,7 @@ public abstract class ShortestPathAlgorithm {
     
     public abstract Itinerary bestPathWalking(Double startingCoordinates, Double endingCoordinates, LocalTime startTime, NodeSize size);
 
+    //TODO: Erreur depuis la changement de tree à list.
     /*
     protected Station createHumanBeginStation(Double coordinates, LocalTime startTime) {
         try {
