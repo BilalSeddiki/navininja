@@ -11,7 +11,7 @@ public class TestPath {
 
     /**
      * Cree un chemin avec des valeurs par defaut.
-     * @return Chemin avec des valeurs par defaut.
+     * @return chemin avec des valeurs par defaut.
      */
     public Path createPathWithDefaultValues() {
         String lineName = "";
