@@ -87,8 +87,8 @@ public class Walk implements Transport {
     @Override
     public boolean equals(Object arg0) {
         return arg0 instanceof Walk w &&
-            this.departureCoordinates == w.departureCoordinates &&
-            this.arrivalCoordinates == w.arrivalCoordinates;
+            this.departureCoordinates.equals(w.departureCoordinates) &&
+            this.arrivalCoordinates.equals(w.arrivalCoordinates);
     }
 
     @Override
