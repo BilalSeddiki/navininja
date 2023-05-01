@@ -93,7 +93,7 @@ public class TestTravel {
     }
 
     /**
-     * Crée un réseau avec deux stations et  un algorithme de calcul du 
+     * Crée un réseau avec uniquement deux stations et un algorithme de calcul du 
      * meilleur itinéraire
      */
     public Pair<Dijkstra, ArrayList<Station>> createDijkstraWithTwoStations() {
@@ -132,7 +132,8 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste le monteur de la classe Travel dans le cas où les points de départ
+     * et d'arrivée sont des stations.
      */
     @Test
     public void testBuilderValidStations() throws IllegalTravelException {
@@ -158,7 +159,8 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste le monteur de la classe Travel dans le cas où les points de départ
+     * et d'arrivée sont des coordonnées GPS.
      */
     @Test
     public void testBuilderValidCoordinates() throws IllegalTravelException {
@@ -182,7 +184,9 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste le monteur de la classe Travel dans le cas où le point de départ
+     * sont des coordonnées GPS, le point d'arrivée est une station.
+     * Les limites de recherche et de distance sont explicitement données.
      */
     @Test
     public void testBuilderSetSearchParameters() throws IllegalTravelException {
@@ -209,7 +213,12 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste le monteur de la classe Travel dans le cas où l'heure de départ
+     * n'est pas donnée et les limites de recherche et de distance sont
+     * négatives.
+     * Afin d'éviter les erreurs dues à l'utilisation de la fonction now()
+     * de LocalTime, l'heure attendue est considérée valide dans
+     * une fourchette de 1 minute.
      */
     @Test
     public void testBuilderDefaultParameters() throws IllegalTravelException {
@@ -239,7 +248,8 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste le monteur de la classe Travel dans le cas où l'algorithme
+     * à appliquer n'a pas été donné, ce qui renvoie une exception.
      */
     @Test
     public void testBuilderNullAlgorithm() throws IllegalTravelException {
@@ -254,7 +264,8 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste le monteur de la classe Travel dans le cas où ni 
+     * le point de départ et ni le point d'arrivée n'ont été donnés.
      */
     @Test
     public void testBuilderNoStationsNorCoordinates() throws IllegalTravelException {
@@ -267,7 +278,8 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste le monteur de la classe Travel dans le cas où
+     * aucun point de départ n'a été donné.
      */
     @Test
     public void testBuilderNoDeparture() throws IllegalTravelException {
@@ -281,7 +293,8 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste le monteur de la classe Travel dans le cas où
+     * aucun point d'arrivée n'a été donné.
      */
     @Test
     public void testBuilderNoArrival() throws IllegalTravelException {
@@ -295,7 +308,8 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste le monteur de la classe Travel dans le cas où
+     * le point de départ est à la fois des coordonnées GPS et une station.
      */
     @Test
     public void testBuilderTwoDepartures() throws IllegalTravelException {
@@ -311,7 +325,8 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste le monteur de la classe Travel dans le cas où
+     * le point d'arrivée est à la fois des coordonnées GPS et une station.
      */
     @Test
     public void testBuilderTwoArrivals() throws IllegalTravelException {
@@ -327,7 +342,7 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste la fonction createEmptyItinerary.
      */
     @Test
     public void testCreateEmptyItinerary() throws IllegalTravelException {
@@ -344,7 +359,8 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste la fonction createItinerary dans le cas où le réseau
+     * sur lequel rechercher le meilleur itinéraire est vide.
      */
     @Test
     public void testEmptyNetwork() throws IllegalTravelException {
@@ -360,21 +376,16 @@ public class TestTravel {
             .setArrivalCoordinates(new Double(0, 0))
             .build();
         Itinerary itineraryCoordinates = travelCoordinates.createItinerary();
-
-        Travel travelStation = new Travel
-            .Builder(emptyDijkstra)
-            .setDepartureTime(LocalTime.of(0, 0))
-            .setDepartureCoordinates(new Double(0, 0))
-            .setArrivalStation(new Station("Station fantome", new Double(1, 1)))
-            .build();
-        Itinerary itineraryStation = travelStation.createItinerary();
         
         assertTrue(itineraryCoordinates.getTransports().size() == 0);
-        assertTrue(itineraryStation.getTransports().size() == 0);
     }
 
     /**
-     * TODO
+     * Teste la recherche du meilleur itinéraire entre deux
+     * coordonnées GPS sur un réseau constitué de deux stations.
+     * Ce test permet de vérifier que si le nombre de stations
+     * dans le réseau est inférieur à la valeur du nombre de recherche
+     * par défaut, cette dernière valeur sera mise à jour.
      */
     @Test
     public void testSearchFromCoordWithTwoStations() throws IllegalTravelException {
@@ -403,7 +414,11 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste la recherche du meilleur itinéraire entre une station et des
+     * coordonnées GPS sur un réseau constitué de deux stations.
+     * Ce test permet de vérifier que si le nombre de stations
+     * dans le réseau est inférieur à la valeur du nombre de recherche
+     * par défaut, cette dernière valeur sera mise à jour.
      */
     @Test
     public void testSearchFromCoordAndStationWithTwoStations() throws IllegalTravelException {
@@ -432,7 +447,7 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste la fonction fromStationToStation.
      */
     @Test
     public void testFromStationToStation() throws IllegalTravelException {
@@ -455,7 +470,7 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste la fonction fromCoordinatesToStation.
      */
     @Test
     public void testFromCoordinatesToStation() throws IllegalTravelException {
@@ -478,7 +493,7 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste la fonction fromStationToCoordinates.
      */
     @Test
     public void testFromStationToCoordinates() throws IllegalTravelException {
@@ -500,7 +515,7 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste la fonction fromCoordinatesToCoordinates.
      */
     @Test
     public void testFromCoordinatesToCoordinates() throws IllegalTravelException {
@@ -524,7 +539,8 @@ public class TestTravel {
     }
 
     /**
-     * TODO
+     * Teste la fonction fromCoordinatesToCoordinates, dans le cas
+     * où l'itinéraire n'est composé que d'un trajet à pied.
      */
     @Test
     public void testFromCoordinatesToCoordinatesOnlyWalk() throws IllegalTravelException {

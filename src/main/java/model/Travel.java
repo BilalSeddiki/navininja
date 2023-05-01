@@ -485,7 +485,7 @@ public class Travel {
          */
         public Travel build() throws IllegalTravelException {
             if(this.algorithm == null) {
-                throw new IllegalTravelException("L'algorithme a appliqué n'est pas défini.");
+                throw new IllegalTravelException("L'algorithme à appliquer n'est pas défini.");
             }
 
             if(this.departureTime == null) {
