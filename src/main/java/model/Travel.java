@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
 import javafx.util.Pair;
-
 import java.awt.geom.Point2D.Double;
 
 import shortestpath.Dijkstra;
@@ -133,22 +131,18 @@ public class Travel {
      * @return itinéraire calculé en fonction des paramètres non nuls.
      */
     public Itinerary createItinerary() {
-        if(this.algorithm != null) {
-            if(this.departureStation != null && this.arrivalStation != null) {
-                return this.fromStationToStation();
-            }
-            else if(this.departureStation != null && this.arrivalCoordinates != null) {
-                return this.fromStationToCoordinates();
-            }
-            else if(this.departureCoordinates != null && this.arrivalCoordinates != null) {
-                return this.fromCoordinatesToCoordinates();
-            }
-            else if(this.departureCoordinates != null && this.arrivalStation != null) {
-                return this.fromCoordinatesToStation();
-            }
-            return this.createEmptyItinerary();
-        } 
-        return this.createEmptyItinerary();
+        if(this.departureStation != null && this.arrivalStation != null) {
+            return this.fromStationToStation();
+        }
+        else if(this.departureStation != null && this.arrivalCoordinates != null) {
+            return this.fromStationToCoordinates();
+        }
+        else if(this.departureCoordinates != null && this.arrivalCoordinates != null) {
+            return this.fromCoordinatesToCoordinates();
+        }
+        else {
+            return this.fromCoordinatesToStation();
+        }
     }
 
     /** 
@@ -495,28 +489,23 @@ public class Travel {
             }
 
             if(this.departureTime == null) {
-                this.departureTime = LocalTime.now();
-            }
-
-            if(this.departureCoordinates == null && this.arrivalCoordinates == null
-                && this.departureStation == null && this.arrivalStation == null
-            ) {
-                throw new IllegalTravelException("Les points de départ et d'arrivée n'ont pas été définis.");
+                LocalTime now = LocalTime.now();
+                this.departureTime = LocalTime.of(now.getHour(), now.getMinute());
             }
 
             if(this.departureCoordinates == null && this.departureStation == null) {
                 throw new IllegalTravelException("Aucun point de départ n'a été défini.");
             }
 
-            if(this.departureCoordinates != null && this.departureStation != null) {
+            else if(this.departureCoordinates != null && this.departureStation != null) {
                 throw new IllegalTravelException("Il ne peut y avoir qu'un unique point de départ.");
             }
 
-            if(this.arrivalCoordinates == null && this.arrivalStation == null) {
+            else if(this.arrivalCoordinates == null && this.arrivalStation == null) {
                 throw new IllegalTravelException("Aucun point d'arrivée n'a été défini.");
             }
 
-            if(this.arrivalCoordinates != null && this.arrivalStation != null) {
+            else if(this.arrivalCoordinates != null && this.arrivalStation != null) {
                 throw new IllegalTravelException("Il ne peut y avoir qu'un unique point d'arrivée.");
             }
 
