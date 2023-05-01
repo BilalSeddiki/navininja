@@ -54,9 +54,8 @@ public class Itinerary {
     public Duration getDuration() {
         Duration total = Duration.ZERO;
         LocalTime newDeparture = departureTime;
-        for (int i = 0; i < this.paths.size(); i++) {
-            Duration pathDuration = paths.get(i).totalDuration(newDeparture)
-                    .orElseThrow(() -> new IllegalStateException("Empty time in Itinerary"));
+        for (Path path : this.paths) {
+            Duration pathDuration = path.totalDuration(newDeparture);
             total = total.plus(pathDuration);
             newDeparture = newDeparture.plus(pathDuration);
         }

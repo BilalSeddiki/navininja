@@ -80,6 +80,12 @@ public class ScheduleController extends Controller {
                      }
                  }
                  scheduleList = FXCollections.observableArrayList(schedules);
+                 scheduleList.sort(new Comparator<Schedule>() {
+                     @Override
+                     public int compare(Schedule o1, Schedule o2) {
+                         return o1.getPassingTimeAsSimpleString().compareTo(o2.getPassingTimeAsSimpleString());
+                     }
+                 });
                  directionColumn.setCellValueFactory(new PropertyValueFactory<>("directionAsSimpleString"));
                  timeColumn.setCellValueFactory(new PropertyValueFactory<>("passingTimeAsSimpleString"));
                  busScheduleTable.setItems(scheduleList);

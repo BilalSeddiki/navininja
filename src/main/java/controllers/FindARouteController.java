@@ -14,6 +14,7 @@ import shortestpath.Dijkstra;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -22,6 +23,10 @@ import java.util.List;
  */
 public class FindARouteController extends Controller {
 
+    @FXML
+    Label titleTotalDuration;
+    @FXML
+    Label labelTotalDuration;
     @FXML
     TableColumn<Transport, String> lineColumn;
     @FXML
@@ -78,6 +83,9 @@ public class FindARouteController extends Controller {
                 .addListener(new TextFieldListener(coordinatesBInput, suggestionMenu, stations, network));
         itineraryTable.getColumns().clear();
         itineraryTable.setVisible(false);
+        titleTotalDuration.setVisible(false);
+        labelTotalDuration.setVisible(false);
+
     }
 
     /**
@@ -95,7 +103,10 @@ public class FindARouteController extends Controller {
             Itinerary it = new Dijkstra(network).bestPath(network.getStation(stationAName),
                     network.getStation(stationBName), time, true);
             List<Transport> paths = it.getPaths();
-
+            long hours = it.getDuration().toHours();
+            long minutes = it.getDuration().toMinutes() % 60;
+            long seconds = it.getDuration().getSeconds() % 60;
+            labelTotalDuration.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
             startColumn.setCellValueFactory(new PropertyValueFactory<>("source"));
             endColumn.setCellValueFactory(new PropertyValueFactory<>("destination"));
             lineColumn.setCellValueFactory(new PropertyValueFactory<>("lineName"));
@@ -125,6 +136,10 @@ public class FindARouteController extends Controller {
             ObservableList<Transport> data = FXCollections.observableList(paths);
             itineraryTable.setItems(data);
             itineraryTable.setVisible(true);
+            titleTotalDuration.setVisible(true);
+
+            labelTotalDuration.setVisible(true);
+
         }
 
     }

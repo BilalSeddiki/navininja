@@ -47,7 +47,7 @@ public class TextFieldListener implements ChangeListener<String> {
         if (!newValue.isBlank()) {
             List<String> filteredSuggestions = new ArrayList<>();
             for (String s : stations) {
-                if (s.toLowerCase().startsWith(newValue.toLowerCase())) {
+                if (s.toLowerCase().contains(newValue.toLowerCase())) {
                     filteredSuggestions.add(s);
                 }
             }

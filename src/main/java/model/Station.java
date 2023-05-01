@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.awt.geom.Point2D.Double;
+import java.time.Duration;
 import java.time.LocalTime;
 
 
@@ -17,6 +18,8 @@ public class Station {
     private ArrayList<Path> outPaths;
     /** Differents chemins qui arrivent à la station. */
     private ArrayList<Path> inPaths;
+    /** Temps qu'il faut pour changer de ligne, par defaut 2 minutes */
+    private Duration lineChangeDuration = Duration.ofMinutes(2);
 
     /**
      * Construit une sation du réseau
@@ -28,6 +31,17 @@ public class Station {
         this.coordinates = coordinates;
         this.inPaths = new ArrayList<Path>();
         this.outPaths = new ArrayList<Path>();
+    }
+
+    /**
+    * Construit une sation du réseau
+    * @param name le nom de la station
+    * @param coordinates les coordonnées gps de la station 
+    * @param lineChangeDuration le temps qu'il faut pour changer de ligne
+    */
+    public Station(String name, Double coordinates, Duration lineChangeDuration) {
+        this(name, coordinates);
+        this.lineChangeDuration = lineChangeDuration;
     }
 
     /**
@@ -126,6 +140,13 @@ public class Station {
      */
     public List<Path> getOutPathsFromLine(String lineName) {
         return outPaths.stream().filter(path -> path.getLineName().equals(lineName)).toList();
+    }
+
+    /** Renvoie le temps qu'il faut pour changer de ligne
+     * @return une duree
+     */
+    public Duration getLineChangeDuration() {
+        return lineChangeDuration;
     }
 
     /**

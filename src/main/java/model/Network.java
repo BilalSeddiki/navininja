@@ -40,53 +40,6 @@ public class Network {
     }
 
     /**
-     * Crée un réseau à partir de deux fichiers CSV.
-     * @param mapFile le nom d'un fichier CSV contenant les informations des chemins du réseau
-     * @param scheduleFile le nom d'un fichier CSV contenant les informations des horaires des lignes 
-     * @return un réseau
-     * @throws IOException si la lecture d'un des fichier echoue
-     */
-    public static Network fromCSV(String mapFile, String scheduleFile) throws IOException {
-        var schedules = new HashMap<String, HashMap<String, HashMap<String, ArrayList<LocalTime>>>>();
-        var csvSchedules = new ScheduleDataCsv().readCSVFile(java.nio.file.Path.of(scheduleFile));
-
-        for (var item : csvSchedules) {
-            schedules
-                    .computeIfAbsent(item.getDepartStation(),
-                            k -> new HashMap<String, HashMap<String, ArrayList<LocalTime>>>())
-                    .computeIfAbsent(item.getLine(), k -> new HashMap<String, ArrayList<LocalTime>>())
-                    .computeIfAbsent(item.getVariant(), k -> new ArrayList<LocalTime>());
-            schedules.get(item.getDepartStation()).get(item.getLine()).get(item.getVariant()).add(item.getDepartTime());
-        }
-
-        var csvPaths = new CardsDataCsv().readCSVFile(java.nio.file.Path.of(mapFile));
-        var stations = new HashMap<String, Station>();
-        var paths = new ArrayList<Path>();
-        for (CardsDataCsv item : csvPaths) {
-            String stationNameA = item.getStationA();
-            if (!stations.containsKey(stationNameA)) {
-                Double coordinatesA = item.getCoordinatesA();
-                Station stationA = new Station(stationNameA, coordinatesA);
-                stations.put(stationA.getName(), stationA);
-            }
-
-            String stationNameB = item.getStationB();
-            if (!stations.containsKey(stationNameB)) {
-                Double coordinatesB = item.getCoordinatesB();
-                Station stationB = new Station(stationNameB, coordinatesB);
-                stations.put(stationB.getName(), stationB);
-            }
-
-            var schedule = schedules.getOrDefault(stationNameA, new HashMap<>())
-                    .getOrDefault(item.getLine(), new HashMap<>())
-                    .getOrDefault(item.getLineVariant(), new ArrayList<LocalTime>());
-
-            paths.add(new Path(item.getLine(), item.getLineVariant(), schedule, item.getDuration(),
-                    item.getDistance(), stations.get(stationNameA), stations.get(stationNameB)));
-        }
-        return new Network(new ArrayList<Station>(stations.values()), paths);
-    }
-    /**
      * Returns a mapping of each station to the list of lines passing by that station.
      * @return a HashMap with each station as key and the list of lines passing by that station as value
      */
@@ -109,13 +62,6 @@ public class Network {
 
     /**
      * Getter
-     * @return retourne la liste des lignes du réseau
-     */
-    public HashMap<String, HashMap<String, ArrayList<Station>>> getLines() {
-        return lines;
-    }
-    /**
-     * Getter
      * @return retourne la liste des stations par nom
      */
     public HashMap<String, Station> getStationsByName() {
@@ -129,8 +75,14 @@ public class Network {
     public HashMap<Double, Station> getStationsByCoordinates() {
         return stationsByCoordinates;
     }
+    /**
+     * Returns a mapping of each station to the list of lines passing by that station.
+     * @return a HashMap with each station as key and the list of lines passing by that station as value
+     */
 
-
+    public HashMap<String, HashMap<String, ArrayList<Station>>> getLines() {
+        return lines;
+    }
     /**
      * Renvoie la liste de station constituant le variant d'une ligne
      * @param name le nom de la ligne
