@@ -112,6 +112,7 @@ public class Main {
         System.out.println("itinerarire final: \n" + itinerary.getTransports().toString());
         */
 
+        
         try {
             Travel travel = new Travel
             .Builder(algorithm)
@@ -121,9 +122,57 @@ public class Main {
             .build();
 
             Itinerary itinerary = travel.createItinerary();
-            System.out.println("durée: " + itinerary.getDuration());
-            System.out.println("itinerarire final: \n" + itinerary.getTransports().toString());
+            System.out.println("--------Itineraire 1: \ndurée: " + itinerary.getDuration());
+            //System.out.println("itinerarire final: \n" + itinerary.getTransports().toString());
+            System.out.println("itinerarire final: \n" + itinerary.toString());
+        }
+        catch (IllegalTravelException e) {
 
+        }
+        
+
+        /*
+        try {
+            Travel travel = new Travel
+            .Builder(algorithm)
+            .setDepartureCoordinates(d)
+            .setArrivalCoordinates(c)
+            .setDepartureTime(LocalTime.of(8, 20))
+            .setSearchLimit(-1)
+            .setSearchDistance(10.0)
+            .build();
+
+            System.out.println(travel.getSearchLimit());
+
+            Travel travel2 = new Travel
+            .Builder(algorithm)
+            .setDepartureCoordinates(d)
+            .setArrivalCoordinates(c)
+            .setDepartureTime(LocalTime.of(8, 20))
+            
+            .setSearchDistance(10.0)
+            .build();
+
+            System.out.println(travel2.getSearchLimit());
+            System.out.println(travel.getSearchLimit());
+        }
+        catch (IllegalTravelException e) {
+
+        }
+        */
+
+        try {
+            Travel travel = new Travel
+            .Builder(algorithm)
+            .setDepartureCoordinates(new Double(48.832994, 2.335764))
+            .setArrivalCoordinates(new Double(48.832068, 2.339215))
+            .setDepartureTime(LocalTime.of(8, 20))
+            .build();
+
+            Itinerary itinerary = travel.createItinerary();
+            System.out.println("\n\n--------Itineraire 2: \ndurée: " + itinerary.getDuration());
+            System.out.println("itinerarire final: \n" + itinerary.getTransports().toString());
+            System.out.println("itinerarire final: \n" + itinerary.toString());
         }
         catch (IllegalTravelException e) {
 

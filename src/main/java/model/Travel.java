@@ -38,10 +38,10 @@ public class Travel {
     private final Station arrivalStation;
 
     /** Nombre de recherches maximal pour un meilleur itinéraire depuis une station plus éloignée. */
-    private static int SEARCH_LIMIT = 5;
+    private int SEARCH_LIMIT;
 
     /** Distance de recherche maximale pour un meilleur itinéraire depuis une station plus éloignée. */
-    private static double SEARCH_DISTANCE = 1000.0;
+    private double SEARCH_DISTANCE;
 
     /** 
      * Construit un déplacement d'un point à un autre.
@@ -54,6 +54,78 @@ public class Travel {
         this.arrivalCoordinates = builder.arrivalCoordinates;
         this.departureStation = builder.departureStation;
         this.arrivalStation = builder.arrivalStation;
+        this.SEARCH_LIMIT = builder.BUILDER_SEARCH_LIMIT;
+        this.SEARCH_DISTANCE = builder.BUILDER_SEARCH_DISTANCE;
+    }
+
+    /**
+     * Renvoie l'algorithme utilisé pour le calcul du meilleur itinéraire.
+     * @return algorithme utilisé, qui contient le réseau.
+     */
+    public ShortestPathAlgorithm getShortestPathAlgorithm() {
+        return this.algorithm;
+    }
+
+    /**
+     * Renvoie l'heure de départ du déplacement.
+     * @return l'heure de départ. 
+     */
+    public LocalTime getDepartureTime() {
+        return this.departureTime;
+    }
+
+    /**
+     * Renvoie les coordonnées du point de départ.
+     * Null est renvoyé si elles ne sont pas définies.
+     * @return coordonnées du point de départ, null si non définies.
+     */
+    public Double getDepartureCoordinates() {
+        return this.departureCoordinates;
+    }
+
+    /**
+     * Renvoie les coordonnées du point d'arrivée.
+     * Null est renvoyé si elles ne sont pas définies.
+     * @return coordonnées du point d'arrivée, null si non définies.
+     */
+    public Double getArrivalCoordinates() {
+        return this.arrivalCoordinates;
+    }
+
+    /**
+     * Renvoie la station de départ.
+     * Null est renvoyé si elle n'est pas définie.
+     * @return station de départ, null si non définie.
+     */
+    public Station getDepartureStation() {
+        return this.departureStation;
+    }
+
+    /**
+     * Renvoie la station d'arrivée.
+     * Null est renvoyé si elle n'est pas définie.
+     * @return station d'arrivée, null si non définie.
+     */
+    public Station getArrivalStation() {
+        return this.arrivalStation;
+    }
+
+    /**
+     * Renvoie le nombre de recherche maximal à effectuer pendant la recherche
+     * des stations les plus proches.
+     * @return nombre de recherche maximal.
+     */
+    public int getSearchLimit() {
+        return this.SEARCH_LIMIT;
+    }
+
+    /**
+     * Renvoie la distance de recherche maximale à considérer pendant la recherche
+     * des stations les plus proches.
+     * @return distance de recherche maximale.
+     */
+    public double getSearchDistance() {
+        return this.SEARCH_DISTANCE;
     }
 
     /** 
@@ -287,6 +359,12 @@ public class Travel {
         Itinerary itineraryMin = this.bestItinerary(departureMin, arrivalMin);
         Duration durationMin = itineraryMin.getDuration();
 
+        if(itineraryMin.getTransports().size() == 0) {
+            Walk walk = new Walk(departure, arrival);
+            itineraryMin.addToFirstPosition(walk);
+            return itineraryMin;
+        }
+
         for(int i = 1; i < this.SEARCH_LIMIT; i++) {
             Station stationDepartureLoop = listDeparture.get(i).getValue();
             for(int j = 1; j < this.SEARCH_LIMIT; j++) {
@@ -326,8 +404,8 @@ public class Travel {
         private Double arrivalCoordinates;
         private Station departureStation;
         private Station arrivalStation;
-        private int BUILDER_SEARCH_LIMIT;
-        private double BUILDER_SEARCH_DISTANCE;
+        private int BUILDER_SEARCH_LIMIT = 5;
+        private double BUILDER_SEARCH_DISTANCE = 1000.0;
 
         /**
          * Construit un monteur.
@@ -399,11 +477,11 @@ public class Travel {
 
         /**
          * Fixe la distance de recherche maximale.
-         * @param difference distance de recherche maximale.
+         * @param distance distance de recherche maximale.
          * @return Monteur dont la distance de recherche maximale a été fixée.
          */
-        public Builder setSearchDifference(double difference) {
-            this.BUILDER_SEARCH_DISTANCE = difference;
+        public Builder setSearchDistance(double distance) {
+            this.BUILDER_SEARCH_DISTANCE = distance;
             return this;
         }
 
@@ -440,6 +518,14 @@ public class Travel {
 
             if(this.arrivalCoordinates != null && this.arrivalStation != null) {
                 throw new IllegalTravelException("Il ne peut y avoir qu'un unique point d'arrivée.");
+            }
+
+            if(this.BUILDER_SEARCH_LIMIT < 0) {
+                this.BUILDER_SEARCH_LIMIT = 1;
+            }
+
+            if(this.BUILDER_SEARCH_DISTANCE < 0.0) {
+                this.BUILDER_SEARCH_DISTANCE = 10.0;
             }
 
             return new Travel(this);
