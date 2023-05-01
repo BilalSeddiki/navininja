@@ -2,7 +2,6 @@ package shortestpath;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
-import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javafx.util.Pair;
 import model.Itinerary;
@@ -25,7 +23,6 @@ import model.Transport;
 import model.Walk;
 import shortestpath.graph.Node;
 import shortestpath.graph.NodeSize;
-import utils.Globals;
 
 public class Dijkstra extends ShortestPathAlgorithm {
 
@@ -143,13 +140,5 @@ public class Dijkstra extends ShortestPathAlgorithm {
     @Override
     public Itinerary bestPath(Double startingCoordinates, Double endingCoordinates, LocalTime startTime, NodeSize size) {
         return null;
-    }
-
-    public static void main(String[] args) throws IOException {
-        Network network = Network.fromCSV(Globals.pathToRessources("map_data.csv"), Globals.pathToRessources("timetables.csv"));
-        Dijkstra dijkstra = new Dijkstra(network);
-        Itinerary itinerary = dijkstra.bestPath(network.getStation("Châtelet"), network.getStation("Bibliothèque François Mitterrand"), LocalTime.now(), true);
-        System.out.println(itinerary);
-        // CA MARCHE PAS PARCE QUE GARE DE LYON SON SCHEDULE EST VIDE
     }
 }
