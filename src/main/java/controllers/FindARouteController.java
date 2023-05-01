@@ -192,7 +192,7 @@ public class FindARouteController extends Controller {
             Transport transport = cellData.getValue();
             String source = transport.getTransportMethod()==
                     Transport.TransportationMethod.TRANSPORTATION ? ((Path) transport).getSource().getName()
-                    : ((Walk) transport).getDepartureCoordinates().getX() + " , " + ((Walk) transport).getDepartureCoordinates().getY();
+                    : (network.hasStation(((Walk) transport).getDepartureCoordinates()) ? network.getStation(((Walk) transport).getDepartureCoordinates()).getName(): ((Walk) transport).getDepartureCoordinates().getX() + " , "+ ((Walk) transport).getDepartureCoordinates().getY());
 
             return new ReadOnlyStringWrapper(source);
         });
@@ -200,9 +200,10 @@ public class FindARouteController extends Controller {
         TableColumn<Transport, String> endColumn = new TableColumn<>("End");
         endColumn.setCellValueFactory(cellData -> {
             Transport transport = cellData.getValue();
+
             String destination = transport.getTransportMethod()==
                     Transport.TransportationMethod.TRANSPORTATION ? ((Path) transport).getDestination().getName()
-                    : ((Walk) transport).getArrivalCoordinates().getX() + " , " + ((Walk) transport).getArrivalCoordinates().getY();
+                    : (network.hasStation(((Walk) transport).getArrivalCoordinates()) ? network.getStation(((Walk) transport).getArrivalCoordinates()).getName(): ((Walk) transport).getArrivalCoordinates().getX() + " , "+ ((Walk) transport).getArrivalCoordinates().getY());
             return new ReadOnlyStringWrapper(destination);
         });
 
@@ -243,7 +244,7 @@ public class FindARouteController extends Controller {
         String inputB = coordinatesBInput.getText();
         InputFormat inputFormatA = checkInputFormat(inputA);
         InputFormat inputFormatB = checkInputFormat(inputB);
-        if (isValidInput(inputA) && inputFormatA == InputFormat.STATION_NAME) {
+        if (!isValidInput(inputA) && inputFormatA == InputFormat.STATION_NAME) {
             // Show error dialog for invalid station name input
             displayErrorMessage("Invalid input", "The input of source text does not match a valid station name.");
         }else if(isValidInput(inputB) && inputFormatB == InputFormat.STATION_NAME){
