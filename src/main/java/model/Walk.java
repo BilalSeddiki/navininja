@@ -2,8 +2,6 @@ package model;
 
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.geom.Point2D.Double;
 
 /** Un trajet à pied d'un point à un autre. */
@@ -76,12 +74,22 @@ public class Walk implements Transport {
     /**
      * {@inheritDoc}
      * Renvoie la durée du trajet à pied d'un point à un autre.
-     * @param departureTime l'heure de départ du trajet (inutilisée)
+     * @param departure l'heure de départ du trajet (inutilisée)
      * @return la durée du trajet à pied
      */
     @Override
     public Duration getTransportDuration(LocalTime departure) {
         return this.getTravelDuration();
+    }
+
+    /**
+     * {@inheritDoc}
+     * Renvoie le moyen de transport utilisé pour atteindre une destination
+     * @return une option parmi les moyen de transports possibles.
+     */
+    @Override
+    public TransportationMethod getTransportMethod(){
+        return TransportationMethod.WALK;
     }
 
     @Override
