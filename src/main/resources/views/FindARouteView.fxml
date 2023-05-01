@@ -83,25 +83,25 @@
             <Tooltip text="Navigate back" />
          </tooltip>
       </Button>
-      <TableView fx:id="itineraryTable" layoutX="197.0" layoutY="488.0" prefHeight="400.0" prefWidth="639.0" AnchorPane.leftAnchor="197.0" AnchorPane.rightAnchor="198.0">
+      <TableView fx:id="itineraryTable" layoutX="44.0" layoutY="434.0" prefHeight="400.0" prefWidth="958.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="32.0">
          <columns>
-            <TableColumn fx:id="startColumn" prefWidth="160.0" text="Start">
+            <TableColumn fx:id="startColumn" prefWidth="328.0" text="Start">
                <cellValueFactory>
                   <PropertyValueFactory property="start" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="endColumn" prefWidth="160.0" text="End">
+            <TableColumn fx:id="endColumn" prefWidth="333.0" text="End">
                <cellValueFactory>
                   <PropertyValueFactory property="end" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="lineColumn" minWidth="5.809478759765625" prefWidth="160.0" text="Line">
+            <TableColumn fx:id="lineColumn" minWidth="5.809478759765625" prefWidth="136.0" text="Line">
                <cellValueFactory>
                   <PropertyValueFactory property="line" />
                </cellValueFactory>
             </TableColumn>
             
-            <TableColumn fx:id="durationColumn" prefWidth="158.0" text="Duration">
+            <TableColumn fx:id="durationColumn" prefWidth="160.0" text="Duration">
                <cellValueFactory>
                   <PropertyValueFactory property="duration" />
                </cellValueFactory>

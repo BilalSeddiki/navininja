@@ -115,6 +115,15 @@ public class Path implements Transport {
     }
 
     /**
+     * {@inheritDoc}
+     * Renvoie le moyen de transport utilisé pour atteindre une destination
+     * @return une option parmi les moyen de transports possibles.
+     */
+    @Override
+    public TransportationMethod getTransportMethod(){
+        return TransportationMethod.TRANSPORTATION;
+    }
+    /**
      * Renvoie le nom de la ligne sur laquelle se situe le chemin.
      * @return le nom de la ligne
      */

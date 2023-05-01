@@ -15,7 +15,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.awt.geom.Point2D.Double;
 
-/*
+
 public class Main extends Application {
 
     public static void main(String[] args) {
@@ -30,8 +30,8 @@ public class Main extends Application {
         primaryStage.show();
     }
 }
-*/
 
+/*
 public class Main {
 
     public static void main(String[] args) {
@@ -113,7 +113,7 @@ public class Main {
         */
 
         
-        try {
+        /*try {
             Travel travel = new Travel
             .Builder(algorithm)
             .setDepartureCoordinates(d)
@@ -161,7 +161,7 @@ public class Main {
         }
         */
 
-        try {
+    /*    try {
             Travel travel = new Travel
             .Builder(algorithm)
             .setDepartureCoordinates(new Double(48.832994, 2.335764))
@@ -178,4 +178,4 @@ public class Main {
 
         }
     }
-}
+}*/
