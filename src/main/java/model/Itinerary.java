@@ -4,8 +4,6 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
 
-import java.util.ArrayList;
-
 /** Un itinéraire composé d'un ensemble de modes de transport et d'une heure de départ. */
 public class Itinerary {
     /** Heure de départ de l'itinéraire. */

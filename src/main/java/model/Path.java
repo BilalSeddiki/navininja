@@ -66,7 +66,7 @@ public class Path implements Transport {
      * @param from l'heure depuis laquelle calculer le prochain départ
      * @return l'heure du prochain départ
      */
-    public Optional<LocalTime> nextTrainDeparture(LocalTime from) {
+    public Optional<LocalTime> nextDeparture(LocalTime from) {
         if (terminus) {
             for (int i = 0; i < schedule.size(); i++) {
                 if (schedule.get(i).isAfter(from)) {
@@ -80,7 +80,7 @@ public class Path implements Transport {
         var tmp = source.getInPath(lineName, variant);
         if (tmp.isPresent()) {
             var p = tmp.get();
-            var ntd = p.nextTrainDeparture(from.minus(p.getTravelDuration()));
+            var ntd = p.nextDeparture(from.minus(p.getTravelDuration()));
             if (ntd.isPresent())
                 return Optional.of(ntd.get().plus(p.getTravelDuration()));
         }
@@ -94,7 +94,7 @@ public class Path implements Transport {
      * @return la durée du chemin
      */
     public Optional<Duration> totalDuration(LocalTime time) {
-        var nextTrain = this.nextTrainDeparture(time);
+        var nextTrain = this.nextDeparture(time);
         if (nextTrain.isEmpty())
             return Optional.empty();
         Duration waitingTime = Duration.between(time, nextTrain.get());
@@ -115,7 +115,7 @@ public class Path implements Transport {
      */
     @Override
     public Duration getTransportDuration(LocalTime departureTime) {
-        return this.totalDuration(departureTime);
+        return this.totalDuration(departureTime).get();
     }
 
     /**

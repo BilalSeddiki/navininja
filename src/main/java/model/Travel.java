@@ -4,12 +4,9 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import javafx.util.Pair;
 import java.awt.geom.Point2D.Double;
 
-import shortestpath.Dijkstra;
 import shortestpath.ShortestPathAlgorithm;
 import shortestpath.graph.NodeSize;
 import utils.IllegalTravelException;
@@ -212,7 +209,7 @@ public class Travel {
      * @return meilleur itinéraire partant de la station de départ vers la station d'arrivée.
      */
     public Itinerary bestItinerary(Station departureStation, Station arrivalStation) {
-        return this.algorithm.bestPath(departureStation, arrivalStation, this.departureTime, NodeSize.TIME);
+        return this.algorithm.bestPath(departureStation, arrivalStation, this.departureTime, NodeSize.TIME, false);
     }
 
     /** 

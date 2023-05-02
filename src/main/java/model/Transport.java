@@ -3,6 +3,7 @@ package model;
 import java.awt.geom.Point2D;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.Optional;
 
 /** Un mode de transport d'un point à un autre. */
 public interface Transport {
@@ -21,6 +22,9 @@ public interface Transport {
      */
     public Duration getTransportDuration(LocalTime departureTime);
 
+    public double getTravelDistance();
+
+    public Duration getTravelDuration();
 
     /**
      * Renvoie le moyen de transport utilisé pour atteindre une destination
@@ -32,7 +36,7 @@ public interface Transport {
 
     public Point2D.Double getOutCoordinates();
 
-    public LocalTime nextDeparture(LocalTime from);
+    public Optional<LocalTime> nextDeparture(LocalTime from);
 
-    public Duration totalDuration(LocalTime departure);
+    public Optional<Duration> totalDuration(LocalTime departure);
 }

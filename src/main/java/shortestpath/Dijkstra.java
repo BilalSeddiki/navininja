@@ -15,7 +15,6 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 import javafx.util.Pair;
-import javafx.util.Pair;
 import model.Itinerary;
 import model.Network;
 import model.Path;
@@ -78,7 +77,7 @@ public class Dijkstra extends ShortestPathAlgorithm {
         }
         return new Itinerary(startTime, stationNodeMap.get(destination.getCoordinates()).getShortestPath());
     }
-    
+
     private boolean isPathLegal(Transport transport, Set<Point2D.Double> visitedStations, LocalTime startTime) {
         if (visitedStations.contains(transport.getOutCoordinates())) {
             return false;
