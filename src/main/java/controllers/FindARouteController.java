@@ -105,7 +105,7 @@ public class FindARouteController extends Controller {
      * @return StationName, Coordinates, invalid
      */
     private InputFormat checkInputFormat(String input) {
-        String stationNamePattern = "^[a-zA-ZâêàéèœŒÂÊÉÈÀ\\-\\s]+$"; // Regex matche les noms des stations
+        String stationNamePattern = "^[a-zA-ZâêàéèœŒÂÊÉÈÀ'\\-\\s]+$"; // Regex matche les noms des stations
         String coordinatesPattern = "^-?\\d+(\\.\\d+)?[\\s]*,[\\s]*-?\\d+(\\.\\d+)?$"; // regex matche les coordonnées lat,long
         if (input.matches(stationNamePattern)) {
             return InputFormat.STATION_NAME;
@@ -240,13 +240,19 @@ public class FindARouteController extends Controller {
             long seconds = travelDuration.getSeconds() % 60;
             return new ReadOnlyStringWrapper(String.format("%02d:%02d:%02d", hours1, minutes1, seconds));
         });
-
+        Duration itDuration = it.getDuration();
+        long hours1 = itDuration.toHours();
+        long minutes1 = itDuration.toMinutes() % 60;
+        long seconds = itDuration.getSeconds() % 60;
+        labelTotalDuration.setText(String.format("%02d:%02d:%02d", hours1, minutes1, seconds));
         itineraryTable.getColumns().clear();
         itineraryTable.getColumns().addAll(startColumn, endColumn, lineColumn, durationColumn);
         ObservableList<Transport> data = FXCollections.observableList(paths);
         itineraryTable.setItems(data);
         System.out.println(data);
         itineraryTable.setVisible(true);
+        labelTotalDuration.setVisible(true);
+        titleTotalDuration.setVisible(true);
 
     }
 
