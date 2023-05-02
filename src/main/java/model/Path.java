@@ -5,10 +5,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/* Note : Pour implémenter les chemins à pied, on pourra créer une interface implémentée par Path et une nouvelle classe pour la marche à pied */
-
 /** Un chemin jusqu'à une prochaine station. */
-public class Path {
+public class Path implements Transport {
     /** Nom de la ligne sur laquelle se situe le chemin. */
     private String lineName;
     /** Nom du variant de la ligne sur laquelle se situe le chemin */
@@ -36,13 +34,13 @@ public class Path {
      * @param source la depuis laquelle part le chemin
      * @param destination la station vers laquelle mène le chemin
      */
-    public Path(String lineName, String variant, ArrayList<LocalTime> schedule, 
+    public Path(String lineName, String variant, List<LocalTime> schedule, 
             Duration travelDuration, double travelDistance,
             Station source, Station destination) {
         this.lineName = lineName;
         this.variant = variant;
-        schedule.sort(LocalTime::compareTo);
-        this.schedule = schedule;
+        this.schedule = new ArrayList<>(schedule);
+        this.schedule.sort(LocalTime::compareTo);
         this.travelDuration = travelDuration;
         this.travelDistance = travelDistance;
         this.source = source;
@@ -89,10 +87,9 @@ public class Path {
 
     /**
      * Calcule le temps pour arriver à la prochaine station à partir d'une heure donnée.
-     * <p>
      * Additionne le temps du trajet jusqu'à la prochaine station et le temps d'attente jusqu'au prochain train.
      * @param time l'heure de départ
-     * @return la durée du trajet
+     * @return la durée du chemin
      */
     public Duration totalDuration(LocalTime time) {
         LocalTime nextTrain = this.nextTrainDeparture(time);
@@ -105,7 +102,27 @@ public class Path {
         Duration totalDuration = waitingTime.plus(this.travelDuration);
         return totalDuration;
     }
+    
+    /**
+     * {@inheritDoc}
+     * Renvoie la durée d'un chemin d'une station à une autre à partir d'une heure donnée.
+     * @param departureTime l'heure de départ du trajet
+     * @return la durée du chemin
+     */
+    @Override
+    public Duration getTransportDuration(LocalTime departureTime) {
+        return this.totalDuration(departureTime);
+    }
 
+    /**
+     * {@inheritDoc}
+     * Renvoie le moyen de transport utilisé pour atteindre une destination
+     * @return une option parmi les moyen de transports possibles.
+     */
+    @Override
+    public TransportationMethod getTransportMethod(){
+        return TransportationMethod.TRANSPORTATION;
+    }
     /**
      * Renvoie le nom de la ligne sur laquelle se situe le chemin.
      * @return le nom de la ligne

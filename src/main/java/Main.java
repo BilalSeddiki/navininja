@@ -5,7 +5,6 @@ import utils.Globals;
 import controllers.*;
 
 
-
 public class Main extends Application {
 
     public static void main(String[] args) {

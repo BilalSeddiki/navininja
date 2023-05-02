@@ -1,4 +1,4 @@
-package model.dijkstra;
+package shortestpath.graph;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -88,7 +88,9 @@ public class Node {
         stringBuilder.append(")\n");
         for (Path path : shortestPath) {
             stringBuilder.append(path);
-            stringBuilder.append(", ");
+            stringBuilder.append(" ");
+            stringBuilder.append(time);
+            stringBuilder.append("\n");
         }
         stringBuilder.append(station.getName());
         return stringBuilder.toString();
