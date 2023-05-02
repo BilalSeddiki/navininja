@@ -1,11 +1,11 @@
 import model.*;
+import network.MinimalStation;
+import network.ServerMsg;
 import utils.Globals;
 import java.net.*;
-import netnavi.ServerMsg;
 import java.io.*;
 import java.util.ArrayList;
 import java.time.*;
-import netnavi.MinimalStation;
 
 public class Server{
     /**
@@ -22,8 +22,18 @@ public class Server{
                 String msg=in.readLine();
                 
                 if(msg.charAt(0)=='h' && msg.charAt(1)=='s'){
+                    int current0=0;
+                    int sl=msg.charAt(current0);
+                    String name=msg.substring(current0+1,current0+sl+1);
+                    current0=current0+sl+1;
+                    int ltl=msg.charAt(current0);
+                    String lttmp=msg.substring(current0+1,current0+ltl+1);
+                    current0=current0+ltl+1;
+                    LocalTime time=LocalTime.parse(lttmp);
+                    int ll=msg.charAt(current0);
+                    String line=msg.substring(current0+1,current0+ll+1);
                     ArrayList<Schedule> tmp=new ArrayList<Schedule>();
-                    tmp=network.traitementSchedule(msg.substring(2,msg.length())); 
+                    tmp=network.traitementSchedule(name,line,time); 
                     ServerMsg.sendSchedules(clientSocket,tmp);
                     clientSocket.close();
                 }else if(msg.charAt(0)=='b' && msg.charAt(1)=='p'){

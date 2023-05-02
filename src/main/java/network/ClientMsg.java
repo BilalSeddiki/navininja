@@ -1,4 +1,4 @@
-package netnavi;
+package network;
 
 import java.net.*;
 import java.time.LocalTime;

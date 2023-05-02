@@ -1,10 +1,11 @@
-package netnavi;
+package network;
 
 import java.net.*;
 import java.io.*;
-import netnavi.*;
 import java.time.LocalTime;
 import model.*;
+import network.*;
+
 import java.util.*;
 import java.time.Duration;
 

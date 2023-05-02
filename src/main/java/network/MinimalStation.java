@@ -1,4 +1,4 @@
-package netnavi;
+package network;
 import java.util.*;
 public class MinimalStation{
     private String nom;
