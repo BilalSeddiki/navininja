@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestStation {
 
+    /**
+     * Teste le constructeur ainsi que les getters de la classe Station.
+     */
     @Test
     public void testConstructorAndGetters() {
         String name = "";
@@ -14,20 +17,12 @@ public class TestStation {
         Station station = new Station(name, coordinates);
         assertEquals(name, station.getName(), "L'attribut name est incorrect.");
         assertEquals(coordinates, station.getCoordinates(), "L'attribut coordinates est incorrect.");
-
-        /* TODO (1 ?): assertEquals -> assertSame avec redéfinition de equals. */
     }
 
-    //TODO (?): Factorisation des constructeurs.
-    @Test
-    public void testConstructorNameNotEmpty() {
-        String name = "";
-        Double coordinates = new Double(0, 0);
-
-        Station station = new Station(name, coordinates);
-        //assertFalse(station.getName().isEmpty(), "L'attribut name ne peut pas être vide.");
-    }
-
+    /**
+     * Teste la création d'une station et que sa latitude soit comprise
+     * entre -90.0 et 90.0.
+     */
     @Test
     public void testConstructorValidLatitude() {
         String name = "";
@@ -39,6 +34,10 @@ public class TestStation {
                 "La latitude doit être comprise en -90 degrés et 90 degrés.");
     }
 
+    /**
+     * Teste la création d'une station et que sa longitude soit comprise
+     * entre -180.0 et 180.0.
+     */
     @Test
     public void testConstructorValidLongitude() {
         String name = "";

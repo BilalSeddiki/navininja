@@ -60,8 +60,6 @@ public class TextFieldListener implements ChangeListener<String> {
                         lineComboBox.getItems().addAll(lines);
                     }
                 }
-
-
             } else {
                 suggestionMenu.hide();
             }

@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/* Note : Pour implémenter les chemins à pied, on pourra créer une interface implémentée par Path et une nouvelle classe pour la marche à pied */
-
 /** Un chemin jusqu'à une prochaine station. */
 public class Path implements Transport {
     /** Nom de la ligne sur laquelle se situe le chemin. */
@@ -91,10 +89,9 @@ public class Path implements Transport {
 
     /**
      * Calcule le temps pour arriver à la prochaine station à partir d'une heure donnée.
-     * <p>
      * Additionne le temps du trajet jusqu'à la prochaine station et le temps d'attente jusqu'au prochain train.
      * @param time l'heure de départ
-     * @return la durée du trajet
+     * @return la durée du chemin
      */
     public Optional<Duration> totalDuration(LocalTime time) {
         var nextTrain = this.nextDeparture(time);
@@ -109,7 +106,27 @@ public class Path implements Transport {
         Duration totalDuration = waitingTime.plus(this.travelDuration);
         return Optional.of(totalDuration);
     }
+    
+    /**
+     * {@inheritDoc}
+     * Renvoie la durée d'un chemin d'une station à une autre à partir d'une heure donnée.
+     * @param departureTime l'heure de départ du trajet
+     * @return la durée du chemin
+     */
+    @Override
+    public Duration getTransportDuration(LocalTime departureTime) {
+        return this.totalDuration(departureTime).get();
+    }
 
+    /**
+     * {@inheritDoc}
+     * Renvoie le moyen de transport utilisé pour atteindre une destination
+     * @return une option parmi les moyen de transports possibles.
+     */
+    @Override
+    public TransportationMethod getTransportMethod(){
+        return TransportationMethod.TRANSPORTATION;
+    }
     /**
      * Renvoie le nom de la ligne sur laquelle se situe le chemin.
      * @return le nom de la ligne

@@ -4,33 +4,33 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
 
-/** Un itinéraire d'une station à une autre. */
+/** Un itinéraire composé d'un ensemble de modes de transport et d'une heure de départ. */
 public class Itinerary {
     /** Heure de départ de l'itinéraire. */
     private LocalTime departureTime;
-    /** L'ensemble des chemins constituant l'itinéraire */
-    private List<Transport> paths;
+    /** L'ensemble des modes de transport constituant l'itinéraire */
+    private List<Transport> transports;
 
     /**
      * Construit un itinéraire. 
      * @param departureTime l'heure de départ de l'itinéraire
-     * @param paths l'ensemble des chemins constituant l'itinéraire
+     * @param transports l'ensemble des modes de transport constituant l'itinéraire
      */
-    public Itinerary(LocalTime departureTime, List<Transport> paths) {
+    public Itinerary(LocalTime departureTime, List<Transport> transports) {
         this.departureTime = departureTime;
-        this.paths = paths;
+        this.transports = transports;
     }
 
     /**
-     * Renvoie l'ensemble des chemins constituant l'itinéraire
-     * @return une liste de chemins
+     * Renvoie l'ensemble des modes de transport constituant l'itinéraire.
+     * @return une liste de modes de transport
      */
-    public List<Transport> getPaths() {
-        return paths;
+    public List<Transport> getTransports() {
+        return transports;
     }
 
     /**
-     * Renvoie l'heure de départ de l'itinéraire
+     * Renvoie l'heure de départ de l'itinéraire.
      * @return l'heure de départ de l'itinéraire
      */
     public LocalTime getDepartureTime() {
@@ -38,8 +38,8 @@ public class Itinerary {
     }
 
     /**
-     * Renvoie l'heure d'arrivé de l'itinéraire
-     * @return l'heure d'arrivé de l'itinéraire
+     * Renvoie l'heure d'arrivée de l'itinéraire.
+     * @return l'heure d'arrivée de l'itinéraire
      */
     public LocalTime getArrivalTime() {
         Duration duration = this.getDuration();
@@ -48,29 +48,55 @@ public class Itinerary {
     }
 
     /**
-     * Renvoie la durée totale de l'itinéraire
+     * Renvoie la durée totale de l'itinéraire.
      * @return la durée de l'itinéraire
      */
     public Duration getDuration() {
         Duration total = Duration.ZERO;
         LocalTime newDeparture = departureTime;
-        for (int i = 0; i < this.paths.size(); i++) {
-            Duration pathDuration = paths.get(i).totalDuration(newDeparture)
-                    .orElseThrow(() -> new IllegalStateException("Empty time in Itinerary"));
+        for(int i = 0; i < this.transports.size(); i++) {
+            Duration pathDuration = transports.get(i).getTransportDuration(newDeparture);
             total = total.plus(pathDuration);
             newDeparture = newDeparture.plus(pathDuration);
         }
         return total;
     }
 
+    /**
+     * Vérifie si l'ensemble des modes de transport de l'itinéraire est vide.
+     * @return true si la liste est vide, false sinon
+     */
+    public boolean isEmpty() {
+        if(this.transports.size() == 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * Ajoute un mode de transport au début de la liste.
+     * @param transport Mode de transport à ajouter au début de la liste de l'itinéraire.
+     */
+    public void addToFirstPosition(Transport transport) {
+        this.transports.add(0, transport);
+    }
+
+    /**
+     * Ajoute un mode de transport à la fin de la liste.
+     * @param transport Mode de transport à ajouter à la fin de la liste de l'itinéraire.
+     */
+    public void addToLastPosition(Transport transport) {
+        this.transports.add(transport);
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder(departureTime.toString());
-        stringBuilder.append("\n");
-        stringBuilder.append(getDuration());
-        for (Transport path : paths) {
+        for (Transport transport : transports) {
             stringBuilder.append("\n");
-            stringBuilder.append(path);
+            stringBuilder.append(transport);
         }
         return stringBuilder.toString();
     }

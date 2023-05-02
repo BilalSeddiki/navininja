@@ -161,6 +161,9 @@ public class Network {
                 Math.pow(station.getCoordinates().getX() - coordinates.getX(), 2) + 
                 Math.pow(station.getCoordinates().getX() - coordinates.getX(), 2));
             list.add(new Pair<>(distance, station));
+            if (station.getCoordinates().equals(coordinates)) {
+                continue;
+            }
         }
         list.sort(new Comparator<Pair<java.lang.Double, Station>>() {
 
@@ -278,4 +281,5 @@ public class Network {
                 this.stationsByCoordinates.equals(n.stationsByCoordinates) &&
                 this.lines.equals(n.lines);
     }
+
 }
