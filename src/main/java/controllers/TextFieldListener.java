@@ -58,10 +58,11 @@ public class TextFieldListener implements ChangeListener<String> {
                         final ObservableList<String> lines = FXCollections.observableArrayList(network.getLinesByStation(newValue));
                         lineComboBox.getItems().clear();
                         lineComboBox.getItems().addAll(lines);
+                    }else{
+                        suggestionMenu.hide();
+
                     }
                 }
-
-
             } else {
                 suggestionMenu.hide();
             }
