@@ -4,8 +4,6 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
 
-import java.util.ArrayList;
-
 /** Un itinéraire composé d'un ensemble de modes de transport et d'une heure de départ. */
 public class Itinerary {
     /** Heure de départ de l'itinéraire. */
@@ -56,8 +54,9 @@ public class Itinerary {
     public Duration getDuration() {
         Duration total = Duration.ZERO;
         LocalTime newDeparture = departureTime;
-        for (Transport transport : this.transports) {
-            Duration pathDuration = transport.getTransportDuration(newDeparture);
+        for (int i = 0; i < this.transports.size(); i++) {
+            Duration pathDuration = transports.get(i).totalDuration(newDeparture)
+                    .orElseThrow(() -> new IllegalStateException("Empty time in Itinerary"));
             total = total.plus(pathDuration);
         }
         return total;

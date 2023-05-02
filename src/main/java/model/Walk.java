@@ -2,11 +2,13 @@ package model;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.Optional;
+import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 
 /** Un trajet à pied d'un point à un autre. */
 public class Walk implements Transport {
-    
+
     /** Coordonnées GPS de départ. */
     private Double departureCoordinates;
 
@@ -101,6 +103,26 @@ public class Walk implements Transport {
 
     @Override
     public String toString() {
-        return departureCoordinates.toString() + " -> " + arrivalCoordinates.toString();
+        return "WALK: " + departureCoordinates + " ; " + arrivalCoordinates + " (" + getTravelDistance() + " ; " + getTravelDuration() + ")";
+    }
+
+    @Override
+    public Point2D.Double getInCoordinates() {
+        return departureCoordinates;
+    }
+
+    @Override
+    public Point2D.Double getOutCoordinates() {
+        return arrivalCoordinates;
+    }
+
+    @Override
+    public Optional<LocalTime> nextDeparture(LocalTime from) {
+        return Optional.of(from);
+    }
+
+    @Override
+    public Optional<Duration> totalDuration(LocalTime departure) {
+        return Optional.of(getTravelDuration());
     }
 }

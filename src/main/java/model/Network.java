@@ -4,21 +4,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.TreeMap;
-import java.util.Map.Entry;
 
-import csv.CardsDataCsv;
-import csv.ScheduleDataCsv;
 import javafx.util.Pair;
-import shortestpath.Dijkstra;
-import shortestpath.graph.NodeSize;
-import utils.Globals;
 
 import java.awt.geom.Point2D.Double;
-import java.io.IOException;
-import java.time.LocalTime;
 
 public class Network {
     /** Ensemble de stations du réseau. <p> Une HashMap avec le nom des stations pour clé, et les stations pour valeur.*/
@@ -288,5 +278,4 @@ public class Network {
                 this.stationsByCoordinates.equals(n.stationsByCoordinates) &&
                 this.lines.equals(n.lines);
     }
-
 }
