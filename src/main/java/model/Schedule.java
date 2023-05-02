@@ -54,6 +54,4 @@ public class Schedule {
         String p=a.substring(i1+1,i1+i2);
         return new Schedule(d,p);
     }
-
-   
 }

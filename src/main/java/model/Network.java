@@ -5,6 +5,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.PriorityQueue;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.List;
 
 import javafx.util.Pair;
@@ -17,6 +20,9 @@ import network.MinimalStation;
 import utils.Globals;
 
 import java.awt.geom.Point2D.Double;
+import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Network {
