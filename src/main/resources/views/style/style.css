@@ -24,7 +24,13 @@
 -fx-background-color: transparent;
 
 }
-
+.tertiary-button{
+-fx-border-width: 1px;
+-fx-border-radius: 10px;
+-fx-border-color: linear-gradient(#82AFFC 0%, #8399FB 100%);
+-fx-background-radius: 14px;
+-fx-background-color: transparent;
+}
 
 .dropshadow{
 -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
@@ -122,3 +128,14 @@
 .table-row-cell:odd:filled:selected {
   -fx-background: -fx-control-inner-background-alt ;
 }
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color:  #eef0f2;
+    -fx-pref-width: 10px;
+    -fx-pref-height: 10px;
+}
+
+.scroll-bar:vertical .thumb, .scroll-bar:horizontal .thumb{
+
+-fx-background-color:linear-gradient(#82AFFC 0%, #8399FB 100%);
+}
+

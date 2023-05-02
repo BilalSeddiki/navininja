@@ -3,8 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Scanner;
@@ -12,8 +11,6 @@ import java.util.Set;
 import java.util.List;
 import java.util.List;
 
-import csv.CardsDataCsv;
-import csv.ScheduleDataCsv;
 import javafx.util.Pair;
 import model.dijkstra.Node;
 import model.dijkstra.NodeDistanceComparator;
@@ -52,53 +49,6 @@ public class Network {
     }
 
     /**
-     * Crée un réseau à partir de deux fichiers CSV.
-     * @param mapFile le nom d'un fichier CSV contenant les informations des chemins du réseau
-     * @param scheduleFile le nom d'un fichier CSV contenant les informations des horaires des lignes 
-     * @return un réseau
-     * @throws IOException si la lecture d'un des fichier echoue
-     */
-    public static Network fromCSV(String mapFile, String scheduleFile) throws IOException {
-        var schedules = new HashMap<String, HashMap<String, HashMap<String, ArrayList<LocalTime>>>>();
-        var csvSchedules = new ScheduleDataCsv().readCSVFile(java.nio.file.Path.of(scheduleFile));
-
-        for (var item : csvSchedules) {
-            schedules
-                    .computeIfAbsent(item.getDepartStation(),
-                            k -> new HashMap<String, HashMap<String, ArrayList<LocalTime>>>())
-                    .computeIfAbsent(item.getLine(), k -> new HashMap<String, ArrayList<LocalTime>>())
-                    .computeIfAbsent(item.getVariant(), k -> new ArrayList<LocalTime>());
-            schedules.get(item.getDepartStation()).get(item.getLine()).get(item.getVariant()).add(item.getDepartTime());
-        }
-
-        var csvPaths = new CardsDataCsv().readCSVFile(java.nio.file.Path.of(mapFile));
-        var stations = new HashMap<String, Station>();
-        var paths = new ArrayList<Path>();
-        for (CardsDataCsv item : csvPaths) {
-            String stationNameA = item.getStationA();
-            if (!stations.containsKey(stationNameA)) {
-                Double coordinatesA = item.getCoordinatesA();
-                Station stationA = new Station(stationNameA, coordinatesA);
-                stations.put(stationA.getName(), stationA);
-            }
-
-            String stationNameB = item.getStationB();
-            if (!stations.containsKey(stationNameB)) {
-                Double coordinatesB = item.getCoordinatesB();
-                Station stationB = new Station(stationNameB, coordinatesB);
-                stations.put(stationB.getName(), stationB);
-            }
-
-            var schedule = schedules.getOrDefault(stationNameA, new HashMap<>())
-                    .getOrDefault(item.getLine(), new HashMap<>())
-                    .getOrDefault(item.getLineVariant(), new ArrayList<LocalTime>());
-
-            paths.add(new Path(item.getLine(), item.getLineVariant(), schedule, item.getDuration(),
-                    item.getDistance(), stations.get(stationNameA), stations.get(stationNameB)));
-        }
-        return new Network(new ArrayList<Station>(stations.values()), paths);
-    }
-    /**
      * Returns a mapping of each station to the list of lines passing by that station.
      * @return a HashMap with each station as key and the list of lines passing by that station as value
      */
@@ -121,13 +71,6 @@ public class Network {
 
     /**
      * Getter
-     * @return retourne la liste des lignes du réseau
-     */
-    public HashMap<String, HashMap<String, ArrayList<Station>>> getLines() {
-        return lines;
-    }
-    /**
-     * Getter
      * @return retourne la liste des stations par nom
      */
     public HashMap<String, Station> getStationsByName() {
@@ -141,8 +84,14 @@ public class Network {
     public HashMap<Double, Station> getStationsByCoordinates() {
         return stationsByCoordinates;
     }
+    /**
+     * Returns a mapping of each station to the list of lines passing by that station.
+     * @return a HashMap with each station as key and the list of lines passing by that station as value
+     */
 
-
+    public HashMap<String, HashMap<String, ArrayList<Station>>> getLines() {
+        return lines;
+    }
     /**
      * Renvoie la liste de station constituant le variant d'une ligne
      * @param name le nom de la ligne
@@ -218,108 +167,26 @@ public class Network {
         return station;
     }
 
-    public enum DijkstraComparator {
-
-        /** Voyage qui parcourt le moins de distance */
-        DISTANCE,
-
-        /** Voyage avec le moins de temps dans les transports */
-        DURATION,
-
-        /** Voyage qui parcourt le moins de distance et avec le moins de temps dans les transports */
-        DISTANCE_PLUS_DURATION,
-
-        /** Voyage qui prend le moins de temps */
-        TIME
-    }
-
-    /**
-     * Calcule le meilleur itinéraire d'une station à une autre.
-     * @param source la station de départ
-     * @param destination la station d'arrivée
-     * @param startTime l'heure à laquelle le trajet commence
-     * @param valueToCompare la manière de déterminer le trajet le plus court
-     * @return un itinéraire d'une station à une autre
-     */
-    public Itinerary bestPath(Station source, Station destination, LocalTime startTime, DijkstraComparator valueToCompare) {
-        Comparator<? super Node> comparator = null;
-        switch (valueToCompare) {
-            case DISTANCE:
-                comparator = new NodeDistanceComparator();
-                break;
-            case DURATION:
-                comparator = new NodeDurationComparator();
-                break;
-            case DISTANCE_PLUS_DURATION:
-                comparator = new NodeDistanceDurationComparator();
-                break;
-            case TIME:
-                comparator = new NodeTimeComparator();
-                break;
-        }
-        PriorityQueue<Node> queue = new PriorityQueue<>(comparator);
-        Set<String> visitedStations = new HashSet<>();
-        Map<Station, Node> stationNodeMap = new HashMap<>();
-        
-        Node initialNode = new Node(source, 0, Duration.ZERO, startTime);
-        stationNodeMap.put(source, initialNode);
-        queue.add(initialNode);
-
-        while (!queue.isEmpty()) {
-            Node currentNode = queue.remove();
-            if (visitedStations.contains(currentNode.getStation().getName())) {
-                System.out.println("Node déjà visitée = " + currentNode.getStation().getName());
+    public List<Pair<java.lang.Double, Station>> getClosestStations(Double coordinates) {
+        List<Pair<java.lang.Double, Station>> list = new ArrayList<>();
+        for (Station station : stationsByCoordinates.values()) {
+            if (station.getCoordinates().equals(coordinates)) {
                 continue;
             }
-            System.out.println("Node actuelle = " + currentNode.getStation().getName());
-            for (Path path : currentNode.getStation().getOutPaths()) {
-                if (visitedStations.contains(path.getDestination().getName())) {
-                    continue;
-                }
-                Node adjacentNode = stationNodeMap.getOrDefault(
-                    path.getDestination(),
-                    new Node(path.getDestination())
-                );
-                double newDistance = currentNode.getDistance() + path.getTravelDistance();
-                Duration newDuration = currentNode.getDuration().plus(path.getTravelDuration());
-                LocalTime newTime = path.nextTrainDeparture(currentNode.getTime()).plus(path.getTravelDuration());
-                boolean better = false;
-                switch (valueToCompare) {
-                    case DISTANCE:
-                        better = newDistance <= adjacentNode.getDistance();
-                        break;
-                    case DURATION:
-                        better = newDuration.minus(adjacentNode.getDuration()).isNegative();
-                        break;
-                    case DISTANCE_PLUS_DURATION:
-                        better = newDistance + newDuration.toSeconds() <= adjacentNode.getDistance() + adjacentNode.getDuration().toSeconds();
-                        break;
-                    case TIME:
-                        better = newTime.isBefore(adjacentNode.getTime());
-                        break;
-                }
-
-                if (better) {
-                    adjacentNode.setDistance(newDistance);
-                    adjacentNode.setDuration(newDuration);
-                    adjacentNode.setTime(newTime);
-                    adjacentNode.setShortestPath(currentNode, path);
-                    stationNodeMap.put(path.getDestination(), adjacentNode);
-                    System.out.println("Optimal = " + currentNode.getStation() + " -> " + adjacentNode.getStation());
-                }
-                else {
-                    System.out.println("Pas optimal = " + currentNode.getStation() + " -> " + adjacentNode.getStation());
-                }
-                queue.add(adjacentNode);
-            }
-            visitedStations.add(currentNode.getStation().getName());
+            double distance = Math.sqrt(
+                Math.pow(station.getCoordinates().getX() - coordinates.getX(), 2) + 
+                Math.pow(station.getCoordinates().getX() - coordinates.getX(), 2));
+            list.add(new Pair<>(distance, station));
         }
-        System.out.println(stationNodeMap.get(destination));
-        return new Itinerary(startTime, stationNodeMap.get(destination).getShortestPath());
-    }
+        list.sort(new Comparator<Pair<java.lang.Double, Station>>() {
 
-    public Itinerary bestPath(Station source, Station destination, LocalTime startTime) {
-        return bestPath(source, destination, startTime, DijkstraComparator.TIME);
+            @Override
+            public int compare(Pair<java.lang.Double, Station> o1, Pair<java.lang.Double, Station> o2) {
+                return o1.getKey().compareTo(o2.getKey());
+            }
+            
+        });
+        return list;
     }
 
     /**

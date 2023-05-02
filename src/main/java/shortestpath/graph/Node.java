@@ -1,32 +1,32 @@
-package model.dijkstra;
+package shortestpath.graph;
 
+import java.awt.geom.Point2D;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Path;
-import model.Station;
+import model.Transport;
 
 public class Node {
 
-    private final Station station;
+    private final Point2D.Double coordinates;
     private double distance;
     private Duration duration;
     private LocalTime time;
-    private List<Path> shortestPath;
+    private List<Transport> shortestPath;
 
-    public Node(Station station, double distance, Duration duration, LocalTime time) {
-        this.station = station;
+    public Node(Point2D.Double coordinates, double distance, Duration duration, LocalTime time) {
+        this.coordinates = coordinates;
         this.distance = distance;
         this.duration = duration;
         this.time = time;
         this.shortestPath = new ArrayList<>();
     }
 
-    public Node(Station station) {
-        this(station, Double.MAX_VALUE, ChronoUnit.FOREVER.getDuration(), LocalTime.MAX);
+    public Node(Point2D.Double coordinates) {
+        this(coordinates, Double.MAX_VALUE, ChronoUnit.FOREVER.getDuration(), LocalTime.MAX);
     }
 
     public void translateDistance(double distance) {
@@ -37,8 +37,8 @@ public class Node {
         this.duration.plus(duration);
     }
 
-    public Station getStation() {
-        return station;
+    public Point2D.Double getCoordinates() {
+        return coordinates;
     }
 
     public double getDistance() {
@@ -65,11 +65,11 @@ public class Node {
         this.time = time;
     }
 
-    public List<Path> getShortestPath() {
+    public List<Transport> getShortestPath() {
         return shortestPath;
     }
 
-    public void setShortestPath(Node node, Path path) {
+    public void setShortestPath(Node node, Transport path) {
         this.shortestPath.clear();
         this.shortestPath.addAll(node.getShortestPath());
         this.shortestPath.add(path);
@@ -78,7 +78,7 @@ public class Node {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(station.getName());
+        stringBuilder.append(coordinates);
         stringBuilder.append(" (");
         stringBuilder.append(distance);
         stringBuilder.append(" km) (");
@@ -86,11 +86,12 @@ public class Node {
         stringBuilder.append(" seconds) (");
         stringBuilder.append(time);
         stringBuilder.append(")\n");
-        for (Path path : shortestPath) {
+        for (Transport path : shortestPath) {
             stringBuilder.append(path);
-            stringBuilder.append(", ");
+            stringBuilder.append(" ");
+            stringBuilder.append(time);
+            stringBuilder.append("\n");
         }
-        stringBuilder.append(station.getName());
         return stringBuilder.toString();
     }
 }

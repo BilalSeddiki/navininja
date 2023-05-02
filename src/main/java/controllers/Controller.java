@@ -5,6 +5,8 @@ import utils.Globals;
 
 import java.io.IOException;
 
+import csv.CsvData;
+
 /**
  * Classe mère des contrôleurs, permet principalement de définir le contrôleur de navigation
  *  * @author R. MARTINI
@@ -20,7 +22,8 @@ public class Controller {
 
     public Controller() {
         try {
-            this.network =  Network.fromCSV(Globals.pathToRessources("map_data.csv"), Globals.pathToRessources("timetables.csv"));
+            this.network = CsvData.makeNetwork(Globals.pathToRessources("map_data.csv"),
+                    Globals.pathToRessources("timetables.csv"));
         } catch (IOException e) {
             e.printStackTrace();
         }

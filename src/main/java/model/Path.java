@@ -1,14 +1,14 @@
 package model;
 
+import java.awt.geom.Point2D;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
-/* Note : Pour implémenter les chemins à pied, on pourra créer une interface implémentée par Path et une nouvelle classe pour la marche à pied */
+import java.util.Optional;
 
 /** Un chemin jusqu'à une prochaine station. */
-public class Path {
+public class Path implements Transport {
     /** Nom de la ligne sur laquelle se situe le chemin. */
     private String lineName;
     /** Nom du variant de la ligne sur laquelle se situe le chemin */
@@ -36,23 +36,29 @@ public class Path {
      * @param source la depuis laquelle part le chemin
      * @param destination la station vers laquelle mène le chemin
      */
-    public Path(String lineName, String variant, ArrayList<LocalTime> schedule, Duration travelDuration,
-            double travelDistance,
+    public Path(String lineName, String variant, List<LocalTime> schedule,
+            Duration travelDuration, double travelDistance,
             Station source, Station destination) {
         this.lineName = lineName;
         this.variant = variant;
-        schedule.sort(LocalTime::compareTo);
-        this.schedule = schedule;
+        this.schedule = new ArrayList<>(schedule);
+        this.schedule.sort(LocalTime::compareTo);
         this.travelDuration = travelDuration;
         this.travelDistance = travelDistance;
         this.source = source;
         this.destination = destination;
-        terminus = !(schedule.isEmpty());
+        this.terminus = !(schedule.isEmpty());
     }
 
+    /**
+     * Fixe la liste des horaires de passage.
+     * @param schedule les horaires de passage des trains.
+     */
     public void setTerminus(ArrayList<LocalTime> schedule) {
-        terminus = true;
-        this.schedule = schedule;
+        if (!(schedule.isEmpty())) {
+            terminus = true;
+            this.schedule = schedule;
+        }
     }
 
     /**
@@ -60,46 +66,67 @@ public class Path {
      * @param from l'heure depuis laquelle calculer le prochain départ
      * @return l'heure du prochain départ
      */
-    public LocalTime nextTrainDeparture(LocalTime from) {
+    public Optional<LocalTime> nextDeparture(LocalTime from) {
         if (terminus) {
             for (int i = 0; i < schedule.size(); i++) {
                 if (schedule.get(i).isAfter(from)) {
-                    return schedule.get(i);
+                    return Optional.of(schedule.get(i));
                 }
             }
             if (schedule.size() > 0) {
-                return schedule.get(0);
-            }
-        } else {
-            var tmp = source.getInPath(lineName, variant);
-            if (tmp.isPresent()) {
-                var p = tmp.get();
-                return p.nextTrainDeparture(from.minus(p.getTravelDuration())).plus(p.getTravelDuration());
+                return Optional.of(schedule.get(0));
             }
         }
-        return LocalTime.of(0, 0);
-
+        var tmp = source.getInPath(lineName, variant);
+        if (tmp.isPresent()) {
+            var p = tmp.get();
+            var ntd = p.nextDeparture(from.minus(p.getTravelDuration()));
+            if (ntd.isPresent())
+                return Optional.of(ntd.get().plus(p.getTravelDuration()));
+        }
+        return Optional.empty();
     }
 
     /**
      * Calcule le temps pour arriver à la prochaine station à partir d'une heure donnée.
-     * <p>
      * Additionne le temps du trajet jusqu'à la prochaine station et le temps d'attente jusqu'au prochain train.
      * @param time l'heure de départ
-     * @return la durée du trajet
+     * @return la durée du chemin
      */
-    public Duration totalDuration(LocalTime time) {
-        LocalTime nextTrain = this.nextTrainDeparture(time);
-        Duration waitingTime = Duration.between(time, nextTrain);
+    public Optional<Duration> totalDuration(LocalTime time) {
+        var nextTrain = this.nextDeparture(time);
+        if (nextTrain.isEmpty())
+            return Optional.empty();
+        Duration waitingTime = Duration.between(time, nextTrain.get());
         if (waitingTime.isNegative()) {
             Duration toMidnight = Duration.between(time, LocalTime.MAX);
-            Duration fromMidnight = Duration.between(LocalTime.MIDNIGHT, nextTrain);
+            Duration fromMidnight = Duration.between(LocalTime.MIDNIGHT, nextTrain.get());
             waitingTime = toMidnight.plus(fromMidnight).plusNanos(1);
         }
         Duration totalDuration = waitingTime.plus(this.travelDuration);
-        return totalDuration;
+        return Optional.of(totalDuration);
+    }
+    
+    /**
+     * {@inheritDoc}
+     * Renvoie la durée d'un chemin d'une station à une autre à partir d'une heure donnée.
+     * @param departureTime l'heure de départ du trajet
+     * @return la durée du chemin
+     */
+    @Override
+    public Duration getTransportDuration(LocalTime departureTime) {
+        return this.totalDuration(departureTime).get();
     }
 
+    /**
+     * {@inheritDoc}
+     * Renvoie le moyen de transport utilisé pour atteindre une destination
+     * @return une option parmi les moyen de transports possibles.
+     */
+    @Override
+    public TransportationMethod getTransportMethod(){
+        return TransportationMethod.TRANSPORTATION;
+    }
     /**
      * Renvoie le nom de la ligne sur laquelle se situe le chemin.
      * @return le nom de la ligne
@@ -163,6 +190,14 @@ public class Path {
         return destination;
     }
 
+    /**
+     * Renvoie le booleen indiquant si la source est un terminus.
+     * @return vrai si la source est un terminus, faux sinon.
+     */
+    public boolean getTerminus() {
+        return terminus;
+    }
+
     @Override
     public boolean equals(Object arg0) {
         return arg0 instanceof Path p &&
@@ -177,6 +212,16 @@ public class Path {
 
     @Override
     public String toString() {
-        return source.getName() + " -> " + destination.getName();
+        return source.getName() + " -> " + destination.getName() + " (" + lineName + " variant " + variant + ")";
+    }
+
+    @Override
+    public Point2D.Double getInCoordinates() {
+        return source.getCoordinates();
+    }
+
+    @Override
+    public Point2D.Double getOutCoordinates() {
+        return destination.getCoordinates();
     }
 }

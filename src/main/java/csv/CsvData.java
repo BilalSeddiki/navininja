@@ -5,11 +5,18 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.awt.geom.Point2D.Double;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+
+import model.Network;
+import model.Station;
+import model.Path;
 
 public abstract class CsvData<T extends CsvData<?>> {
 
@@ -27,7 +34,7 @@ public abstract class CsvData<T extends CsvData<?>> {
      * @return La liste d'instance décrit par le fichier CSV donné en argument
      * @throws IOException if the named file does not exist, is a directory rather than a regular file, or for some other reason cannot be opened for reading.
      */
-    public List<T> readCSVFile(Path path) throws IOException {
+    public List<T> readCSVFile(java.nio.file.Path path) throws IOException {
         FileReader reader = new FileReader(path.toString(), StandardCharsets.UTF_8);
         return readCSV(reader);
     }
@@ -35,6 +42,54 @@ public abstract class CsvData<T extends CsvData<?>> {
     public List<T> readCSVString(String text) throws IOException {
         StringReader reader = new StringReader(text);
         return readCSV(reader);
+    }
+
+    /**
+     * Crée un réseau à partir de deux fichiers CSV.
+     * @param mapFile le nom d'un fichier CSV contenant les informations des chemins du réseau
+     * @param scheduleFile le nom d'un fichier CSV contenant les informations des horaires des lignes 
+     * @return un réseau
+     * @throws IOException si la lecture d'un des fichier echoue
+     */
+    public static Network makeNetwork(String mapFile, String scheduleFile) throws IOException {
+        var schedules = new HashMap<String, HashMap<String, HashMap<String, ArrayList<LocalTime>>>>();
+        var csvSchedules = new ScheduleDataCsv().readCSVFile(java.nio.file.Path.of(scheduleFile));
+
+        for (var item : csvSchedules) {
+            schedules
+                    .computeIfAbsent(item.getDepartStation(),
+                            k -> new HashMap<String, HashMap<String, ArrayList<LocalTime>>>())
+                    .computeIfAbsent(item.getLine(), k -> new HashMap<String, ArrayList<LocalTime>>())
+                    .computeIfAbsent(item.getVariant(), k -> new ArrayList<LocalTime>());
+            schedules.get(item.getDepartStation()).get(item.getLine()).get(item.getVariant()).add(item.getDepartTime());
+        }
+
+        var csvPaths = new CardsDataCsv().readCSVFile(java.nio.file.Path.of(mapFile));
+        var stations = new HashMap<String, Station>();
+        var paths = new ArrayList<Path>();
+        for (CardsDataCsv item : csvPaths) {
+            String stationNameA = item.getStationA();
+            if (!stations.containsKey(stationNameA)) {
+                Double coordinatesA = item.getCoordinatesA();
+                Station stationA = new Station(stationNameA, coordinatesA);
+                stations.put(stationA.getName(), stationA);
+            }
+
+            String stationNameB = item.getStationB();
+            if (!stations.containsKey(stationNameB)) {
+                Double coordinatesB = item.getCoordinatesB();
+                Station stationB = new Station(stationNameB, coordinatesB);
+                stations.put(stationB.getName(), stationB);
+            }
+
+            var schedule = schedules.getOrDefault(stationNameA, new HashMap<>())
+                    .getOrDefault(item.getLine(), new HashMap<>())
+                    .getOrDefault(item.getLineVariant(), new ArrayList<LocalTime>());
+
+            paths.add(new Path(item.getLine(), item.getLineVariant(), schedule, item.getDuration(),
+                    item.getDistance(), stations.get(stationNameA), stations.get(stationNameB)));
+        }
+        return new Network(new ArrayList<Station>(stations.values()), paths);
     }
 
     /**

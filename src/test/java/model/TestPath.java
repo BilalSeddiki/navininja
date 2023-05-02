@@ -3,13 +3,17 @@ package model;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.awt.geom.Point2D.Double;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestPath {
 
-    /* Constructeurs et getters */
+    /**
+     * Cree un chemin avec des valeurs par defaut.
+     * @return chemin avec des valeurs par defaut.
+     */
     public Path createPathWithDefaultValues() {
         String lineName = "";
         String variant = "0";
@@ -23,6 +27,30 @@ public class TestPath {
         return path;
     }
 
+    /**
+     * Cree un chemin avec des valeurs par defaut et une liste
+     * d'horaires de passage des trains non vide.
+     * @return Chemin avec des valeurs par defaut et une liste d'horaire.
+     */
+    public Path createPathWithScheduleAndTravelDuration() {
+        String lineName = "";
+        String variant = "0";
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        schedule.add(LocalTime.of(8, 30, 00));
+        schedule.add(LocalTime.of(8, 40, 00));
+        schedule.add(LocalTime.of(8, 50, 00));
+        Duration travelDuration = Duration.ofMinutes(5);
+        double travelDistance = 0;
+        Station source = new Station("", new Double(0, 0));
+        Station destination = new Station("", new Double(0, 0));
+        Path path = new Path(lineName, variant, schedule, travelDuration, travelDistance, source, destination);
+
+        return path;
+    }
+
+    /**
+     * Teste le constructeur ainsi que les getters de la classe Path.
+     */
     @Test
     public void testConstructorAndGetters() {
         String lineName = "";
@@ -34,87 +62,56 @@ public class TestPath {
         Station destination = new Station("", new Double(0, 0));
 
         Path path = new Path(lineName, variant, schedule, travelDuration, travelDistance, source, destination);
-        assertEquals(lineName, path.getLineName(), "L'attribut lineName est incorrect.");
-        assertEquals(variant, path.getVariant(), "L'attribut variant est incorrect.");
-        assertEquals(schedule, path.getSchedule(), "L'attribut schedule est incorrect.");
-        assertEquals(travelDuration, path.getTravelDuration(), "L'attribut travelDuration est incorrect.");
+        assertSame(lineName, path.getLineName(), "L'attribut lineName est incorrect.");
+        assertSame(variant, path.getVariant(), "L'attribut variant est incorrect.");
+        assertTrue(schedule.equals(path.getSchedule()), "L'attribut schedule est incorrect.");
+        assertSame(travelDuration, path.getTravelDuration(), "L'attribut travelDuration est incorrect.");
         assertEquals(travelDistance, path.getTravelDistance(), "L'attribut travelDistance est incorrect.");
-        assertEquals(source, path.getSource(), "L'attribut source est incorrect.");
-        assertEquals(destination, path.getDestination(), "L'attribut destination est incorrect.");
-
-        /* TODO (1 ?): assertEquals -> assertSame avec redéfinition de equals. */
+        assertSame(source, path.getSource(), "L'attribut source est incorrect.");
+        assertSame(destination, path.getDestination(), "L'attribut destination est incorrect.");
     }
 
-    @Test
-    public void testConstructorLineNameNotEmpty() {
-        Path path = createPathWithDefaultValues();
-        //assertFalse(path.getLineName().isEmpty(), "L'attribut lineName ne peut pas être vide.");
-    }
-
-    @Test
-    public void testConstructorScheduleNotEmpty() {
-        Path path = createPathWithDefaultValues();
-        //assertFalse(path.getSchedule().isEmpty(), "L'attribut schedule ne peut pas être vide.");
-    }
-
-    @Test
-    public void testConstructorTravelDurationNotZero() {
-        Path path = createPathWithDefaultValues();
-        //assertNotEquals(path.getTravelDuration(), Duration.ZERO, "L'attribut travelDuration ne peut pas valoir zéro.");
-    }
-
-    @Test
-    public void testConstructorTravelDistanceNotZero() {
-        Path path = createPathWithDefaultValues();
-        //assertNotEquals(path.getTravelDistance(), 0, "L'attribut travelDistance ne peut pas valoir zéro.");
-    }
-
-    @Test
-    public void testConstructorSourceNotNull() {
-        Path path = createPathWithDefaultValues();
-        assertNotNull(path.getSource(), "L'attribut source ne peut pas être nul.");
-    }
-
-    @Test
-    public void testConstructorNextStationNotNull() {
-        Path path = createPathWithDefaultValues();
-        assertNotNull(path.getDestination(), "L'attribut destination ne peut pas être nul.");
-    }
-
-    /* Fonction nextTrainDeparture */
+    /**
+     * Teste la fonction nextTrainDeparture dans le cas ou le prochain train
+     * arrive le jour même.
+     */
     @Test
     public void testNextTrainDepartureSameDay() {
-        String lineName = "Test";
-        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
-        schedule.add(LocalTime.of(8, 30, 00));
-        schedule.add(LocalTime.of(8, 40, 00));
-        schedule.add(LocalTime.of(8, 50, 00));
-        Station source = new Station("Station 1", new Double(0, 0));
-        Station destination = new Station("Station 2", new Double(0, 0));
-
-        Path path = new Path("Test", "0", schedule, Duration.ZERO, 0, source, destination);
+        Path path = createPathWithScheduleAndTravelDuration();
         LocalTime depart = LocalTime.of(8, 37, 00);
-        assertEquals(schedule.get(1), path.nextTrainDeparture(depart), "TODO");
+        assertEquals(path.getSchedule().get(1), path.nextDeparture(depart).get(),
+                "Le calcul du prochain depart est incorrect.");
     }
 
+    /**
+     * Teste la fonction nextTrainDeparture dans le cas ou le prochain train
+     * arrive le lendemain.
+     */
     @Test
     public void testNextTrainDepartureNextDay() {
-        String lineName = "Test";
-        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
-        schedule.add(LocalTime.of(8, 30, 00));
-        schedule.add(LocalTime.of(8, 40, 00));
-        schedule.add(LocalTime.of(8, 50, 00));
-        Station source = new Station("Station 1", new Double(0, 0));
-        Station destination = new Station("Station 2", new Double(0, 0));
-
-        Path path = new Path("Test", "0", schedule, Duration.ZERO, 0, source, destination);
+        Path path = createPathWithScheduleAndTravelDuration();
         LocalTime depart = LocalTime.of(23, 30, 00);
-        assertEquals(schedule.get(0), path.nextTrainDeparture(depart), "Le calcul du prochain départ est incorrect.");
+        assertEquals(path.getSchedule().get(0), path.nextDeparture(depart).get(),
+                "Le calcul du prochain depart est incorrect.");
     }
 
+    /**
+     * Teste la fonction nextTrainDeparture dans le cas ou la liste des horaires
+     * est vide.
+     */
+    @Test
+    public void testNextTrainDepartureEmptySchedule() {
+        Path path = createPathWithDefaultValues();
+        LocalTime depart = LocalTime.of(14, 30, 00);
+        assertEquals(Optional.empty(), path.nextDeparture(depart),
+                "Le calcul du prochain départ est incorrect.");
+    }
+
+    /**
+     * Teste la propagation.
+     */
     @Test
     public void testPropagation() {
-        String lineName = "Test";
         ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
         schedule.add(LocalTime.of(8, 30, 00));
         schedule.add(LocalTime.of(8, 40, 00));
@@ -123,69 +120,75 @@ public class TestPath {
         Station s1 = new Station("Station 1", new Double(0, 0));
         Station s2 = new Station("Station 2", new Double(0, 0));
         Station destination = new Station("Destination", new Double(0, 0));
-        Duration t = Duration.ofMinutes(1);
+        Duration duration = Duration.ofMinutes(1);
 
-        Path path1 = new Path("Test", "0", schedule, t, 0, source, s1);
+        Path path1 = new Path("Test", "0", schedule, duration, 0, source, s1);
         source.addOutPath(path1);
         s1.addInPath(path1);
-        Path path2 = new Path("Test", "0", new ArrayList<LocalTime>(), t, 0, s1, s2);
+        Path path2 = new Path("Test", "0", new ArrayList<LocalTime>(), duration, 0, s1, s2);
         s1.addOutPath(path2);
         s2.addInPath(path2);
-        Path path3 = new Path("Test", "0", new ArrayList<LocalTime>(), t, 0, s2, destination);
+        Path path3 = new Path("Test", "0", new ArrayList<LocalTime>(), duration, 0, s2, destination);
         s2.addOutPath(path3);
         destination.addInPath(path3);
 
         LocalTime depart = LocalTime.of(8, 30, 00);
-        assertEquals(LocalTime.of(8, 32, 00), path3.nextTrainDeparture(depart),
+        assertEquals(LocalTime.of(8, 32, 00), path3.nextDeparture(depart).get(),
                 "Le calcul du prochain départ est incorrect.");
     }
 
-    @Test
-    public void testNextTrainDepartureEmptySchedule() {
-        String lineName = "Test";
-        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
-        Station source = new Station("Station 1", new Double(0, 0));
-        Station destination = new Station("Station 2", new Double(0, 0));
-
-        Path path = new Path("Test", "0", schedule, Duration.ZERO, 0, source, destination);
-        LocalTime depart = LocalTime.of(14, 30, 00);
-        assertEquals(LocalTime.of(0, 0), path.nextTrainDeparture(depart),
-                "Le calcul du prochain départ est incorrect.");
-    }
-
-    /* Fonction totalDuration */
+    /**
+     * Teste la fonction totalDuration dans le cas ou le temps d'attente
+     * entre l'heure de depart et l'heure d'arrivee du prochain train
+     * est positive.
+     */
     @Test
     public void testTotalDurationPositive() {
-        String lineName = "Test";
-        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
-        schedule.add(LocalTime.of(8, 30, 00));
-        schedule.add(LocalTime.of(8, 40, 00));
-        schedule.add(LocalTime.of(8, 50, 00));
-        Duration travelDuration = Duration.ofMinutes(5);
-        Station source = new Station("Station 1", new Double(0, 0));
-        Station destination = new Station("Station 2", new Double(0, 0));
-        //TODO: Factoriser les constructeurs pour les Station ?
-        Path path = new Path("Test", "0", schedule, travelDuration, 0, source, destination);
+        Path path = createPathWithScheduleAndTravelDuration();
         LocalTime depart = LocalTime.of(7, 30, 00);
+        Duration travelDuration = path.getTravelDuration();
         Duration duration = (Duration.ofMinutes(60)).plus(travelDuration);
-        //TODO: Trouver une autre façon de préciser les données ?
-        assertEquals(duration, path.totalDuration(depart), "Le calcul de la durée totale du trajet est incorrect.");
+        assertEquals(duration, path.totalDuration(depart).get(),
+                "Le calcul de la durée totale du trajet est incorrect.");
     }
 
+    /**
+     * Teste la fonction totalDuration dans le cas ou le temps d'attente
+     * entre l'heure de depart et l'heure d'arrivee du prochain train
+     * est negative.
+     */
     @Test
     public void testTotalDurationNegative() {
-        String lineName = "Test";
+        Path path = createPathWithScheduleAndTravelDuration();
+        LocalTime depart = LocalTime.of(23, 30, 00);
+        Duration travelDuration = path.getTravelDuration();
+        Duration duration = (Duration.ofMinutes(540)).plus(travelDuration);
+        assertEquals(duration, path.totalDuration(depart).get(),
+                "Le calcul de la durée totale du trajet est incorrect.");
+    }
+
+    /**
+     * Teste la fonction setTerminus dans le cas ou la liste des horaires
+     * de passage des trains est vide.
+     */
+    @Test
+    public void testSetTerminusWithEmptySchedule() {
+        Path path = createPathWithDefaultValues();
+        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+        path.setTerminus(schedule);
+        assertFalse(path.getTerminus());
+    }
+
+    /**
+     * Teste la fonction setTerminus dans le cas ou la liste des horaires
+     * de passage des trains n'est pas vide.
+     */
+    @Test
+    public void testSetTerminusWithNotEmptySchedule() {
+        Path path = createPathWithDefaultValues();
         ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
         schedule.add(LocalTime.of(8, 30, 00));
-        Duration travelDuration = Duration.ofMinutes(5);
-        Station source = new Station("Station 1", new Double(0, 0));
-        Station destination = new Station("Station 2", new Double(0, 0));
-        //TODO: Factoriser les constructeurs pour les Station ?
-
-        Path path = new Path("Test", "0", schedule, travelDuration, 0, source, destination);
-        LocalTime depart = LocalTime.of(23, 30, 00);
-        Duration duration = (Duration.ofMinutes(540)).plus(travelDuration);
-        //TODO: Trouver une autre façon de préciser les données ?
-        assertEquals(duration, path.totalDuration(depart), "Le calcul de la durée totale du trajet est incorrect.");
+        path.setTerminus(schedule);
+        assertTrue(path.getTerminus());
     }
 }

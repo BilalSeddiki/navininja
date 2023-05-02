@@ -12,6 +12,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import model.Network;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +47,18 @@ public class TextFieldListener implements ChangeListener<String> {
     private void textFieldListener(String newValue, TextField textField){
         if (!newValue.isBlank()) {
             List<String> filteredSuggestions = new ArrayList<>();
+            String normalizedInput = Normalizer.normalize(newValue, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
             for (String s : stations) {
-                if (s.toLowerCase().startsWith(newValue.toLowerCase())) {
-                    filteredSuggestions.add(s);
+                String normalizedStation = Normalizer.normalize(s, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+
+                if(normalizedInput.length() == 1 ){
+                    if(normalizedStation.toLowerCase().startsWith(normalizedInput.toLowerCase())){
+                        filteredSuggestions.add(s);
+                    }
+                }else {
+                    if (normalizedStation.toLowerCase().contains(normalizedInput.toLowerCase())) {
+                        filteredSuggestions.add(s);
+                    }
                 }
             }
             if (!filteredSuggestions.isEmpty()) {
@@ -60,8 +70,6 @@ public class TextFieldListener implements ChangeListener<String> {
                         lineComboBox.getItems().addAll(lines);
                     }
                 }
-
-
             } else {
                 suggestionMenu.hide();
             }
