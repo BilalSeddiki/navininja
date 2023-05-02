@@ -63,14 +63,14 @@
             <String fx:value="primary-button" />
          </styleClass>
       </Button>
-      <TextField fx:id="coordinatesAInput" layoutX="156.0" layoutY="219.0" prefHeight="38.0" prefWidth="321.0" promptText="From..." AnchorPane.leftAnchor="169.0" />
-      <TextField fx:id="coordinatesBInput" layoutX="543.0" layoutY="219.0" prefHeight="38.0" prefWidth="321.0" promptText="To..." AnchorPane.leftAnchor="543.0">
+      <TextField fx:id="coordinatesAInput" layoutX="156.0" layoutY="219.0" prefHeight="38.0" prefWidth="302.0" promptText="From..." AnchorPane.leftAnchor="169.0" />
+      <TextField fx:id="coordinatesBInput" layoutX="567.0" layoutY="219.0" prefHeight="38.0" prefWidth="297.0" promptText="To..." AnchorPane.leftAnchor="567.0">
          <contextMenu>
             <ContextMenu fx:id="suggestionMenu" />
          </contextMenu></TextField>
       <Label layoutX="169.0" layoutY="273.0" prefHeight="17.0" prefWidth="207.0" styleClass="title" text="When ? " />
-      <ComboBox fx:id="hourComboBoxA" editable="true" layoutX="169.0" layoutY="308.0" prefHeight="39.0" prefWidth="150.0" promptText="Hour" visibleRowCount="12" />
-      <ComboBox fx:id="minComboBoxA" editable="true" layoutX="340.0" layoutY="308.0" prefHeight="39.0" prefWidth="150.0" promptText="Minute" visibleRowCount="12" AnchorPane.rightAnchor="544.0" />
+      <ComboBox fx:id="hourComboBoxA" editable="true" layoutX="169.0" layoutY="308.0" prefHeight="39.0" prefWidth="135.0" promptText="Hour" visibleRowCount="12" />
+      <ComboBox fx:id="minComboBoxA" editable="true" layoutX="320.0" layoutY="308.0" prefHeight="39.0" prefWidth="138.0" promptText="Minute" visibleRowCount="12" AnchorPane.rightAnchor="564.0" />
       <Button fx:id="goBackBtn" layoutX="53.0" layoutY="40.0" mnemonicParsing="false" onAction="#goBackListener" styleClass="secondary-button">
          <graphic>
             <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" styleClass="secondary-button">
@@ -108,6 +108,22 @@
             </TableColumn>
          </columns>
       </TableView>
+      <Button fx:id="reverseInputButton" layoutX="497.0" layoutY="220.0" mnemonicParsing="false" onAction="#reverseInputListener" prefHeight="38.0" prefWidth="40.0" stylesheets="@style/style.css">
+         <styleClass>
+            <String fx:value="tertiary-button" />
+            <String fx:value="dropshadow" />
+         </styleClass>
+          <graphic>
+               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../exchange.png" />
+                  </image>
+               </ImageView>
+            </graphic>
+            <tooltip>
+               <Tooltip text="Exchange text fields" />
+            </tooltip>
+      </Button>
 
    </AnchorPane>
 </ScrollPane>

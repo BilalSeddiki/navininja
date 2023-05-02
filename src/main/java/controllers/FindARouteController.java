@@ -20,6 +20,8 @@ import java.util.List;
  */
 public class FindARouteController extends Controller {
     @FXML
+    Button reverseInputButton;
+    @FXML
     Button goBackBtn;
     @FXML
     ComboBox<String> hourComboBoxA;
@@ -43,6 +45,7 @@ public class FindARouteController extends Controller {
     TableColumn<Transport, String> lineColumn;
     @FXML
     TableColumn<Transport, Duration> durationColumn;
+
 
     /**
      * This enum helps recognizing the input format the user chose
@@ -247,7 +250,7 @@ public class FindARouteController extends Controller {
         if (!isValidInput(inputA) && inputFormatA == InputFormat.STATION_NAME) {
             // Show error dialog for invalid station name input
             displayErrorMessage("Invalid input", "The input of source text does not match a valid station name.");
-        }else if(isValidInput(inputB) && inputFormatB == InputFormat.STATION_NAME){
+        }else if(!isValidInput(inputB) && inputFormatB == InputFormat.STATION_NAME){
             displayErrorMessage("Invalid input", "The input of destination text does not match a valid station name.");
 
         } else if ((checkInputFormat(inputA) == InputFormat.INVALID) || (checkInputFormat(inputB) == InputFormat.INVALID)) {
@@ -272,4 +275,16 @@ public class FindARouteController extends Controller {
     public void goBackListener(ActionEvent actionEvent) {
         navigationController.navigateBack();
     }
+
+    /**
+     * Écouteur du bouton 'échanger' permet d'échanger les deux zones de textes'
+     * @param actionEvent événement détécté
+     */
+    public void reverseInputListener(ActionEvent actionEvent) {
+        String textInputB = coordinatesBInput.getText();
+        coordinatesBInput.setText(coordinatesAInput.getText());
+        coordinatesAInput.setText(textInputB);
+        suggestionMenu.hide();
+    }
+
 }
