@@ -58,7 +58,6 @@ public class Itinerary {
             Duration pathDuration = transports.get(i).totalDuration(newDeparture)
                     .orElseThrow(() -> new IllegalStateException("Empty time in Itinerary"));
             total = total.plus(pathDuration);
-            newDeparture = newDeparture.plus(pathDuration);
         }
         return total;
     }

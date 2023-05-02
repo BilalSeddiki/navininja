@@ -83,7 +83,7 @@
             <Tooltip text="Navigate back" />
          </tooltip>
       </Button>
-      <TableView fx:id="itineraryTable" layoutX="44.0" layoutY="434.0" prefHeight="400.0" prefWidth="958.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="32.0">
+      <TableView fx:id="itineraryTable" layoutX="46.0" layoutY="500.0" prefHeight="334.0" prefWidth="956.0" AnchorPane.leftAnchor="46.0" AnchorPane.rightAnchor="32.0">
          <columns>
             <TableColumn fx:id="startColumn" prefWidth="328.0" text="Start">
                <cellValueFactory>
@@ -100,7 +100,7 @@
                   <PropertyValueFactory property="line" />
                </cellValueFactory>
             </TableColumn>
-            
+
             <TableColumn fx:id="durationColumn" prefWidth="160.0" text="Duration">
                <cellValueFactory>
                   <PropertyValueFactory property="duration" />
@@ -124,8 +124,8 @@
                <Tooltip text="Exchange text fields" />
             </tooltip>
       </Button>
-      <Label fx:id="titleTotalDuration" layoutX="197.0" layoutY="448.0" prefHeight="23.0" prefWidth="156.0" styleClass="title" stylesheets="@style/style.css" text="Total trip duration : " />
-      <Label fx:id="labelTotalDuration" layoutX="353.0" layoutY="448.0" prefHeight="17.0" prefWidth="142.0" styleClass="title" stylesheets="@style/style.css" text="00:00" />
+      <Label fx:id="titleTotalDuration" layoutX="46.0" layoutY="447.0" prefHeight="23.0" prefWidth="156.0" styleClass="title" stylesheets="@style/style.css" text="Total trip duration : " />
+      <Label fx:id="labelTotalDuration" layoutX="202.0" layoutY="447.0" prefHeight="17.0" prefWidth="142.0" styleClass="title" stylesheets="@style/style.css" text="00:00" />
 
    </AnchorPane>
 </ScrollPane>
