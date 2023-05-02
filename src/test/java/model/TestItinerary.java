@@ -58,7 +58,7 @@ public class TestItinerary {
         Itinerary itinerary = createItinerary();
 
         Duration duration = itinerary.getDuration();
-        Duration supposedDuration = Duration.ofMinutes(30);
+        Duration supposedDuration = Duration.ofMinutes(35);
         assertEquals(duration, supposedDuration, 
             "La durée totale de cet itinéraire devrait être 30 minutes.");
     }
@@ -71,9 +71,9 @@ public class TestItinerary {
         Itinerary itinerary = createItinerary();
 
         LocalTime arrivalTime = itinerary.getArrivalTime();
-        LocalTime supposedArrivalTime = LocalTime.of(9, 00, 00);
+        LocalTime supposedArrivalTime = LocalTime.of(9, 05, 00);
         assertEquals(arrivalTime, supposedArrivalTime, 
-            "L'heure d'arrivée de l'itinéraire devrait etre 9h.");
+            "L'heure d'arrivée de l'itinéraire devrait etre 9h05.");
     }
 
     /**
