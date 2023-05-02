@@ -1,4 +1,4 @@
-package netnavi;
+package network;
 
 public class MinimalPath{
     public String source;

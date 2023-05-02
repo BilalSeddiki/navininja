@@ -1,4 +1,4 @@
-package netnavi;
+package network;
 
 import java.net.Socket;
 import java.util.Scanner;

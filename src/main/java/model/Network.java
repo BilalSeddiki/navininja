@@ -8,11 +8,16 @@ import java.util.NoSuchElementException;
 import java.util.List;
 
 import javafx.util.Pair;
+import model.dijkstra.Node;
+import model.dijkstra.NodeDistanceComparator;
+import model.dijkstra.NodeDistanceDurationComparator;
+import model.dijkstra.NodeDurationComparator;
+import model.dijkstra.NodeTimeComparator;
+import network.MinimalStation;
+import utils.Globals;
 
 import java.awt.geom.Point2D.Double;
 import java.time.format.DateTimeFormatter;
-
-import netnavi.MinimalStation;
 
 public class Network {
     /** Ensemble de stations du réseau. <p> Une HashMap avec le nom des stations pour clé, et les stations pour valeur.*/
@@ -191,21 +196,13 @@ public class Network {
      * necessite un refactor
      * <p>
      * renvoie la liste des schedule de la station pour une ligne a l'horaire donnée
-     * @param msg le message de l'interface Graphique qui contient les information
+     * @param name le nom de la station
+     * @param line la ligne a la station
+     * @param time l'horaire donnée
      * @return ArrayList<Schedule> qui contient les Schedules demandés
      */
-    public ArrayList<Schedule> traitementSchedule(String msg){
+    public ArrayList<Schedule> traitementSchedule(String name,String line,LocalTime time){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-        int current0=0;
-        int sl=msg.charAt(current0);
-        String name=msg.substring(current0+1,current0+sl+1);
-        current0=current0+sl+1;
-        int ltl=msg.charAt(current0);
-        String lttmp=msg.substring(current0+1,current0+ltl+1);
-        current0=current0+ltl+1;
-        LocalTime time=LocalTime.parse(lttmp);
-        int ll=msg.charAt(current0);
-        String line=msg.substring(current0+1,current0+ll+1);
         ArrayList<Schedule> schedulestmp=new ArrayList<Schedule>();
         if(hasStation(name)){
             List<Path> paths = getStation(name).getOutPathsFromLine(line);
