@@ -289,12 +289,4 @@ public class Network {
                 this.lines.equals(n.lines);
     }
 
-    public static void main(String[] args) throws IOException {
-        Network network = Network.fromCSV(Globals.pathToRessources("map_data.csv"), Globals.pathToRessources("timetables.csv"));
-        Dijkstra dijkstra = new Dijkstra(network);
-        Double start = new Double(2.346411849769496, 48.85955653272677);
-        Double end = new Double(2.376487371168305, 48.829925765928905);
-        Itinerary itinerary = dijkstra.bestPath(start, end, LocalTime.now(), NodeSize.TIME);
-        System.out.println(itinerary);
-    }
 }
