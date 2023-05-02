@@ -151,7 +151,7 @@ public class Network {
         return station;
     }
 
-    public List<Pair<java.lang.Double, Station>> getClosestStations(Double coordinates) {
+    public List<Pair<java.lang.Double, Station>> getClosestStations(Double coordinates, double maxDistance) {
         List<Pair<java.lang.Double, Station>> list = new ArrayList<>();
         for (Station station : stationsByCoordinates.values()) {
             if (station.getCoordinates().equals(coordinates)) {
@@ -159,7 +159,11 @@ public class Network {
             }
             double distance = Math.sqrt(
                 Math.pow(station.getCoordinates().getX() - coordinates.getX(), 2) + 
-                Math.pow(station.getCoordinates().getX() - coordinates.getX(), 2));
+                Math.pow(station.getCoordinates().getX() - coordinates.getX(), 2)
+            );
+            if (distance > maxDistance) {
+                break;
+            }
             list.add(new Pair<>(distance, station));
         }
         list.sort(new Comparator<Pair<java.lang.Double, Station>>() {
@@ -171,6 +175,10 @@ public class Network {
             
         });
         return list;
+    }
+
+    public List<Pair<java.lang.Double, Station>> getClosestStations(Double coordinates) {
+        return getClosestStations(coordinates, java.lang.Double.MAX_VALUE);
     }
 
     /**
