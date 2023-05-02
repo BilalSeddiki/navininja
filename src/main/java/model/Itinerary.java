@@ -56,10 +56,9 @@ public class Itinerary {
     public Duration getDuration() {
         Duration total = Duration.ZERO;
         LocalTime newDeparture = departureTime;
-        for(int i = 0; i < this.transports.size(); i++) {
-            Duration pathDuration = transports.get(i).getTransportDuration(newDeparture);
+        for (Transport transport : this.transports) {
+            Duration pathDuration = transport.getTransportDuration(newDeparture);
             total = total.plus(pathDuration);
-            newDeparture = newDeparture.plus(pathDuration);
         }
         return total;
     }
