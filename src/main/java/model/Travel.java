@@ -111,25 +111,28 @@ public class Travel {
      * @return itinéraire calculé en fonction des paramètres non nuls.
      */
     public Itinerary createItinerary() {
+        Itinerary itinerary;
         if(this.departureCoordinates != null && this.arrivalCoordinates != null) {
             boolean isDepartureStation = this.network.hasStation(departureCoordinates);
             boolean isArrivalStation = this.network.hasStation(arrivalCoordinates);
             if(isDepartureStation && isArrivalStation) {
-                System.out.println("ici");
-                this.fromStationToStation();
+                itinerary = this.fromStationToStation();
             }
             else if(isDepartureStation) {
-                this.fromCoordinatesOrStation(false);
+                itinerary = this.fromCoordinatesOrStation(false);
             }
             else if(isArrivalStation) {
-                this.fromCoordinatesOrStation(true);
+                itinerary = this.fromCoordinatesOrStation(true);
             }
             else {
-                this.fromCoordinatesToCoordinates();
+                itinerary = this.fromCoordinatesToCoordinates();
             }
 
         }
-        return this.createEmptyItinerary();
+        else {
+            itinerary = createEmptyItinerary();
+        }
+        return itinerary;
     }
 
     /** 
@@ -150,7 +153,6 @@ public class Travel {
         try {
             Station departureStation = this.network.getStation(this.departureCoordinates);
             Station arrivalStation = this.network.getStation(this.arrivalCoordinates);
-            System.out.println("aaaaaaaaaa");
             return this.bestItinerary(departureStation, arrivalStation); 
         }
         catch(Exception e) {
@@ -214,7 +216,7 @@ public class Travel {
      * @return couple d'un itinéraire et d'un trajet à pied.
      */
     private Pair<Itinerary, Walk> searchFromCoordAndStation(Double coordinates, Station station, boolean direction) {
-        List<Pair<java.lang.Double, Station>> list = this.algorithm.getNetwork().getClosestStations(coordinates);
+        List<Station> list = this.algorithm.getNetwork().getClosestStations(coordinates);
         
         if(list.size() == 0) {
             return new Pair<Itinerary, Walk>(this.createEmptyItinerary(), null);
@@ -241,14 +243,13 @@ public class Travel {
      * point d'arrivée, false sinon.
      * @return couple d'un itinéraire et d'une station.
      */
-    private Pair<Itinerary, Station> itineraryFromCoordAndStation(List<Pair<java.lang.Double, Station>> list, Station station, boolean direction) {
-        Station stationMin = list.get(0).getValue();
+    private Pair<Itinerary, Station> itineraryFromCoordAndStation(List<Station> list, Station station, boolean direction) {
+        Station stationMin = list.get(0);
         Itinerary itineraryMin = this.itineraryWithDirection(stationMin, station, direction);
         Duration durationMin = itineraryMin.getDuration();
 
         for(int i = 1; i < this.SEARCH_LIMIT; i++) {
-            Pair<java.lang.Double, Station> pair = list.get(i);
-            Station stationLoop = pair.getValue();
+            Station stationLoop = list.get(i);
             Itinerary itineraryLoop = this.itineraryWithDirection(stationLoop, station, direction);
             Duration durationLoop = itineraryLoop.getDuration();
             if(durationLoop.compareTo(durationMin) < 0) {
@@ -308,8 +309,8 @@ public class Travel {
      * @return itinéraire calculé à partir des coordonnées GPS de départ et d'arrivée.
      */
     private Itinerary searchFromCoord(Double departure, Double arrival) {
-        List<Pair<java.lang.Double, Station>> listDeparture = this.algorithm.getNetwork().getClosestStations(departure);
-        List<Pair<java.lang.Double, Station>> listArrival = this.algorithm.getNetwork().getClosestStations(arrival);
+        List<Station> listDeparture = this.algorithm.getNetwork().getClosestStations(departure);
+        List<Station> listArrival = this.algorithm.getNetwork().getClosestStations(arrival);
 
         if(listDeparture.size() == 0 || listArrival.size() == 0) {
             return this.createEmptyItinerary();
@@ -333,12 +334,12 @@ public class Travel {
      * @return itinéraire calculé à partir des listes et coordonnées.
      */
     private Itinerary itineraryFromCoord(
-        List<Pair<java.lang.Double, Station>> listDeparture, 
-        List<Pair<java.lang.Double, Station>> listArrival,
+        List<Station> listDeparture, 
+        List<Station> listArrival,
         Double departure, Double arrival
         ) {
-        Station departureMin = listDeparture.get(0).getValue();
-        Station arrivalMin = listArrival.get(0).getValue();
+        Station departureMin = listDeparture.get(0);
+        Station arrivalMin = listArrival.get(0);
         Itinerary itineraryMin = this.bestItinerary(departureMin, arrivalMin);
         Duration durationMin = itineraryMin.getDuration();
 
@@ -349,9 +350,9 @@ public class Travel {
         }
 
         for(int i = 1; i < this.SEARCH_LIMIT; i++) {
-            Station stationDepartureLoop = listDeparture.get(i).getValue();
+            Station stationDepartureLoop = listDeparture.get(i);
             for(int j = 1; j < this.SEARCH_LIMIT; j++) {
-                Station stationArrivalLoop = listArrival.get(j).getValue();
+                Station stationArrivalLoop = listArrival.get(j);
                 if(stationDepartureLoop.equals(stationArrivalLoop)) {
                     continue;
                 }

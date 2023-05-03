@@ -113,19 +113,21 @@ public class Main {
         Travel travel = new Travel
             .Builder(network)
             .setDepartureTime(departureTime)
-            .setDepartureStation(stationList.get(0))
-            .setArrivalStation(stationList.get(2))
+            .setDepartureCoordinates(coordinatesList.get(2))
+            .setArrivalCoordinates(coordinatesList.get(1))
             .build();
         Itinerary itinerary = travel.createItinerary();
 
         ArrayList<Transport> transports = new ArrayList<Transport>();
-        transports.add(pathList.get(0));
-        transports.add(pathList.get(1));
+        transports.add(new Walk(coordinatesList.get(2), stationList.get(0).getCoordinates()));
+        transports.add(pathList.get(8));
+        transports.add(new Walk(stationList.get(5).getCoordinates(), coordinatesList.get(1)));
         Itinerary expected = new Itinerary(departureTime, transports);
 
         System.out.println("expected: ");
         System.out.println(expected.toString());
         System.out.println("---------------");
+        System.out.println("CREATED: ");
         System.out.println(itinerary.toString());
     }
 }

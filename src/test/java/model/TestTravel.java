@@ -464,7 +464,6 @@ public class TestTravel {
     /**
      * Teste la fonction fromCoordinatesToStation.
      */
-    /*
     @Test
     public void testFromCoordinatesToStation() throws IllegalTravelException {
         LocalTime departureTime = LocalTime.of(8, 20);
@@ -484,12 +483,10 @@ public class TestTravel {
         assertEquals(itinerary.getDepartureTime(), expected.getDepartureTime());
         assertEquals(itinerary.getTransports(), expected.getTransports());
     }
-    */
 
     /**
      * Teste la fonction fromStationToCoordinates.
      */
-    /*
     @Test
     public void testFromStationToCoordinates() throws IllegalTravelException {
         LocalTime departureTime = LocalTime.of(8, 20);
@@ -508,12 +505,10 @@ public class TestTravel {
         assertEquals(itinerary.getDepartureTime(), expected.getDepartureTime());
         assertEquals(itinerary.getTransports(), expected.getTransports());
     }
-    */
 
     /**
      * Teste la fonction fromCoordinatesToCoordinates.
      */
-    /*
     @Test
     public void testFromCoordinatesToCoordinates() throws IllegalTravelException {
         LocalTime departureTime = LocalTime.of(8, 20);
@@ -534,13 +529,11 @@ public class TestTravel {
         assertEquals(itinerary.getDepartureTime(), expected.getDepartureTime());
         assertEquals(itinerary.getTransports(), expected.getTransports());
     }
-    */
 
     /**
      * Teste la fonction fromCoordinatesToCoordinates, dans le cas
      * où l'itinéraire n'est composé que d'un trajet à pied.
      */
-    /*
     @Test
     public void testFromCoordinatesToCoordinatesOnlyWalk() throws IllegalTravelException {
         LocalTime departureTime = LocalTime.of(8, 20);
@@ -559,5 +552,4 @@ public class TestTravel {
         assertEquals(itinerary.getDepartureTime(), expected.getDepartureTime());
         assertEquals(itinerary.getTransports(), expected.getTransports());
     }
-    */
 }
