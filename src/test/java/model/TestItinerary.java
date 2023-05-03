@@ -146,7 +146,7 @@ public class TestItinerary {
 
         String itineraryString = 
             itinerary.getDepartureTime().toString() + "\n" 
-            + path.toString() + "\n" + walk.toString();
+            + path.toString() + "\n" + walk.toString() + "\n" + itinerary.getDuration().toString() + "\n" + itinerary.getArrivalTime().toString();
         String resultString = itinerary.toString();
         assertEquals(itineraryString, resultString, 
             "Les deux chaînes de caractères devraient être égales.");
