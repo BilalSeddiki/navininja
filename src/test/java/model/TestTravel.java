@@ -361,6 +361,7 @@ public class TestTravel {
             .setDepartureTime(departureTime)
             .setDepartureStation(stationList.get(0))
             .setArrivalStation(stationList.get(2))
+            .setWalking(false)
             .build();
         Itinerary itinerary = travel.createItinerary();
 
@@ -384,6 +385,7 @@ public class TestTravel {
             .setDepartureTime(departureTime)
             .setDepartureCoordinates(coordinatesList.get(0))
             .setArrivalStation(stationList.get(2))
+            .setWalking(false)
             .build();
         Itinerary itinerary = travel.createItinerary();
 
@@ -429,6 +431,7 @@ public class TestTravel {
             .setDepartureTime(departureTime)
             .setDepartureCoordinates(coordinatesList.get(2))
             .setArrivalCoordinates(coordinatesList.get(1))
+            .setWalking(false)
             .build();
         Itinerary itinerary = travel.createItinerary();
 

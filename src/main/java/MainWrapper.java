@@ -1,7 +1,6 @@
-import utils.*;
 public class MainWrapper {
 
-    public static void main(String[] args) throws IllegalTravelException {
+    public static void main(String[] args) {
         Main.main(args);
     }
 }

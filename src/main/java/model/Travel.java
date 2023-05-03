@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import javafx.util.Pair;
 import java.awt.geom.Point2D.Double;
 
@@ -16,6 +18,12 @@ public class Travel {
 
     /** Algorithme de calcul du meilleur itinéraire. */
     private final ShortestPathAlgorithm algorithm;
+
+    /** Poids sur lequel sera basé les calculs de l'algorithme. */
+    private final NodeSize nodeSize;
+
+    /** S'il est possible de marcher entre les stations. */
+    private final boolean walking;
 
     /** Réseau utilisé. */
     private final Network network;
@@ -33,7 +41,7 @@ public class Travel {
     private int SEARCH_LIMIT;
 
     /** Distance de recherche maximale pour un meilleur itinéraire depuis une station plus éloignée. */
-    private double SEARCH_DISTANCE;
+    private final double SEARCH_DISTANCE;
 
     /** 
      * Construit un déplacement d'un point à un autre.
@@ -41,6 +49,8 @@ public class Travel {
      */
     private Travel(Builder builder) {
         this.algorithm = builder.algorithm;
+        this.nodeSize = builder.nodeSize;
+        this.walking = builder.walking;
         this.network = builder.network;
         this.departureTime = builder.departureTime;
         this.departureCoordinates = builder.departureCoordinates;
@@ -106,22 +116,26 @@ public class Travel {
      * @return itinéraire calculé en fonction des paramètres non nuls.
      */
     public Itinerary createItinerary() {
-        Itinerary itinerary;
         boolean isDepartureStation = this.network.hasStation(departureCoordinates);
         boolean isArrivalStation = this.network.hasStation(arrivalCoordinates);
-        if(isDepartureStation && isArrivalStation) {
-            itinerary = this.fromStationToStation();
+        try {
+            if (isDepartureStation && isArrivalStation) {
+                return this.fromStationToStation();
+            }
+            else if (isDepartureStation) {
+                return this.fromCoordinatesOrStation(false);
+            }
         }
-        else if(isDepartureStation) {
-            itinerary = this.fromCoordinatesOrStation(false);
+        catch (NoSuchElementException e) {
+            return this.createEmptyItinerary();
         }
-        else if(isArrivalStation) {
-            itinerary = this.fromCoordinatesOrStation(true);
+
+        if(isArrivalStation) {
+            return this.fromCoordinatesOrStation(true);
         }
         else {
-            itinerary = this.fromCoordinatesToCoordinates();
+            return this.fromCoordinatesToCoordinates();
         }
-        return itinerary;
     }
 
     /** 
@@ -138,15 +152,10 @@ public class Travel {
      * Calcule un itinéraire dont le départ est une station et l'arrivée une station.
      * @return itinéraire calculé à partir d'une station vers une station.
      */
-    private Itinerary fromStationToStation() {
-        try {
-            Station departureStation = this.network.getStation(this.departureCoordinates);
-            Station arrivalStation = this.network.getStation(this.arrivalCoordinates);
-            return this.bestItinerary(departureStation, arrivalStation); 
-        }
-        catch(Exception e) {
-            return this.createEmptyItinerary();
-        }
+    private Itinerary fromStationToStation() throws NoSuchElementException {
+        Station departureStation = this.network.getStation(this.departureCoordinates);
+        Station arrivalStation = this.network.getStation(this.arrivalCoordinates);
+        return this.bestItinerary(departureStation, arrivalStation); 
     }
 
     /** 
@@ -155,30 +164,25 @@ public class Travel {
      * si true, sinon l'inverse.
      * @return itinéraire.
      */
-    private Itinerary fromCoordinatesOrStation(boolean direction) {
+    private Itinerary fromCoordinatesOrStation(boolean direction) throws NoSuchElementException {
         Double coordinates;
         Station station;
         Itinerary itinerary;
-        try {
-            if(direction) {
-                coordinates = departureCoordinates;
-                station = this.network.getStation(this.arrivalCoordinates);
-            }
-            else {
-                coordinates = arrivalCoordinates;
-                station = this.network.getStation(this.departureCoordinates);
-            }
-            Pair<Itinerary, Walk> result = 
-                this.searchFromCoordAndStation(coordinates, station, direction);
-            itinerary = result.getKey();
-            Walk walk = result.getValue();
-            if(walk != null) {
-                itinerary.addToPosition(walk, direction);
-            }
+        if(direction) {
+            coordinates = departureCoordinates;
+            station = this.network.getStation(this.arrivalCoordinates);
         }
-        catch (Exception e) {
-            itinerary = this.createEmptyItinerary();
-        }        
+        else {
+            coordinates = arrivalCoordinates;
+            station = this.network.getStation(this.departureCoordinates);
+        }
+        Pair<Itinerary, Walk> result = 
+            this.searchFromCoordAndStation(coordinates, station, direction);
+        itinerary = result.getKey();
+        Walk walk = result.getValue();
+        if(walk != null) {
+            itinerary.addToPosition(walk, direction);
+        }
         return itinerary;
     }
 
@@ -197,7 +201,7 @@ public class Travel {
      * @return meilleur itinéraire partant de la station de départ vers la station d'arrivée.
      */
     public Itinerary bestItinerary(Station departureStation, Station arrivalStation) {
-        return this.algorithm.bestPath(departureStation, arrivalStation, this.departureTime, NodeSize.TIME, false);
+        return this.algorithm.bestPath(departureStation, arrivalStation, this.departureTime, nodeSize, walking);
     }
 
     /** 
@@ -377,6 +381,8 @@ public class Travel {
     /** Monteur permettant de gérer les différentes combinaisons d'attributs. */
     public static class Builder {
         private ShortestPathAlgorithm algorithm;
+        private NodeSize nodeSize;
+        private boolean walking = true;
         private Network network;
         private LocalTime departureTime;
         private Double departureCoordinates;
@@ -401,6 +407,24 @@ public class Travel {
             this.algorithm = new Dijkstra(this.network);
             return this;
         } 
+
+        /**
+         * Fixe le poids de l'algorithme de calcul du plus court chemin.
+         * @param nodeSize le poids de l'algorithme de calcul du plus court chemin.
+         */
+        public Builder setNodeSize(NodeSize nodeSize) {
+            this.nodeSize = nodeSize;
+            return this;
+        }
+
+        /**
+         * Fixe le mode de transport à pied entre les stations.
+         * @param walking s'il est possible de marcher à pied entre les stations.
+         */
+        public Builder setWalking(boolean walking) {
+            this.walking = walking;
+            return this;
+        }
 
         /**
          * Fixe l'heure de départ de l'itinéraire.
@@ -483,6 +507,10 @@ public class Travel {
 
             if(this.algorithm == null) {
                 this.algorithm = new Dijkstra(this.network);
+            }
+
+            if(this.nodeSize == null) {
+                this.nodeSize = NodeSize.TIME;
             }
 
             if(this.departureTime == null) {
