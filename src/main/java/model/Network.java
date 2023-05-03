@@ -5,16 +5,17 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 import javafx.util.Pair;
 
-import java.awt.geom.Point2D.Double;
+import java.awt.geom.Point2D;
 
 public class Network {
     /** Ensemble de stations du réseau. <p> Une HashMap avec le nom des stations pour clé, et les stations pour valeur.*/
     private HashMap<String, Station> stationsByName;
     /** Ensemble de stations du réseau. <p> Une HashMap avec les coordonnées des stations pour clé, et les stations pour valeur.*/
-    private HashMap<Double, Station> stationsByCoordinates;
+    private HashMap<Point2D.Double, Station> stationsByCoordinates;
     /** Ensemble des lignes du réseau. <p> Une HashMap à deux dimension avec le nom et le variant des lignes pour clé, et une liste de station pour valeur */
     private HashMap<String, HashMap<String, ArrayList<Station>>> lines;
 
@@ -65,7 +66,7 @@ public class Network {
      * Getter
      * @return retourne la liste des stations par coordonnées
      */
-    public HashMap<Double, Station> getStationsByCoordinates() {
+    public HashMap<Point2D.Double, Station> getStationsByCoordinates() {
         return stationsByCoordinates;
     }
     /**
@@ -117,7 +118,7 @@ public class Network {
      * @param coordinates les coordonnées d'une station
      * @return true si la station existe
      */
-    public boolean hasStation(Double coordinates) {
+    public boolean hasStation(Point2D.Double coordinates) {
         return stationsByCoordinates.containsKey(coordinates);
     }
 
@@ -144,41 +145,40 @@ public class Network {
      * @return la station
      * @throws NoSuchElementException si la station n'existe pas dans le réseau
      */
-    public Station getStation(Double coordinates) throws NoSuchElementException {
+    public Station getStation(Point2D.Double coordinates) throws NoSuchElementException {
         var station = stationsByCoordinates.get(coordinates);
         if (station == null)
             throw new NoSuchElementException();
         return station;
     }
 
-    public List<Pair<java.lang.Double, Station>> getClosestStations(Double coordinates, double maxDistance) {
-        List<Pair<java.lang.Double, Station>> list = new ArrayList<>();
-        for (Station station : stationsByCoordinates.values()) {
-            if (station.getCoordinates().equals(coordinates)) {
-                continue;
-            }
-            double distance = Math.sqrt(
-                Math.pow(station.getCoordinates().getX() - coordinates.getX(), 2) + 
-                Math.pow(station.getCoordinates().getX() - coordinates.getX(), 2)
-            );
-            if (distance > maxDistance) {
-                break;
-            }
-            list.add(new Pair<>(distance, station));
-        }
-        list.sort(new Comparator<Pair<java.lang.Double, Station>>() {
+    public List<Station> getClosestStations(Point2D.Double coordinates) {
+        List<Station> list = new ArrayList<>();
+        list.addAll(stationsByCoordinates.values());
+        list.removeIf(new Predicate<Station>() {
 
             @Override
-            public int compare(Pair<java.lang.Double, Station> o1, Pair<java.lang.Double, Station> o2) {
-                return o1.getKey().compareTo(o2.getKey());
+            public boolean test(Station t) {
+                return t.getCoordinates().equals(coordinates);
+            }
+            
+        });
+        list.sort(new Comparator<Station>() {
+
+            private double getDistance(Station station) {
+                return Math.sqrt(
+                    Math.pow(station.getCoordinates().getX() - coordinates.getX(), 2) + 
+                    Math.pow(station.getCoordinates().getY() - coordinates.getY(), 2)
+                );
+            }
+
+            @Override
+            public int compare(Station o1, Station o2) {
+                return Double.compare(getDistance(o1), getDistance(o2));
             }
             
         });
         return list;
-    }
-
-    public List<Pair<java.lang.Double, Station>> getClosestStations(Double coordinates) {
-        return getClosestStations(coordinates, java.lang.Double.MAX_VALUE);
     }
 
     /**
@@ -221,7 +221,7 @@ public class Network {
      * @param stationList la liste des stations
      */
     private void initStationByCoordinates(ArrayList<Station> stationList) {
-        stationsByCoordinates = new HashMap<Double, Station>();
+        stationsByCoordinates = new HashMap<Point2D.Double, Station>();
         stationList.forEach(s -> {
             stationsByCoordinates.put(s.getCoordinates(), s);
         });

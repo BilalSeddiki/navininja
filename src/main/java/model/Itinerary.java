@@ -98,6 +98,10 @@ public class Itinerary {
             stringBuilder.append("\n");
             stringBuilder.append(transport);
         }
+        stringBuilder.append("\n");
+        stringBuilder.append(getDuration());
+        stringBuilder.append("\n");
+        stringBuilder.append(getArrivalTime());
         return stringBuilder.toString();
     }
 }

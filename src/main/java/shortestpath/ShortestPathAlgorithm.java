@@ -16,7 +16,7 @@ public abstract class ShortestPathAlgorithm {
 
     public ShortestPathAlgorithm(Network network) {
         this.network = network;
-        maxWalkingDistance = 0.001;
+        maxWalkingDistance = 1;
     }
 
     /**
@@ -26,6 +26,8 @@ public abstract class ShortestPathAlgorithm {
     public Network getNetwork() {
         return this.network;
     }
+
+    public abstract Itinerary bestPath(Station source, Station destination, LocalTime startTime, NodeSize size, boolean walking);
     
     /**
      * Renvoie le meilleur chemin entre deux stations, à l'heure indiquée
@@ -36,11 +38,10 @@ public abstract class ShortestPathAlgorithm {
      * @param walking détermine si l'itinéraire peut utiliser des trajets à pied entre les stations
      * @return Objet Itinerary suivant les arguments
      */
-    public abstract Itinerary bestPath(Point2D.Double source, Point2D.Double destination, LocalTime startTime, NodeSize size, boolean walking);
-
-    public Itinerary bestPath(Station source, Station destination, LocalTime startTime, NodeSize size, boolean walking) {
-        return bestPath(source.getCoordinates(), destination.getCoordinates(), startTime, size, walking);
+    public Itinerary bestPath(Point2D.Double source, Point2D.Double destination, LocalTime startTime, NodeSize size, boolean walking) {
+        return bestPath(network.getStation(source), network.getStation(destination), startTime, size, walking);
     }
+
 
     public Itinerary bestPath(Point2D.Double source, Point2D.Double destination, LocalTime startTime, boolean walking) {
         return bestPath(source, destination, startTime, NodeSize.TIME, walking);
