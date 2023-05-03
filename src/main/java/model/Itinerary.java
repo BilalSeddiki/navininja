@@ -91,7 +91,11 @@ public class Itinerary {
         this.transports.add(transport);
     }
 
-    /** TODO */
+    /** 
+     * Ajoute un mode de transport au début ou à la fin de la liste de l'itinéraire.
+     * @param transport Mode de transport à ajouter au début ou à la fin de l'itinéraire.
+     * @param position ajoute au début si true, l'ajoute à la fin sinon.
+     */
     public void addToPosition(Transport transport, boolean position) {
         if(position) {
             this.addToFirstPosition(transport);

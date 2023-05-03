@@ -90,24 +90,6 @@ public class TestTravel {
     }
 
     /**
-     * Crée un réseau avec uniquement deux stations et un algorithme de calcul du 
-     * meilleur itinéraire
-     */
-    public Pair<Dijkstra, ArrayList<Station>> createNetworkWithTwoStations() {
-        ArrayList<Station> stationList = new ArrayList<Station>();
-        stationList.add(new Station("Station 0", new Double(4, 4)));
-        stationList.add(new Station("Station 1", new Double(8, 8)));
-
-        ArrayList<Path> pathList = new ArrayList<Path>();
-        pathList.add(createPathWithDefaultValues("Line 0", "0", stationList.get(0), stationList.get(1)));
-        pathList.add(createPathWithDefaultValues("Line 0", "1", stationList.get(1), stationList.get(0)));
-
-        Network network = new Network(stationList, pathList);
-        Dijkstra dijkstra = new Dijkstra(network);
-        return new Pair<Dijkstra, ArrayList<Station>>(dijkstra, stationList);
-    }
-
-    /**
      * Crée un chemin avec des valeurs par defaut.
      * Les valeurs par défaut sont:
      * Durée du trajet: 5 minutes.
@@ -369,76 +351,6 @@ public class TestTravel {
     }
 
     /**
-     * Teste la recherche du meilleur itinéraire entre deux
-     * coordonnées GPS sur un réseau constitué de deux stations.
-     * Ce test permet de vérifier que si le nombre de stations
-     * dans le réseau est inférieur à la valeur du nombre de recherche
-     * par défaut, cette dernière valeur sera mise à jour.
-     */
-    /*
-    @Test
-    public void testSearchFromCoordWithTwoStations() throws IllegalTravelException {
-        Pair<Dijkstra, ArrayList<Station>> pair = createNetworkWithTwoStations();
-        ArrayList<Station> stationList = pair.getValue();
-        Station s0 = stationList.get(0);
-        Station s1 = stationList.get(1);
-
-        LocalTime departureTime = LocalTime.of(8, 20);
-
-        Travel travel = new Travel
-            .Builder(pair.getKey())
-            .setDepartureTime(LocalTime.of(0, 0))
-            .setDepartureCoordinates(new Double(0, 0))
-            .setArrivalCoordinates(new Double(10, 10))
-            .build();
-        Itinerary itinerary = travel.createItinerary();
-
-        ArrayList<Transport> transports = new ArrayList<Transport>();
-        transports.add(new Walk(new Double(0, 0), s0.getCoordinates()));
-        transports.add(createPathWithDefaultValues("Line 0", "0", s0, s1));
-        transports.add(new Walk(s1.getCoordinates(), new Double(10, 10)));
-        Itinerary expected = new Itinerary(departureTime, transports);
-
-        assertEquals(itinerary.getTransports(), expected.getTransports());
-    }
-    */
-
-    /**
-     * Teste la recherche du meilleur itinéraire entre une station et des
-     * coordonnées GPS sur un réseau constitué de deux stations.
-     * Ce test permet de vérifier que si le nombre de stations
-     * dans le réseau est inférieur à la valeur du nombre de recherche
-     * par défaut, cette dernière valeur sera mise à jour.
-     */
-    /*
-    @Test
-    public void testSearchFromCoordAndStationWithTwoStations() throws IllegalTravelException {
-        Pair<Dijkstra, ArrayList<Station>> pair = createNetworkWithTwoStations();
-        ArrayList<Station> stationList = pair.getValue();
-        Station s0 = stationList.get(0);
-        Station s1 = stationList.get(1);
-
-        LocalTime departureTime = LocalTime.of(8, 20);
-
-        Travel travel = new Travel
-            .Builder(pair.getKey())
-            .setDepartureTime(LocalTime.of(0, 0))
-            .setDepartureCoordinates(new Double(0, 0))
-            .setArrivalStation(s1)
-            .setSearchDistance(1.0)
-            .build();
-        Itinerary itinerary = travel.createItinerary();
-
-        ArrayList<Transport> transports = new ArrayList<Transport>();
-        transports.add(new Walk(new Double(0, 0), s0.getCoordinates()));
-        transports.add(createPathWithDefaultValues("Line 0", "0", s0, s1));
-        Itinerary expected = new Itinerary(departureTime, transports);
-
-        assertEquals(itinerary.getTransports(), expected.getTransports());
-    }
-    */
-
-    /**
      * Teste la fonction fromStationToStation.
      */
     @Test
@@ -521,9 +433,9 @@ public class TestTravel {
         Itinerary itinerary = travel.createItinerary();
 
         ArrayList<Transport> transports = new ArrayList<Transport>();
-        transports.add(new Walk(coordinatesList.get(2), stationList.get(0).getCoordinates()));
-        transports.add(pathList.get(8));
-        transports.add(new Walk(stationList.get(5).getCoordinates(), coordinatesList.get(1)));
+        transports.add(new Walk(coordinatesList.get(2), stationList.get(3).getCoordinates()));
+        transports.add(pathList.get(4));
+        transports.add(new Walk(stationList.get(1).getCoordinates(), coordinatesList.get(1)));
         Itinerary expected = new Itinerary(departureTime, transports);
 
         assertEquals(itinerary.getDepartureTime(), expected.getDepartureTime());

@@ -17,7 +17,7 @@ public class Travel {
     /** Algorithme de calcul du meilleur itinéraire. */
     private final ShortestPathAlgorithm algorithm;
 
-    /** TODO */
+    /** Réseau utilisé. */
     private final Network network;
     
     /** Heure de départ de l'itinéraire. */
@@ -49,15 +49,10 @@ public class Travel {
         this.SEARCH_DISTANCE = builder.BUILDER_SEARCH_DISTANCE;
     }
 
-    /**
-     * Renvoie l'algorithme utilisé pour le calcul du meilleur itinéraire.
-     * @return algorithme utilisé, qui contient le réseau.
+    /** 
+     * Renvoie le réseau utilisé.
+     * @return réseau utilisé.
      */
-    public ShortestPathAlgorithm getShortestPathAlgorithm() {
-        return this.algorithm;
-    }
-
-    /** TODO */
     public Network getNetwork() {
         return this.network;
     }
@@ -112,25 +107,19 @@ public class Travel {
      */
     public Itinerary createItinerary() {
         Itinerary itinerary;
-        if(this.departureCoordinates != null && this.arrivalCoordinates != null) {
-            boolean isDepartureStation = this.network.hasStation(departureCoordinates);
-            boolean isArrivalStation = this.network.hasStation(arrivalCoordinates);
-            if(isDepartureStation && isArrivalStation) {
-                itinerary = this.fromStationToStation();
-            }
-            else if(isDepartureStation) {
-                itinerary = this.fromCoordinatesOrStation(false);
-            }
-            else if(isArrivalStation) {
-                itinerary = this.fromCoordinatesOrStation(true);
-            }
-            else {
-                itinerary = this.fromCoordinatesToCoordinates();
-            }
-
+        boolean isDepartureStation = this.network.hasStation(departureCoordinates);
+        boolean isArrivalStation = this.network.hasStation(arrivalCoordinates);
+        if(isDepartureStation && isArrivalStation) {
+            itinerary = this.fromStationToStation();
+        }
+        else if(isDepartureStation) {
+            itinerary = this.fromCoordinatesOrStation(false);
+        }
+        else if(isArrivalStation) {
+            itinerary = this.fromCoordinatesOrStation(true);
         }
         else {
-            itinerary = createEmptyItinerary();
+            itinerary = this.fromCoordinatesToCoordinates();
         }
         return itinerary;
     }
@@ -160,7 +149,12 @@ public class Travel {
         }
     }
 
-    /** TODO */
+    /** 
+     * Calcule un itinéraire dont le départ ou l'arrivée est une station.
+     * @param diretion l'arrivée est une station et le départ des coordonnées
+     * si true, sinon l'inverse.
+     * @return itinéraire.
+     */
     private Itinerary fromCoordinatesOrStation(boolean direction) {
         Double coordinates;
         Station station;
@@ -400,7 +394,9 @@ public class Travel {
             this.network = network;
         }
 
-        /** TODO */
+        /** 
+         * Fixe l'algorithme de calcul du plus court chemin à Dijkstra.
+         */
         public Builder setDijkstra() {
             this.algorithm = new Dijkstra(this.network);
             return this;
