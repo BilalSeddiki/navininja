@@ -11,11 +11,11 @@ import java.util.Set;
 import java.util.List;
 
 import javafx.util.Pair;
-import model.dijkstra.Node;
-import model.dijkstra.NodeDistanceComparator;
-import model.dijkstra.NodeDistanceDurationComparator;
-import model.dijkstra.NodeDurationComparator;
-import model.dijkstra.NodeTimeComparator;
+import shortestpath.graph.Node;
+import shortestpath.graph.NodeDistanceComparator;
+import shortestpath.graph.NodeDistanceDurationComparator;
+import shortestpath.graph.NodeDurationComparator;
+import shortestpath.graph.NodeTimeComparator;
 import network.MinimalStation;
 import utils.Globals;
 

@@ -8,9 +8,16 @@ import network.*;
 
 import java.util.*;
 import java.time.Duration;
+import java.awt.geom.Point2D;
 
 /* La classe qui gèrent les messages reseaux que peut envoyer le serveur*/
 public class ServerMsg {
+
+
+    public static void sendError(Socket c){
+        String msg="NotFound";
+        NetUtil.send(c,msg);
+    }
 
     /**
      * Envoie les Schedules demandés a l'interface Graphique
@@ -34,24 +41,45 @@ public class ServerMsg {
      */
     public static void sendBestPath(Socket c, Itinerary a){
         String msg="";
-        var tmp=a.getPaths();
+        var tmp=a.getTransports();
         msg=msg.concat(String.valueOf((char)tmp.size()));
-        for(var t:tmp){
-            msg=msg.concat(String.valueOf((char)t.getSource().toString().length()));
-            msg=msg.concat(t.getSource().toString());
-            msg=msg.concat(String.valueOf((char)t.getDestination().toString().length()));
-            msg=msg.concat(t.getDestination().toString());
-            msg=msg.concat(String.valueOf((char)t.getLineName().length()));
-            msg=msg.concat(t.getLineName());
-            msg=msg.concat(String.valueOf((char)t.getVariant().length()));
-            msg=msg.concat(t.getVariant());
-            Duration duration=t.getTravelDuration();
-            long hours = duration.toHours();
-            long minutes = duration.toMinutes() % 60;
-            long seconds = duration.getSeconds() % 60;
-            String d=String.format("%02d:%02d:%02d", hours, minutes, seconds);
-            msg=msg.concat(String.valueOf((char)d.length()));
-            msg=msg.concat(d);
+        for(Transport tm:tmp){
+            if(tm instanceof Path){
+                var t=(Path)tm;
+                msg=msg.concat(String.valueOf((char)t.getSource().toString().length()));
+                msg=msg.concat(t.getSource().toString());
+                msg=msg.concat(String.valueOf((char)t.getDestination().toString().length()));
+                msg=msg.concat(t.getDestination().toString());
+                msg=msg.concat(String.valueOf((char)t.getLineName().length()));
+                msg=msg.concat(t.getLineName());
+                msg=msg.concat(String.valueOf((char)t.getVariant().length()));
+                msg=msg.concat(t.getVariant());
+                Duration duration=t.getTravelDuration();
+                long hours = duration.toHours();
+                long minutes = duration.toMinutes() % 60;
+                long seconds = duration.getSeconds() % 60;
+                String d=String.format("%02d:%02d:%02d", hours, minutes, seconds);
+                msg=msg.concat(String.valueOf((char)d.length()));
+                msg=msg.concat(d);
+            }else{
+                var t=(Walk)tm;
+                msg=msg.concat(String.valueOf((char)t.getDepartureCoordinates().toString().length()));
+                msg=msg.concat(t.getDepartureCoordinates().toString());
+                msg=msg.concat(String.valueOf((char)t.getArrivalCoordinates().toString().length()));
+                msg=msg.concat(t.getArrivalCoordinates().toString());
+                msg=msg.concat(String.valueOf((char)"Marche".length()));
+                msg=msg.concat("Marche");
+                msg=msg.concat(String.valueOf((char)"".length()));
+                msg=msg.concat("");
+                Duration duration=t.getTravelDuration();
+                long hours = duration.toHours();
+                long minutes = duration.toMinutes() % 60;
+                long seconds = duration.getSeconds() % 60;
+                String d=String.format("%02d:%02d:%02d", hours, minutes, seconds);
+                msg=msg.concat(String.valueOf((char)d.length()));
+                msg=msg.concat(d);
+            }
+            
         }
         NetUtil.send(c,msg);
     }

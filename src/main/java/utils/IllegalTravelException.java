@@ -10,4 +10,5 @@ public class IllegalTravelException extends Exception {
     public IllegalTravelException(String error) {
         super(error);
     }
+    
 }
