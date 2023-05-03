@@ -91,6 +91,16 @@ public class Itinerary {
         this.transports.add(transport);
     }
 
+    /** TODO */
+    public void addToPosition(Transport transport, boolean position) {
+        if(position) {
+            this.addToFirstPosition(transport);
+        }
+        else {
+            this.addToLastPosition(transport);
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder(departureTime.toString());

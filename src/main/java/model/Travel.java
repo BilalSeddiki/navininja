@@ -7,7 +7,7 @@ import java.util.List;
 import javafx.util.Pair;
 import java.awt.geom.Point2D.Double;
 
-import shortestpath.ShortestPathAlgorithm;
+import shortestpath.*;
 import shortestpath.graph.NodeSize;
 import utils.IllegalTravelException;
 
@@ -16,6 +16,9 @@ public class Travel {
 
     /** Algorithme de calcul du meilleur itinéraire. */
     private final ShortestPathAlgorithm algorithm;
+
+    /** TODO */
+    private final Network network;
     
     /** Heure de départ de l'itinéraire. */
     private final LocalTime departureTime;
@@ -25,12 +28,6 @@ public class Travel {
 
     /** Coordonnées GPS d'arrivée. */
     private final Double arrivalCoordinates;
-
-    /** Station de départ. */
-    private final Station departureStation;
-
-    /** Station d'arrivée. */
-    private final Station arrivalStation;
 
     /** Nombre de recherches maximal pour un meilleur itinéraire depuis une station plus éloignée. */
     private int SEARCH_LIMIT;
@@ -44,11 +41,10 @@ public class Travel {
      */
     private Travel(Builder builder) {
         this.algorithm = builder.algorithm;
+        this.network = builder.network;
         this.departureTime = builder.departureTime;
         this.departureCoordinates = builder.departureCoordinates;
         this.arrivalCoordinates = builder.arrivalCoordinates;
-        this.departureStation = builder.departureStation;
-        this.arrivalStation = builder.arrivalStation;
         this.SEARCH_LIMIT = builder.BUILDER_SEARCH_LIMIT;
         this.SEARCH_DISTANCE = builder.BUILDER_SEARCH_DISTANCE;
     }
@@ -59,6 +55,11 @@ public class Travel {
      */
     public ShortestPathAlgorithm getShortestPathAlgorithm() {
         return this.algorithm;
+    }
+
+    /** TODO */
+    public Network getNetwork() {
+        return this.network;
     }
 
     /**
@@ -88,24 +89,6 @@ public class Travel {
     }
 
     /**
-     * Renvoie la station de départ.
-     * Null est renvoyé si elle n'est pas définie.
-     * @return station de départ, null si non définie.
-     */
-    public Station getDepartureStation() {
-        return this.departureStation;
-    }
-
-    /**
-     * Renvoie la station d'arrivée.
-     * Null est renvoyé si elle n'est pas définie.
-     * @return station d'arrivée, null si non définie.
-     */
-    public Station getArrivalStation() {
-        return this.arrivalStation;
-    }
-
-    /**
      * Renvoie le nombre de recherche maximal à effectuer pendant la recherche
      * des stations les plus proches.
      * @return nombre de recherche maximal.
@@ -128,18 +111,25 @@ public class Travel {
      * @return itinéraire calculé en fonction des paramètres non nuls.
      */
     public Itinerary createItinerary() {
-        if(this.departureStation != null && this.arrivalStation != null) {
-            return this.fromStationToStation();
+        if(this.departureCoordinates != null && this.arrivalCoordinates != null) {
+            boolean isDepartureStation = this.network.hasStation(departureCoordinates);
+            boolean isArrivalStation = this.network.hasStation(arrivalCoordinates);
+            if(isDepartureStation && isArrivalStation) {
+                System.out.println("ici");
+                this.fromStationToStation();
+            }
+            else if(isDepartureStation) {
+                this.fromCoordinatesOrStation(false);
+            }
+            else if(isArrivalStation) {
+                this.fromCoordinatesOrStation(true);
+            }
+            else {
+                this.fromCoordinatesToCoordinates();
+            }
+
         }
-        else if(this.departureStation != null && this.arrivalCoordinates != null) {
-            return this.fromStationToCoordinates();
-        }
-        else if(this.departureCoordinates != null && this.arrivalCoordinates != null) {
-            return this.fromCoordinatesToCoordinates();
-        }
-        else {
-            return this.fromCoordinatesToStation();
-        }
+        return this.createEmptyItinerary();
     }
 
     /** 
@@ -157,7 +147,43 @@ public class Travel {
      * @return itinéraire calculé à partir d'une station vers une station.
      */
     private Itinerary fromStationToStation() {
-        return this.bestItinerary(this.departureStation, this.arrivalStation); 
+        try {
+            Station departureStation = this.network.getStation(this.departureCoordinates);
+            Station arrivalStation = this.network.getStation(this.arrivalCoordinates);
+            System.out.println("aaaaaaaaaa");
+            return this.bestItinerary(departureStation, arrivalStation); 
+        }
+        catch(Exception e) {
+            return this.createEmptyItinerary();
+        }
+    }
+
+    /** TODO */
+    private Itinerary fromCoordinatesOrStation(boolean direction) {
+        Double coordinates;
+        Station station;
+        Itinerary itinerary;
+        try {
+            if(direction) {
+                coordinates = departureCoordinates;
+                station = this.network.getStation(this.arrivalCoordinates);
+            }
+            else {
+                coordinates = arrivalCoordinates;
+                station = this.network.getStation(this.departureCoordinates);
+            }
+            Pair<Itinerary, Walk> result = 
+                this.searchFromCoordAndStation(coordinates, station, direction);
+            itinerary = result.getKey();
+            Walk walk = result.getValue();
+            if(walk != null) {
+                itinerary.addToPosition(walk, direction);
+            }
+        }
+        catch (Exception e) {
+            itinerary = this.createEmptyItinerary();
+        }        
+        return itinerary;
     }
 
     /** 
@@ -167,41 +193,7 @@ public class Travel {
     private Itinerary fromCoordinatesToCoordinates() {
         return this.searchFromCoord(this.departureCoordinates, this.arrivalCoordinates);
     }
-
-    /** 
-     * Calcule un itinéraire dont le départ sont des coordonnées GPS et l'arrivée une station.
-     * @return itinéraire calculé à partir de coordonnées GPS vers une station.
-     */
-    private Itinerary fromCoordinatesToStation() {
-        Pair<Itinerary, Walk> result = 
-            this.searchFromCoordAndStation(
-                this.departureCoordinates, this.arrivalStation, true
-            );
-        Itinerary itinerary = result.getKey();
-        Walk walk = result.getValue();
-        if(walk != null) {
-            itinerary.addToFirstPosition(walk);
-        }
-        return itinerary;
-    }
-
-    /** 
-     * Calcule un itinéraire dont le départ est une station et l'arrivée des coordonnées GPS.
-     * @return itinéraire calculé à partir d'une station vers des coordonnées GPS.
-     */
-    private Itinerary fromStationToCoordinates() {
-        Pair<Itinerary, Walk> result = 
-            this.searchFromCoordAndStation(
-                this.arrivalCoordinates, this.departureStation, false
-            );
-        Itinerary itinerary = result.getKey();
-        Walk walk = result.getValue();
-        if(walk != null) {
-            itinerary.addToLastPosition(walk);
-        }
-        return itinerary;
-    }
-
+    
     /** 
      * Calcule le meilleur itinéraire d'une station vers une station.
      * @param departureStation station de départ.
@@ -390,6 +382,7 @@ public class Travel {
     /** Monteur permettant de gérer les différentes combinaisons d'attributs. */
     public static class Builder {
         private ShortestPathAlgorithm algorithm;
+        private Network network;
         private LocalTime departureTime;
         private Double departureCoordinates;
         private Double arrivalCoordinates;
@@ -402,9 +395,15 @@ public class Travel {
          * Construit un monteur.
          * @param algorithm Algorithme de calcul du meilleur itinéraire.
          */
-        public Builder(ShortestPathAlgorithm algorithm) {
-            this.algorithm = algorithm;
+        public Builder(Network network) {
+            this.network = network;
         }
+
+        /** TODO */
+        public Builder setDijkstra() {
+            this.algorithm = new Dijkstra(this.network);
+            return this;
+        } 
 
         /**
          * Fixe l'heure de départ de l'itinéraire.
@@ -481,8 +480,12 @@ public class Travel {
          * @return Déplacement construit en fonction des paramètres fournis.
          */
         public Travel build() throws IllegalTravelException {
+            if(this.network == null) {
+                throw new IllegalTravelException("Le réseau n'est pas défini.");
+            }
+
             if(this.algorithm == null) {
-                throw new IllegalTravelException("L'algorithme à appliquer n'est pas défini.");
+                this.algorithm = new Dijkstra(this.network);
             }
 
             if(this.departureTime == null) {
@@ -512,6 +515,14 @@ public class Travel {
 
             if(this.BUILDER_SEARCH_DISTANCE < 0.0) {
                 this.BUILDER_SEARCH_DISTANCE = 10.0;
+            }
+
+            if(this.departureStation != null) {
+                this.departureCoordinates = departureStation.getCoordinates();
+            }
+
+            if(this.arrivalStation != null) {
+                this.arrivalCoordinates = arrivalStation.getCoordinates();
             }
 
             return new Travel(this);

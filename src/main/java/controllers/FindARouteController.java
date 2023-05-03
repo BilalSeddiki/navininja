@@ -151,7 +151,6 @@ public class FindARouteController extends Controller {
         Point2D.Double coordA;
         Point2D.Double coordB;
         LocalTime time = LocalTime.of(Integer.parseInt(hourComboBoxA.getValue()),Integer.parseInt(minComboBoxA.getValue()));
-        Dijkstra algorithm = new Dijkstra(network);
         Travel travel;
         if( inputFormatA == InputFormat.COORDINATES && inputFormatB == InputFormat.COORDINATES){
             //both inputs are coordinates
@@ -160,7 +159,8 @@ public class FindARouteController extends Controller {
             String[] latlongB = inputB.split("[,]");
             coordB = new Point2D.Double(Double.parseDouble(latlongB[0]),Double.parseDouble(latlongB[1]));
             travel = new Travel
-                    .Builder(algorithm)
+                    .Builder(network)
+                    .setDijkstra()
                     .setDepartureCoordinates(coordA)
                     .setArrivalCoordinates(coordB)
                     .setDepartureTime(time)
@@ -169,7 +169,8 @@ public class FindARouteController extends Controller {
             String[] latlongA = inputA.split("[,]");
             coordA = new Point2D.Double(Double.parseDouble(latlongA[0]),Double.parseDouble(latlongA[1]));
             travel = new Travel
-                    .Builder(algorithm)
+                    .Builder(network)
+                    .setDijkstra()
                     .setDepartureCoordinates(coordA)
                     .setArrivalStation(network.getStation(inputB))
                     .setDepartureTime(time)
@@ -178,7 +179,8 @@ public class FindARouteController extends Controller {
             String[] latlongB = inputB.split("[,]");
             coordB = new Point2D.Double(Double.parseDouble(latlongB[0]),Double.parseDouble(latlongB[1]));
             travel = new Travel
-                    .Builder(algorithm)
+                    .Builder(network)
+                    .setDijkstra()
                     .setDepartureStation(network.getStation(inputA))
                     .setArrivalCoordinates(coordB)
                     .setDepartureTime(time)
@@ -186,7 +188,8 @@ public class FindARouteController extends Controller {
         }else{
             //both are stations
             travel = new Travel
-                    .Builder(algorithm)
+                    .Builder(network)
+                    .setDijkstra()
                     .setDepartureStation(network.getStation(inputA))
                     .setArrivalStation(network.getStation(inputB))
                     .setDepartureTime(time)
