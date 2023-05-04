@@ -19,7 +19,7 @@ public class Itinerary {
      * l'itinéraire
      */
     public Itinerary(final LocalTime departureTime,
-                     final List<Transport> transports) {
+            final List<Transport> transports) {
         this.departureTime = departureTime;
         this.transports = transports;
     }
@@ -49,8 +49,7 @@ public class Itinerary {
      */
     public LocalTime getArrivalTime() {
         Duration duration = this.getDuration();
-        LocalTime arrivalTime = departureTime.plus(duration);
-        return arrivalTime;
+        return departureTime.plus(duration);
     }
 
     /**
@@ -77,7 +76,7 @@ public class Itinerary {
      * @return true si la liste est vide, false sinon
      */
     public boolean isEmpty() {
-        return this.transports.size() == 0;
+        return this.transports.isEmpty();
     }
 
     /**

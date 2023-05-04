@@ -39,16 +39,16 @@ public final class Travel {
     private final Double arrivalCoordinates;
 
     /**
-     * Nombre de recherches maximal pour un meilleur itinéraire depuis une station
-     * plus éloignée.
+     * Nombre de recherches maximal pour un meilleur itinéraire depuis une
+     * station plus éloignée.
      */
-    private int SEARCH_LIMIT;
+    private int searchLimit;
 
     /**
      * Distance de recherche maximale pour un meilleur itinéraire depuis une
      * station plus éloignée.
      */
-    private final double SEARCH_DISTANCE;
+    private final double searchDistance;
 
     /**
      * Construit un déplacement d'un point à un autre.
@@ -62,13 +62,12 @@ public final class Travel {
         this.departureTime = builder.departureTime;
         this.departureCoordinates = builder.departureCoordinates;
         this.arrivalCoordinates = builder.arrivalCoordinates;
-        this.SEARCH_LIMIT = builder.BUILDER_SEARCH_LIMIT;
-        this.SEARCH_DISTANCE = builder.BUILDER_SEARCH_DISTANCE;
+        this.searchLimit = builder.builderSearchLimit;
+        this.searchDistance = builder.builderSearchDistance;
     }
 
     /**
      * Renvoie le réseau utilisé.
-     * 
      * @return réseau utilisé.
      */
     public Network getNetwork() {
@@ -77,7 +76,6 @@ public final class Travel {
 
     /**
      * Renvoie l'heure de départ du déplacement.
-     * 
      * @return l'heure de départ.
      */
     public LocalTime getDepartureTime() {
@@ -85,9 +83,8 @@ public final class Travel {
     }
 
     /**
-     * Renvoie les coordonnées du point de départ. Null est renvoyé si elles ne sont
-     * pas définies.
-     * 
+     * Renvoie les coordonnées du point de départ. Null est renvoyé si elles ne
+     * sont pas définies.
      * @return coordonnées du point de départ, null si non définies.
      */
     public Double getDepartureCoordinates() {
@@ -109,7 +106,7 @@ public final class Travel {
      * @return nombre de recherche maximal.
      */
     public int getSearchLimit() {
-        return this.SEARCH_LIMIT;
+        return this.searchLimit;
     }
 
     /**
@@ -118,7 +115,7 @@ public final class Travel {
      * @return distance de recherche maximale.
      */
     public double getSearchDistance() {
-        return this.SEARCH_DISTANCE;
+        return this.searchDistance;
     }
 
     /**
@@ -154,7 +151,7 @@ public final class Travel {
      * @return itinéraire vide.
      */
     public Itinerary createEmptyItinerary() {
-        List<Transport> transport = new ArrayList<Transport>();
+        List<Transport> transport = new ArrayList<>();
         return new Itinerary(this.departureTime, transport);
     }
 
@@ -239,8 +236,8 @@ public final class Travel {
         if (list.isEmpty()) {
             return new Pair<>(this.createEmptyItinerary(), null);
         }
-        if (list.size() < this.SEARCH_LIMIT) {
-            this.SEARCH_LIMIT = list.size();
+        if (list.size() < this.searchLimit) {
+            this.searchLimit = list.size();
         }
 
         Pair<Itinerary, Station> min =
@@ -250,7 +247,7 @@ public final class Travel {
 
         Walk walk = walkWithDirection(coordinates,
             stationMin.getCoordinates(), direction);
-        return new Pair<Itinerary, Walk>(itineraryMin, walk);
+        return new Pair<>(itineraryMin, walk);
     }
 
     /**
@@ -271,7 +268,7 @@ public final class Travel {
             itineraryWithDirection(stationMin, station, direction);
         Duration durationMin = itineraryMin.getDuration();
 
-        for (int i = 1; i < this.SEARCH_LIMIT; i++) {
+        for (int i = 1; i < this.searchLimit; i++) {
             Station stationLoop = list.get(i);
             Itinerary itineraryLoop =
                 itineraryWithDirection(stationLoop, station, direction);
@@ -281,7 +278,7 @@ public final class Travel {
                     new Walk(stationMin.getCoordinates(),
                         stationLoop.getCoordinates());
                 double distance = walkDifference.getTravelDistance();
-                if (distance < this.SEARCH_DISTANCE) {
+                if (distance < this.searchDistance) {
                     stationMin = stationLoop;
                     itineraryMin = itineraryLoop;
                     durationMin = durationLoop;
@@ -349,8 +346,8 @@ public final class Travel {
             return this.createEmptyItinerary();
         }
         int sizeMin = Math.min(listDeparture.size(), listArrival.size());
-        if (sizeMin < this.SEARCH_LIMIT) {
-            this.SEARCH_LIMIT = sizeMin;
+        if (sizeMin < this.searchLimit) {
+            this.searchLimit = sizeMin;
         }
         return
             itineraryFromCoord(listDeparture, listArrival, departure, arrival);
@@ -383,9 +380,9 @@ public final class Travel {
             return itineraryMin;
         }
 
-        for (int i = 1; i < this.SEARCH_LIMIT; i++) {
+        for (int i = 1; i < this.searchLimit; i++) {
             Station stationDepartureLoop = listDeparture.get(i);
-            for (int j = 1; j < this.SEARCH_LIMIT; j++) {
+            for (int j = 1; j < this.searchLimit; j++) {
                 Station stationArrivalLoop = listArrival.get(j);
                 if (stationDepartureLoop.equals(stationArrivalLoop)) {
                     continue;
@@ -398,7 +395,7 @@ public final class Travel {
                         new Walk(arrivalMin.getCoordinates(),
                         stationArrivalLoop.getCoordinates());
                     double distance = walkDifference.getTravelDistance();
-                    if (distance < this.SEARCH_DISTANCE) {
+                    if (distance < this.searchDistance) {
                         departureMin = stationDepartureLoop;
                         arrivalMin = stationArrivalLoop;
                         itineraryMin = itineraryLoop;
@@ -419,6 +416,12 @@ public final class Travel {
 
     /** Monteur permettant de gérer les différentes combinaisons d'attributs. */
     public static class Builder {
+
+        /** Valeur par défaut de la limite de recherche de stations proches. */
+        private static final int DEFAULT_SEARCH_LIMIT = 5;
+
+        /** Valeur par défaut de la dist. de recherche de stations proches. */
+        private static final double DEFAULT_SEARCH_DISTANCE = 1000.0;
 
         /** Network surlequel sera alimenté le network. */
         private final Network network;
@@ -446,8 +449,12 @@ public final class Travel {
 
         /** Station d'arrivée. */
         private Station arrivalStation;
-        private int BUILDER_SEARCH_LIMIT = 5;
-        private double BUILDER_SEARCH_DISTANCE = 1000.0;
+
+        /** Limite de recherche de statiosn proches.  */
+        private int builderSearchLimit = DEFAULT_SEARCH_LIMIT;
+
+        /** Limite de distance de recherche de stations proches. */
+        private double builderSearchDistance = DEFAULT_SEARCH_DISTANCE;
 
         /**
          * Construit un monteur.
@@ -546,7 +553,7 @@ public final class Travel {
          * @return Monteur dont la limite de recherche a été fixée.
          */
         public Builder setSearchLimit(final int limit) {
-            this.BUILDER_SEARCH_LIMIT = limit;
+            this.builderSearchLimit = limit;
             return this;
         }
 
@@ -556,7 +563,7 @@ public final class Travel {
          * @return Monteur dont la distance de recherche maximale a été fixée.
          */
         public Builder setSearchDistance(final double distance) {
-            this.BUILDER_SEARCH_DISTANCE = distance;
+            this.builderSearchDistance = distance;
             return this;
         }
 
@@ -571,7 +578,7 @@ public final class Travel {
 
             if (this.algorithm == null) {
                 this.algorithm = new Dijkstra(this.network);
-                algorithm.setWalkingDistance(BUILDER_SEARCH_DISTANCE);
+                algorithm.setWalkingDistance(builderSearchDistance);
             }
 
             if (this.nodeSize == null) {
@@ -603,12 +610,12 @@ public final class Travel {
                     "Il ne peut y avoir qu'un unique point d'arrivée.");
             }
 
-            if (this.BUILDER_SEARCH_LIMIT < 0) {
-                this.BUILDER_SEARCH_LIMIT = 1;
+            if (this.builderSearchLimit < 0) {
+                this.builderSearchLimit = DEFAULT_SEARCH_LIMIT;
             }
 
-            if (this.BUILDER_SEARCH_DISTANCE < 0.0) {
-                this.BUILDER_SEARCH_DISTANCE = 10.0;
+            if (this.builderSearchDistance < 0.0) {
+                this.builderSearchDistance = DEFAULT_SEARCH_DISTANCE;
             }
 
             if (this.departureStation != null) {

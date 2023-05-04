@@ -30,7 +30,7 @@ public class Node {
      * @param time heure d'arrivée de la node par rapport à la source
      */
     public Node(final Point2D.Double coordinates, final double distance,
-        final Duration duration, final LocalTime time) {
+            final Duration duration, final LocalTime time) {
         this.coordinates = coordinates;
         this.distance = distance;
         this.duration = duration;

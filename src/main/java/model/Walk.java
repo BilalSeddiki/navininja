@@ -69,9 +69,7 @@ public class Walk implements Transport {
 
         double xSin = Math.sin(x1Rad) * Math.sin(x2Rad);
         double xyCos = Math.cos(x1Rad) * Math.cos(x2Rad) * Math.cos(yRad);
-        double distance = Math.acos(xSin + xyCos) * GPS;
-
-        return distance;
+        return Math.acos(xSin + xyCos) * GPS;
     }
 
     /**
@@ -84,8 +82,7 @@ public class Walk implements Transport {
         double distance = this.getTravelDistance() * MS;
         long ratio = Math.round(distance / SPEED);
 
-        Duration duration = Duration.ofMinutes(ratio);
-        return duration;
+        return Duration.ofMinutes(ratio);
     }
 
     /**

@@ -29,8 +29,8 @@ public class Station {
     public Station(final String name, final Double coordinates) {
         this.name = name;
         this.coordinates = coordinates;
-        this.inPaths = new ArrayList<Path>();
-        this.outPaths = new ArrayList<Path>();
+        this.inPaths = new ArrayList<>();
+        this.outPaths = new ArrayList<>();
     }
 
     /**
@@ -86,12 +86,15 @@ public class Station {
      */
     public final void setTerminus(final String nom,
                                   final String variant,
-                                  final ArrayList<LocalTime> schedule) {
+                                  final List<LocalTime> schedule) {
         Optional<Path> tmp = outPaths.stream()
-                .filter(path -> path.getLineName().equals(nom)
-                                && path.getVariant() == variant)
-                .findFirst();
-        tmp.get().setTerminus(schedule);
+            .filter(path ->
+                path.getLineName().equals(nom)
+                && path.getVariant().equals(variant))
+            .findFirst();
+        if (tmp.isPresent()) {
+            tmp.get().setTerminus(schedule);
+        }
     }
 
     /**
@@ -204,6 +207,13 @@ public class Station {
                 && s.outPaths.containsAll(this.outPaths);
     }
 
+    /**
+     * Compare cet objet avec celui passé en argument uniquement
+     * sur les attributs name et coordinates.
+     * @param arg0 l'objet à comparer
+     * @return true if this object is the same as the obj argument;
+     * false otherwise.
+     */
     public final boolean equalsNonRecursive(final Object arg0) {
         return arg0 instanceof Station s
                 && this.name.equals(s.name)

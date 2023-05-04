@@ -36,7 +36,7 @@ public class Network {
      * @param pathList une liste de chemins entre les stations
      */
     public Network(final List<Station> stationList,
-    final List<Path> pathList) {
+            final List<Path> pathList) {
         initStationByName(stationList);
         initStationByCoordinates(stationList);
         addPathsToStations(pathList);

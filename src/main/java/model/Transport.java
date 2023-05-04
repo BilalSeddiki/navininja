@@ -17,6 +17,7 @@ public interface Transport {
         /** indique si c'est un transport. */
         TRANSPORTATION
     }
+
     /**
      * Renvoie la durée du trajet d'un point à un autre
      * en fonction du mode de transport.

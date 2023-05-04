@@ -14,7 +14,7 @@ public class Path implements Transport {
     /** Nom du variant de la ligne sur laquelle se situe le chemin.*/
     private String variant;
     /** Horaires de passage des trains sur ce chemin, dans l'ordre. */
-    private ArrayList<LocalTime> schedule;
+    private List<LocalTime> schedule;
     /** Durée du trajet jusqu'à la prochaine station. */
     private Duration travelDuration;
     /** Distance du trajet jusqu'à la prochaine station en km. */
@@ -61,7 +61,7 @@ public class Path implements Transport {
      *
      * @param schedule les horaires de passage des trains.
      */
-    public void setTerminus(final ArrayList<LocalTime> schedule) {
+    public void setTerminus(final List<LocalTime> schedule) {
         if (!(schedule.isEmpty())) {
             terminus = true;
             this.schedule = schedule;
@@ -82,7 +82,7 @@ public class Path implements Transport {
                     return Optional.of(schedule.get(i));
                 }
             }
-            if (schedule.size() > 0) {
+            if (schedule.isEmpty()) {
                 return Optional.of(schedule.get(0));
             }
         }
@@ -132,7 +132,11 @@ public class Path implements Transport {
      */
     @Override
     public Duration getTransportDuration(final LocalTime departureTime) {
-        return this.totalDuration(departureTime).get();
+        Optional<Duration> totalDuration = this.totalDuration(departureTime);
+        if (totalDuration.isEmpty()) {
+            return null;
+        }
+        return totalDuration.get();
     }
 
     /**

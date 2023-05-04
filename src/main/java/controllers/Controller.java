@@ -13,6 +13,7 @@ import csv.CsvData;
  *  * @author R. MARTINI
  */
 public class Controller {
+
     /**
      * Instance du controlleur de navigation.
      */
@@ -42,8 +43,7 @@ public class Controller {
      * @param navigationController instance du controlleur de navigation
      */
     public void setNavigationController(
-                final NavigationController navigationController) {
+        final NavigationController navigationController) {
         this.navigationController = navigationController;
     }
-
 }

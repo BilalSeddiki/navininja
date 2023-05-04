@@ -1,6 +1,8 @@
 public final class MainWrapper {
 
-    private MainWrapper() { };
+    private MainWrapper() {
+    }
+
     /**
      * wrapper autour du vraie main.
      * @param args les arguments a envoyé a main
