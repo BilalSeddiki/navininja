@@ -9,6 +9,20 @@ import java.awt.geom.Point2D.Double;
 /** Un trajet à pied d'un point à un autre. */
 public class Walk implements Transport {
 
+    /**
+     * constante de calcul pour GPS.
+     */
+    private static final int GPS = 6371 * 1000;
+    /**
+     * constante de calcul pour la vitesse de marche.
+     */
+    private static final double SPEED = 5.0 * 1000;
+    /**
+     * constante de calcul pour la conversion minute/seconde.
+     */
+    private static final double MS = 60;
+
+
     /** Coordonnées GPS de départ. */
     private Double departureCoordinates;
 
@@ -20,7 +34,8 @@ public class Walk implements Transport {
      * @param departureCoordinates coordonnées GPS de départ
      * @param arrivalCoordinates coordonnées GPS d'arrivée
      */
-    public Walk(Double departureCoordinates, Double arrivalCoordinates) {
+    public Walk(final Double departureCoordinates,
+                final Double arrivalCoordinates) {
         this.departureCoordinates = departureCoordinates;
         this.arrivalCoordinates = arrivalCoordinates;
     }
@@ -46,28 +61,28 @@ public class Walk implements Transport {
      * @return distance entre les deux points GPS en mètres.
      */
     public double getTravelDistance() {
-        double x1_rad = Math.toRadians(this.departureCoordinates.getX());
+        double x1Rad = Math.toRadians(this.departureCoordinates.getX());
         double y1 = this.departureCoordinates.getY();
-        double x2_rad = Math.toRadians(this.arrivalCoordinates.getX());
+        double x2Rad = Math.toRadians(this.arrivalCoordinates.getX());
         double y2 = this.arrivalCoordinates.getY();
-        double y_rad = Math.toRadians(y2 - y1);
+        double yRad = Math.toRadians(y2 - y1);
 
-        double x_sin = Math.sin(x1_rad) * Math.sin(x2_rad);
-        double xy_cos = Math.cos(x1_rad) * Math.cos(x2_rad) * Math.cos(y_rad);
-        double distance = Math.acos(x_sin + xy_cos) * 6371 * 1000;
+        double xSin = Math.sin(x1Rad) * Math.sin(x2Rad);
+        double xyCos = Math.cos(x1Rad) * Math.cos(x2Rad) * Math.cos(yRad);
+        double distance = Math.acos(xSin + xyCos) * GPS;
 
         return distance;
     }
 
-    /** 
+    /**
      * Calcule la durée du trajet à pied entre deux points GPS.
      * La vitesse moyenne considérée est 5 km/h.
+     *
      * @return la durée du trajet à pied entre deux points GPS.
      */
     public Duration getTravelDuration() {
-        double speed = 5.0 * 1000;
-        double distance = this.getTravelDistance() * 60;
-        long ratio = Math.round(distance / speed);
+        double distance = this.getTravelDistance() * MS;
+        long ratio = Math.round(distance / SPEED);
 
         Duration duration = Duration.ofMinutes(ratio);
         return duration;
@@ -76,53 +91,56 @@ public class Walk implements Transport {
     /**
      * {@inheritDoc}
      * Renvoie la durée du trajet à pied d'un point à un autre.
+     *
      * @param departure l'heure de départ du trajet (inutilisée)
      * @return la durée du trajet à pied
      */
     @Override
-    public Duration getTransportDuration(LocalTime departure) {
+    public Duration getTransportDuration(final LocalTime departure) {
         return this.getTravelDuration();
     }
 
     /**
      * {@inheritDoc}
      * Renvoie le moyen de transport utilisé pour atteindre une destination
+     *
      * @return une option parmi les moyen de transports possibles.
      */
     @Override
-    public TransportationMethod getTransportMethod(){
+    public TransportationMethod getTransportMethod() {
         return TransportationMethod.WALK;
     }
 
     @Override
-    public boolean equals(Object arg0) {
-        return arg0 instanceof Walk w &&
-            this.departureCoordinates.equals(w.departureCoordinates) &&
-            this.arrivalCoordinates.equals(w.arrivalCoordinates);
+    public final boolean equals(final Object arg0) {
+        return arg0 instanceof Walk w
+                && this.departureCoordinates.equals(w.departureCoordinates)
+                && this.arrivalCoordinates.equals(w.arrivalCoordinates);
     }
 
     @Override
-    public String toString() {
-        return "WALK: " + departureCoordinates + " ; " + arrivalCoordinates + " (" + getTravelDistance() + " ; " + getTravelDuration() + ")";
+    public final String toString() {
+        return "WALK: " + departureCoordinates + " ; " + arrivalCoordinates
+            + " (" + getTravelDistance() + " ; " + getTravelDuration() + ")";
     }
 
     @Override
-    public Point2D.Double getInCoordinates() {
+    public final Point2D.Double getInCoordinates() {
         return departureCoordinates;
     }
 
     @Override
-    public Point2D.Double getOutCoordinates() {
+    public final Point2D.Double getOutCoordinates() {
         return arrivalCoordinates;
     }
 
     @Override
-    public Optional<LocalTime> nextDeparture(LocalTime from) {
+    public final Optional<LocalTime> nextDeparture(final LocalTime from) {
         return Optional.of(from);
     }
 
     @Override
-    public Optional<Duration> totalDuration(LocalTime departure) {
+    public final Optional<Duration> totalDuration(final LocalTime departure) {
         return Optional.of(getTravelDuration());
     }
 }

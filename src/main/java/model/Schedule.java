@@ -1,6 +1,6 @@
 package model;
 
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleStringProperty;
 
 /** Horaire de passage dans une certaine direction. */
 public class Schedule {
@@ -16,12 +16,12 @@ public class Schedule {
      * @param direction La direction du trajet.
      * @param passingTime L'horaire de passage.
      */
-    public Schedule(String direction, String passingTime) {
+    public Schedule(final String direction, final String passingTime) {
         this.direction = new SimpleStringProperty(direction);
         this.passingTime = new SimpleStringProperty(passingTime);
     }
 
-    /** 
+    /**
      * Renvoie la direction du trajet sous forme de SimpleStringProperty.
      * @return La direction du trajet sous forme de SimpleStringProperty.
      */
@@ -29,7 +29,7 @@ public class Schedule {
         return this.direction.get();
     }
 
-    /** 
+    /**
      * Renvoie l'horaire de passage sous forme de SimpleStringProperty.
      * @return L'horaire de passage sous forme de SimpleStringProperty.
      */
