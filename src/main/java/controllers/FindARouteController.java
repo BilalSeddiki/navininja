@@ -133,7 +133,7 @@ public class FindARouteController extends Controller {
 
     /**
      * Fonction pour initialiser les valeurs prédéfinies de l'interface,
-     * tel que les valeurs des listes "heures" ou "minutes"
+     * tel que les valeurs des listes "heures" ou "minutes".
      */
     public void initialize() {
         //Initialisation de la liste des minutes

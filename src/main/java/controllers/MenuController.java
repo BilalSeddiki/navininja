@@ -28,8 +28,7 @@ public class MenuController extends Controller {
      * Écouteur du bouton 'Find a route'.
      * @param actionEvent événement
      */
-    public void findARouteListener(final ActionEvent actionEvent)
-            {
+    public void findARouteListener(final ActionEvent actionEvent) {
         navigationController.navigateTo("FindARouteView");
     }
 

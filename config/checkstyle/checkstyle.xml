@@ -51,9 +51,9 @@
 
   <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
   <module name="SuppressionFilter">
-    <property name="file" value="${org.checkstyle.sun.suppressionfilter.config}"
+    <property name="file" value="${config_loc}/suppressions.xml"
               default="checkstyle-suppressions.xml" />
-    <property name="optional" value="true"/>
+    <property name="optional" value="false"/>
   </module>
 
   <!-- Checks that a package-info.java file exists for each package.     -->

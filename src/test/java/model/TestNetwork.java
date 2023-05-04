@@ -18,6 +18,9 @@ import org.junit.jupiter.api.Test;
 
 public class TestNetwork {
 
+    /**
+     * Teste les paths ajoutés aux stations.
+     */
     @Test
     public void testPathsAddedToStations() {
         var stationList = new ArrayList<Station>();
@@ -70,6 +73,9 @@ public class TestNetwork {
         && actual.containsAll(expected));
     }
 
+    /**
+     * Teste le getter des variants de ligne.
+     */
     @Test
     public void testGetLineVariant() {
         var stationList = new ArrayList<Station>();
@@ -124,6 +130,9 @@ public class TestNetwork {
             network.getLineVariant("Line 1", "2"));
     }
 
+    /**
+     * Teste le getter des lignes.
+     */
     @Test
     public void testGetLine() {
         var stationList = new ArrayList<Station>();
@@ -174,6 +183,9 @@ public class TestNetwork {
             network.getLine("Line 4"));
     }
 
+    /**
+     * Teste le getter des stations.
+     */
     @Test
     public void testGetStation() {
         var stationList = new ArrayList<Station>();

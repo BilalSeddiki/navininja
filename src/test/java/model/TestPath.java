@@ -48,7 +48,9 @@ public class TestPath {
         double travelDistance = 0;
         Station source = new Station("", new Double(0, 0));
         Station destination = new Station("", new Double(0, 0));
-        Path path = new Path(lineName, variant, schedule, travelDuration, travelDistance, source, destination);
+        Path path =
+            new Path(lineName, variant, schedule, travelDuration,
+                travelDistance, source, destination);
 
         return path;
     }

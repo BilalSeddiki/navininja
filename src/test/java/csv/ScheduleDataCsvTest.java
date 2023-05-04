@@ -19,7 +19,7 @@ class ScheduleDataCsvTest {
      * @throws IOException
      */
     @Test
-    void readCSVTest(@TempDir Path tempDir) throws IOException {
+    void readCSVTest(final @TempDir Path tempDir) throws IOException {
         String csv =
             "B;Borderouge;7:00;1\n"
             + "B;Borderouge;8:00;1\n"

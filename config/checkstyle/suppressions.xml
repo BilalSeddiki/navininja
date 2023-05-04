@@ -7,6 +7,6 @@
 <suppressions>
   <suppress checks="MagicNumber"
             files="[\\/]src[\\/]test[\\/]"/>
-  <suppress checks="JavadocPackage" 
+  <suppress checks="VisibilityModifier"
             files="[\\/]src[\\/]main[\\/]java[\\/]controllers[\\/]"/>
 </suppressions>

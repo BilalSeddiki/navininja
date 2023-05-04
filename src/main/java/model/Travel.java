@@ -420,13 +420,15 @@ public final class Travel {
         /** Valeur par défaut de la limite de recherche de stations proches. */
         private static final int DEFAULT_SEARCH_LIMIT = 5;
 
-        /** Valeur par défaut de la limite de recherche si la valeur donnée est incorrecte. */
+        /** Valeur par défaut de la limite de recherche si la valeur donnée
+         * est incorrecte. */
         private static final int DEFAULT_SEARCH_LIMIT_EFFECTIVE = 1;
 
         /** Valeur par défaut de la dist. de recherche de stations proches. */
         private static final double DEFAULT_SEARCH_DISTANCE = 1000.0;
 
-        /** Valeur par défaut de la dist. de recherche si la valeur donnée est incorrecte. */
+        /** Valeur par défaut de la dist. de recherche si la valeur donnée
+         * est incorrecte. */
         private static final double DEFAULT_SEARCH_DISTANCE_EFFECTIVE = 10.0;
 
         /** Network surlequel sera alimenté le network. */
