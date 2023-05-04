@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /** Un chemin jusqu'à une prochaine station. */
@@ -82,7 +83,7 @@ public class Path implements Transport {
                     return Optional.of(schedule.get(i));
                 }
             }
-            if (schedule.isEmpty()) {
+            if (!schedule.isEmpty()) {
                 return Optional.of(schedule.get(0));
             }
         }
@@ -134,7 +135,7 @@ public class Path implements Transport {
     public Duration getTransportDuration(final LocalTime departureTime) {
         Optional<Duration> totalDuration = this.totalDuration(departureTime);
         if (totalDuration.isEmpty()) {
-            return null;
+            throw new NoSuchElementException();
         }
         return totalDuration.get();
     }

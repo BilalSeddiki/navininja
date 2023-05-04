@@ -420,8 +420,14 @@ public final class Travel {
         /** Valeur par défaut de la limite de recherche de stations proches. */
         private static final int DEFAULT_SEARCH_LIMIT = 5;
 
+        /** Valeur par défaut de la limite de recherche si la valeur donnée est incorrecte. */
+        private static final int DEFAULT_SEARCH_LIMIT_EFFECTIVE = 1;
+
         /** Valeur par défaut de la dist. de recherche de stations proches. */
         private static final double DEFAULT_SEARCH_DISTANCE = 1000.0;
+
+        /** Valeur par défaut de la dist. de recherche si la valeur donnée est incorrecte. */
+        private static final double DEFAULT_SEARCH_DISTANCE_EFFECTIVE = 10.0;
 
         /** Network surlequel sera alimenté le network. */
         private final Network network;
@@ -611,11 +617,11 @@ public final class Travel {
             }
 
             if (this.builderSearchLimit < 0) {
-                this.builderSearchLimit = DEFAULT_SEARCH_LIMIT;
+                this.builderSearchLimit = DEFAULT_SEARCH_LIMIT_EFFECTIVE;
             }
 
             if (this.builderSearchDistance < 0.0) {
-                this.builderSearchDistance = DEFAULT_SEARCH_DISTANCE;
+                this.builderSearchDistance = DEFAULT_SEARCH_DISTANCE_EFFECTIVE;
             }
 
             if (this.departureStation != null) {

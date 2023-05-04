@@ -42,7 +42,7 @@ public abstract class CsvData<T extends CsvData<?>> {
      * opened for reading.
      */
     public List<T> readCSVFile(final java.nio.file.Path path)
-        throws IOException {
+            throws IOException {
         FileReader reader =
             new FileReader(path.toString(), StandardCharsets.UTF_8);
         return readCSV(reader);
@@ -71,7 +71,7 @@ public abstract class CsvData<T extends CsvData<?>> {
      * @throws IOException si la lecture d'un des fichier echoue
      */
     public static Network makeNetwork(final String mapFile,
-        final String scheduleFile) throws IOException {
+            final String scheduleFile) throws IOException {
         var schedules =
             new HashMap
             <String, HashMap<String, HashMap<String, ArrayList<LocalTime>>>>();

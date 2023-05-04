@@ -27,11 +27,13 @@ public interface Transport {
      * @return la durée du trajet
      */
     Duration getTransportDuration(LocalTime departureTime);
+
     /**
      * renvoie la distance de voyage.
      * @return la distance de voyage
      */
     double getTravelDistance();
+
     /**
      * renvoie la durée de voyage.
      * @return la durée de voyage
@@ -50,6 +52,7 @@ public interface Transport {
      * @return les Cordonnée GPS de depart
      */
     Point2D.Double getInCoordinates();
+
     /**
      * renvoie les Cordonnée GPS de l'arrivée.
      * @return les Cordonnée GPS de l'arrivée
