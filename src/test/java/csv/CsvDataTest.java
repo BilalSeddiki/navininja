@@ -18,9 +18,10 @@ import model.Network;
 import model.Path;
 import model.Station;
 
-public class CsvDataTest {
+class CsvDataTest {
+
     @Test
-    public void testmakeNetwork(@TempDir java.nio.file.Path tempDir) {
+    void testmakeNetwork(@TempDir java.nio.file.Path tempDir) {
         var csvPaths = "Lourmel;2.2822419598550767, 48.83866086365992;Boucicaut;2.2879184311245595, 48.841024160993214;8 variant 1;4:14;15.93935780373747\n"
                 +
                 "Boucicaut;2.2879184311245595, 48.841024160993214;Félix Faure;2.2918472203679703, 48.84268433479664;8 variant 1;2:58;11.195691029379345\n"

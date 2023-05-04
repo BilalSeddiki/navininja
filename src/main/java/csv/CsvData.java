@@ -29,7 +29,7 @@ public abstract class CsvData<T extends CsvData<?>> {
     }
 
     /**
-     * 
+     * Lis un fichier CSV et renvoie une liste contenant les données parsées.
      * @param path Le chemin vers le fichier CSV à parser
      * @return La liste d'instance décrit par le fichier CSV donné en argument
      * @throws IOException if the named file does not exist, is a directory rather than a regular file, or for some other reason cannot be opened for reading.
@@ -39,6 +39,12 @@ public abstract class CsvData<T extends CsvData<?>> {
         return readCSV(reader);
     }
 
+    /**
+     * Lis une chaîne de caractères contenant des données CSV et renvoie une liste contenant les données parsées.
+     * @param text La chaîne de caractères à parser
+     * @return La liste d'instance décrit par la chaîne de caractères donnée en argument
+     * @throws IOException if an I/O error occurs
+     */
     public List<T> readCSVString(String text) throws IOException {
         StringReader reader = new StringReader(text);
         return readCSV(reader);
@@ -47,7 +53,7 @@ public abstract class CsvData<T extends CsvData<?>> {
     /**
      * Crée un réseau à partir de deux fichiers CSV.
      * @param mapFile le nom d'un fichier CSV contenant les informations des chemins du réseau
-     * @param scheduleFile le nom d'un fichier CSV contenant les informations des horaires des lignes 
+     * @param scheduleFile le nom d'un fichier CSV contenant les informations des horaires des lignes
      * @return un réseau
      * @throws IOException si la lecture d'un des fichier echoue
      */
@@ -89,13 +95,6 @@ public abstract class CsvData<T extends CsvData<?>> {
             paths.add(new Path(item.getLine(), item.getLineVariant(), schedule, item.getDuration(),
                     item.getDistance(), stations.get(stationNameA), stations.get(stationNameB)));
         }
-        return new Network(new ArrayList<Station>(stations.values()), paths);
+        return new Network(new ArrayList<>(stations.values()), paths);
     }
-
-    /**
-     * Méthode utilitaire afin à ne pas avoir à préciser le chemin vers le fichier CSV correspondant.
-     * @return <T> La liste d'instance décrit par le fichier CSV correspondant contenu dans resources/
-     * @throws IOException
-     */
-    public abstract List<T> readCSVFile() throws IOException;
 }

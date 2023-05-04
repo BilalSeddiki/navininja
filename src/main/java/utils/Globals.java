@@ -4,6 +4,7 @@ package utils;
  * Classe statique pour définir les variables globales du logiciel
  */
 public class Globals {
+
     /**
      * Fonction statique chargée de construire le chemin ver la vue depuis la racine du projet.
      * @param viewFileName nom du fichier fxml de la vue
