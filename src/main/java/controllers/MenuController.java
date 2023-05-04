@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-import java.io.IOException;
 
 /**
  * Contrôleur de la vue Menu, se charge de définir les écouteurs des boutons
@@ -14,17 +13,10 @@ import java.io.IOException;
 public class MenuController extends Controller {
 
     /**
-     * Référence au composant FXML du bouton 'Network plan'.
-     */
-    @FXML
-    public Button networkPlanBtn;
-
-    /**
      * Référence au composant FXML du bouton 'Find a route'.
      */
-
     @FXML
-    public Button findARouteBtn;
+    Button findARouteBtn;
 
     /**
      * Référence au composant FXML du bouton 'Time plan'.
@@ -37,15 +29,8 @@ public class MenuController extends Controller {
      * @param actionEvent événement
      */
     public void findARouteListener(final ActionEvent actionEvent)
-            throws IOException {
+            {
         navigationController.navigateTo("FindARouteView");
-    }
-
-    /**
-     * Écouteur du bouton 'Network plan'.
-     * @param actionEvent événement
-     */
-    public void networkPlanListener(final ActionEvent actionEvent) {
     }
 
     /**

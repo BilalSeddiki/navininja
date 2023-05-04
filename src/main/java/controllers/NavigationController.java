@@ -67,7 +67,6 @@ public final class NavigationController {
             Controller currentController = loader.getController();
             currentController.setNavigationController(this);
             history.push(viewName);
-            // scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource(Globals.pathToStyleSheetFromController("style.css"))).toExternalForm());
             stage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();

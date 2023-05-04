@@ -31,20 +31,26 @@ import java.util.List;
  */
 public class FindARouteController extends Controller {
 
+    /** label static du texte "total trip duration". */
     @FXML
     Label titleTotalDuration;
+
+    /** label valeur du "total trip duration". */
     @FXML
     Label labelTotalDuration;
 
     /** Bouton pour intervertir station A et B. */
     @FXML
     Button reverseInputButton;
-
     /** Bouton retour. */
+
     @FXML
     Button goBackBtn;
+    /** Liste choix de l'heure. */
     @FXML
     ComboBox<String> hourComboBoxA;
+
+    /** Liste choix des minutes. */
     @FXML
     ComboBox<String> minComboBoxA;
 
@@ -85,7 +91,7 @@ public class FindARouteController extends Controller {
     TableColumn<Transport, Duration> durationColumn;
 
     /**
-     * This enum helps recognizing the input format the user chose.
+     * Enum permettant de détecter le type de saisie de l'utilisateur.
      */
     private enum InputFormat {
 
@@ -125,6 +131,10 @@ public class FindARouteController extends Controller {
      */
     private static final String INVALID_INPUT_MESSAGE = "Invalid input";
 
+    /**
+     * Fonction pour initialiser les valeurs prédéfinies de l'interface,
+     * tel que les valeurs des listes "heures" ou "minutes"
+     */
     public void initialize() {
         //Initialisation de la liste des minutes
         for (int i = 0; i < MINUTES_IN_HOUR; i++) {
@@ -151,7 +161,6 @@ public class FindARouteController extends Controller {
         itineraryTable.setVisible(false);
         titleTotalDuration.setVisible(false);
         labelTotalDuration.setVisible(false);
-
     }
 
     /**
@@ -268,7 +277,6 @@ public class FindARouteController extends Controller {
                     .setDepartureTime(time)
                     .build();
         }
-
         return travel.createItinerary();
     }
 

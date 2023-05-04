@@ -17,7 +17,7 @@ import java.util.List;
 
 public class TextFieldListener implements ChangeListener<String> {
 
-    /** Liste des stations observés. */
+    /** Liste des stations observées. */
     private final ObservableList<String> stations;
 
     /** Menu contextuel des suggestions de stations. */

@@ -61,7 +61,7 @@
          <ContextMenu fx:id="suggestionMenuStation" />
       </contextMenu>
    </TextField>
-   <Button fx:id="searchBtn" layoutX="373.0" layoutY="313.0" mnemonicParsing="false" onAction="#FindSchedule" prefHeight="39.0" prefWidth="318.0" stylesheets="@style/style.css" text="Search" textFill="WHITE">
+   <Button fx:id="searchBtn" layoutX="373.0" layoutY="313.0" mnemonicParsing="false" onAction="#findSchedule" prefHeight="39.0" prefWidth="318.0" stylesheets="@style/style.css" text="Search" textFill="WHITE">
       <cursor>
          <Cursor fx:constant="HAND" />
       </cursor>

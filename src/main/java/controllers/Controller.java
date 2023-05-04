@@ -20,7 +20,7 @@ public class Controller {
     public NavigationController navigationController;
 
     /**
-     * le network  contenant les donnée.
+     * le network contenant les données.
      */
     public Network network;
 

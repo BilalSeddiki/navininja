@@ -49,11 +49,11 @@ public class ScheduleController extends Controller {
     @FXML
     TableView<Schedule> busScheduleTable;
 
-    //todo on doit avoir TableColumn<Schedule, String> directionColumn; à la fin
+    /**Colonne de la direction du variant. */
     @FXML
     TableColumn<Schedule, String> directionColumn;
 
-    //todo on doit avoir TableColumn<Schedule, String> timeColumn; à la fin
+    /**Colonne de l'horaire de passage. */
     @FXML
     TableColumn<Schedule, String> timeColumn;
 
