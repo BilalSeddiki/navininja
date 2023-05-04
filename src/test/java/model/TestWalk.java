@@ -17,9 +17,9 @@ public class TestWalk {
         Double arrival = new Double(0, 0);
 
         Walk walk = new Walk(departure, arrival);
-        assertSame(departure, walk.getDepartureCoordinates(), 
+        assertSame(departure, walk.getDepartureCoordinates(),
             "L'attribut departureCoordinates est incorrect.");
-        assertSame(arrival, walk.getArrivalCoordinates(), 
+        assertSame(arrival, walk.getArrivalCoordinates(),
             "L'attribut arrivalCoordinates est incorrect.");
     }
 
@@ -36,7 +36,8 @@ public class TestWalk {
         double up = 40.0;
         double distance = walk.getTravelDistance();
         assertTrue(distance >= low && distance <= up,
-            "La distance entre les deux points devrait être comprise entre 30 et 40 mètres. ");
+            "La distance entre les deux points
+            devrait être comprise entre 30 et 40 mètres. ");
     }
 
     /**

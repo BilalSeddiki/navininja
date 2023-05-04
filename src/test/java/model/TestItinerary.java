@@ -11,16 +11,24 @@ public class TestItinerary {
 
     /**
      * Cree un chemin avec des valeurs par defaut.
+     * @param duration la durée du chemin
      * @return chemin avec des valeurs par defaut.
      */
-    public Path createPathWithDefaultValues(Duration duration) {
+    public Path createPathWithDefaultValues(final Duration duration) {
         Station source = new Station("Station source", new Double(0, 0));
-        Station destination = new Station("Station destination", new Double(0, 0));
+        Station destination =
+            new Station("Station destination", new Double(0, 0));
         ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
         schedule.add(LocalTime.of(8, 30, 00));
         schedule.add(LocalTime.of(8, 40, 00));
         schedule.add(LocalTime.of(8, 50, 00));
-        Path path = new Path("", "0", schedule, duration, 0, source, destination);
+        Path path = new Path("",
+                             "0",
+                             schedule,
+                             duration,
+                             0,
+                             source,
+                             destination);
         return path;
     }
 
@@ -46,8 +54,12 @@ public class TestItinerary {
         ArrayList<Transport> transports = new ArrayList<Transport>();
 
         Itinerary itinerary = new Itinerary(departureTime, transports);
-        assertEquals(departureTime, itinerary.getDepartureTime(), "L'attribut departureTime est incorrect.");
-        assertEquals(transports, itinerary.getTransports(), "L'attribut paths est incorrect.");
+        assertEquals(departureTime,
+                     itinerary.getDepartureTime(),
+                     "L'attribut departureTime est incorrect.");
+        assertEquals(transports,
+                     itinerary.getTransports(),
+                     "L'attribut paths est incorrect.");
     }
 
     /**
@@ -59,8 +71,9 @@ public class TestItinerary {
 
         Duration duration = itinerary.getDuration();
         Duration supposedDuration = Duration.ofMinutes(35);
-        assertEquals(duration, supposedDuration, 
-            "La durée totale de cet itinéraire devrait être 30 minutes.");
+        assertEquals(duration,
+                     supposedDuration,
+             "La durée totale de cet itinéraire devrait être 30 minutes.");
     }
 
     /**
@@ -72,7 +85,7 @@ public class TestItinerary {
 
         LocalTime arrivalTime = itinerary.getArrivalTime();
         LocalTime supposedArrivalTime = LocalTime.of(9, 05, 00);
-        assertEquals(arrivalTime, supposedArrivalTime, 
+        assertEquals(arrivalTime, supposedArrivalTime,
             "L'heure d'arrivée de l'itinéraire devrait etre 9h05.");
     }
 
@@ -81,8 +94,10 @@ public class TestItinerary {
      */
     @Test
     public void testIsEmptyTrue() {
-        Itinerary itinerary = new Itinerary(LocalTime.of(0, 0), new ArrayList<Transport>());
-        assertTrue(itinerary.isEmpty(), "Le calcul de l'heure d'arrivée de l'itinéraire est incorrect.");
+        Itinerary itinerary = new Itinerary(LocalTime.of(0, 0),
+                                 new ArrayList<Transport>());
+        assertTrue(itinerary.isEmpty(),
+            "Le calcul de l'heure d'arrivée de l'itinéraire est incorrect.");
     }
 
     /**
@@ -91,7 +106,8 @@ public class TestItinerary {
     @Test
     public void testIsEmptyFalse() {
         Itinerary itinerary = createItinerary();
-        assertFalse(itinerary.isEmpty(), "Le calcul de l'heure d'arrivée de l'itinéraire est incorrect.");
+        assertFalse(itinerary.isEmpty(),
+            "Le calcul de l'heure d'arrivée de l'itinéraire est incorrect.");
     }
 
     /**
@@ -107,9 +123,9 @@ public class TestItinerary {
         int sizeAfter = itinerary.getTransports().size();
         Walk firstElement = (Walk) itinerary.getTransports().get(0);
 
-        assertEquals(sizeBefore + 1, sizeAfter, 
+        assertEquals(sizeBefore + 1, sizeAfter,
             "La taille de la liste de modes de transport devrait être de 3.");
-        assertEquals(firstElement, toBeAdded, 
+        assertEquals(firstElement, toBeAdded,
             "Les deux trajets à pied ajoutés devraient être égaux.");
     }
 
@@ -126,9 +142,9 @@ public class TestItinerary {
         int sizeAfter = itinerary.getTransports().size();
         Walk lastElement = (Walk) itinerary.getTransports().get(sizeAfter - 1);
 
-        assertEquals(sizeBefore + 1, sizeAfter, 
+        assertEquals(sizeBefore + 1, sizeAfter,
             "La taille de la liste de modes de transport devrait être de 3.");
-        assertEquals(lastElement, toBeAdded, 
+        assertEquals(lastElement, toBeAdded,
             "Les deux trajets à pied ajoutés devraient être égaux.");
     }
 
@@ -144,11 +160,14 @@ public class TestItinerary {
         transports.add(walk);
         Itinerary itinerary = new Itinerary(LocalTime.of(0, 0), transports);
 
-        String itineraryString = 
-            itinerary.getDepartureTime().toString() + "\n" 
-            + path.toString() + "\n" + walk.toString() + "\n" + itinerary.getDuration().toString() + "\n" + itinerary.getArrivalTime().toString();
+        String itineraryString =
+            itinerary.getDepartureTime().toString() + "\n"
+            + path.toString() + "\n"
+            + walk.toString() + "\n"
+            + itinerary.getDuration().toString() + "\n"
+            + itinerary.getArrivalTime().toString();
         String resultString = itinerary.toString();
-        assertEquals(itineraryString, resultString, 
+        assertEquals(itineraryString, resultString,
             "Les deux chaînes de caractères devraient être égales.");
     }
 }
