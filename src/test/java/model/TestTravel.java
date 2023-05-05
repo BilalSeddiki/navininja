@@ -1,76 +1,100 @@
 package model;
 
-import shortestpath.*;
-import model.*;
 import utils.IllegalTravelException;
 
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.awt.geom.Point2D.Double;
-import javafx.util.Pair;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestTravel {
-    
+
+    /** Network sur lequel les tests seront effectués. */
     private Network network;
-    private ArrayList<Station> stationList;
-    private ArrayList<Path> pathList;
-    private ArrayList<Double> coordinatesList;
+
+    /** Liste de station servi pendant les tests. */
+    private List<Station> stationList;
+
+    /** Liste des paths utilisés pendant les tests. */
+    private List<Path> pathList;
+
+    /** Liste des coordonnées utilisés pendant les tests. */
+    private List<Double> coordinatesList;
 
     /**
      * Crée un réseau ainsi que des coordonnées.
      */
     @BeforeAll
     public void createNetwork() {
-        ArrayList<Station> stationList = new ArrayList<Station>();
-        stationList.add(new Station("Station 0", new Double(48.858093, 2.294694)));
-        stationList.add(new Station("Station 1", new Double(48.858203, 2.295068)));
-        stationList.add(new Station("Station 2", new Double(48.857126, 2.296561)));
-        stationList.add(new Station("Station 3", new Double(48.857689, 2.295063)));
-        stationList.add(new Station("Station 4", new Double(48.857756, 2.294634)));
-        stationList.add(new Station("Station 5", new Double(48.858029, 2.294400)));
+        List<Station> stationList = new ArrayList<Station>();
+        stationList.add(new Station("Station 0",
+            new Double(48.858093, 2.294694)));
+        stationList.add(new Station("Station 1",
+            new Double(48.858203, 2.295068)));
+        stationList.add(new Station("Station 2",
+            new Double(48.857126, 2.296561)));
+        stationList.add(new Station("Station 3",
+            new Double(48.857689, 2.295063)));
+        stationList.add(new Station("Station 4",
+            new Double(48.857756, 2.294634)));
+        stationList.add(new Station("Station 5",
+            new Double(48.858029, 2.294400)));
         this.stationList = stationList;
 
-        ArrayList<Path> pathList = new ArrayList<Path>();
+        List<Path> pathList = new ArrayList<Path>();
         /* (Ordre) Ligne n [Variant]: Station m -> Station o */
         /* (0) L0 [0]: S0 -> S1 */
-        pathList.add(createPathWithDefaultValues("Line 0", "0", stationList.get(0), stationList.get(1)));
-        
+        pathList.add(createPathWithDefaultValues("Line 0", "0",
+            stationList.get(0), stationList.get(1)));
+
         /* (1) L0 [0]: S1 -> S2 */
-        pathList.add(createPathWithDefaultValues("Line 0", "0", stationList.get(1), stationList.get(2)));
-        
+        pathList.add(createPathWithDefaultValues("Line 0", "0",
+            stationList.get(1), stationList.get(2)));
+
         /* (2) L0 [1]: S1 -> S0 */
-        pathList.add(createPathWithDefaultValues("Line 0", "1", stationList.get(1), stationList.get(0)));
-        
+        pathList.add(createPathWithDefaultValues("Line 0", "1",
+            stationList.get(1), stationList.get(0)));
+
         /* (3) L0 [1]: S2 -> S1 */
-        pathList.add(createPathWithDefaultValues("Line 0", "1", stationList.get(2), stationList.get(1)));
-        
+        pathList.add(createPathWithDefaultValues("Line 0", "1",
+            stationList.get(2), stationList.get(1)));
+
         /* (4) L1 [0]: S3 -> S1 */
-        pathList.add(createPathWithDefaultValues("Line 1", "0", stationList.get(3), stationList.get(1)));
-        
+        pathList.add(createPathWithDefaultValues("Line 1", "0",
+            stationList.get(3), stationList.get(1)));
+
         /* (5) L1 [0]: S1 -> S4 */
-        pathList.add(createPathWithDefaultValues("Line 1", "0", stationList.get(1), stationList.get(4)));
-        
+        pathList.add(createPathWithDefaultValues("Line 1", "0",
+            stationList.get(1), stationList.get(4)));
+
         /* (6) L1 [1]: S1 -> S3 */
-        pathList.add(createPathWithDefaultValues("Line 1", "1", stationList.get(1), stationList.get(3)));
-        
+        pathList.add(createPathWithDefaultValues("Line 1", "1",
+            stationList.get(1), stationList.get(3)));
+
         /* (7) L1 [1]: S4 -> S1 */
-        pathList.add(createPathWithDefaultValues("Line 1", "1", stationList.get(4), stationList.get(1)));
+        pathList.add(createPathWithDefaultValues("Line 1", "1",
+            stationList.get(4), stationList.get(1)));
 
         /* (8) L2 [0]: S0 -> S5 */
-        pathList.add(createPathWithDefaultValues("Line 2", "0", stationList.get(0), stationList.get(5)));
-        
+        pathList.add(createPathWithDefaultValues("Line 2", "0",
+            stationList.get(0), stationList.get(5)));
+
         /* (9) L2 [1]: S5 -> S0 */
-        pathList.add(createPathWithDefaultValues("Line 2", "1", stationList.get(5), stationList.get(0)));
+        pathList.add(createPathWithDefaultValues("Line 2", "1",
+            stationList.get(5), stationList.get(0)));
         this.pathList = pathList;
 
-        /* 
+        /*
          * Plan du réseau: (Sn -> Station n, Ln -> Ligne n)
          * S5 <-L2-> S0 <-L0-> S1
          *                      | <-L1-> S4
@@ -80,7 +104,7 @@ public class TestTravel {
 
         this.network = new Network(stationList, pathList);
 
-        ArrayList<Double> coordinatesList = new ArrayList<Double>();
+        List<Double> coordinatesList = new ArrayList<Double>();
         coordinatesList.add(new Double(48.858370, 2.294532));
         coordinatesList.add(new Double(48.858841, 2.292953));
         coordinatesList.add(new Double(48.857946, 2.295365));
@@ -95,17 +119,25 @@ public class TestTravel {
      * Durée du trajet: 5 minutes.
      * Distance entre deux stations: 5 mètres.
      * Horaires de passage des trains: 8h30, 8h40, 8h50.
+     * @param lineName le nom de la ligne
+     * @param variant le variant de la ligne
+     * @param source la source du path
+     * @param destination la destination du path
      * @return chemin avec des valeurs par defaut.
      */
-    public Path createPathWithDefaultValues(String lineName, String variant, Station source, Station destination) {
-        ArrayList<LocalTime> schedule = new ArrayList<LocalTime>();
+    public Path createPathWithDefaultValues(final String lineName,
+        final String variant,
+        final Station source,
+        final Station destination) {
+        List<LocalTime> schedule = new ArrayList<LocalTime>();
         schedule.add(LocalTime.of(8, 30));
         schedule.add(LocalTime.of(8, 40));
         schedule.add(LocalTime.of(8, 50));
         Duration duration = Duration.ofMinutes(5);
         double distance = 5.0;
 
-        Path path = new Path(lineName, variant, schedule, duration, distance, source, destination);
+        Path path = new Path(lineName, variant, schedule,
+            duration, distance, source, destination);
 
         return path;
     }
@@ -129,7 +161,8 @@ public class TestTravel {
             .build();
         assertEquals(travel.getNetwork(), this.network);
         assertEquals(travel.getDepartureTime(), departureTime);
-        assertEquals(travel.getDepartureCoordinates(), departure.getCoordinates());
+        assertEquals(travel.getDepartureCoordinates(),
+            departure.getCoordinates());
         assertEquals(travel.getArrivalCoordinates(), arrival.getCoordinates());
         assertEquals(travel.getSearchLimit(), searchLimit);
         assertEquals(travel.getSearchDistance(), searchDistance);
@@ -210,10 +243,11 @@ public class TestTravel {
         LocalTime departureTime = travel.getDepartureTime();
         assertEquals(travel.getNetwork(), this.network);
         assertTrue(
-            departureTime.isAfter(expectedTime.minusMinutes(1)) && 
-            departureTime.isBefore(expectedTime.plusMinutes(1)));
+            departureTime.isAfter(expectedTime.minusMinutes(1))
+            && departureTime.isBefore(expectedTime.plusMinutes(1)));
         assertEquals(travel.getArrivalCoordinates(), coordinatesList.get(0));
-        assertEquals(travel.getDepartureCoordinates(), departure.getCoordinates());
+        assertEquals(travel.getDepartureCoordinates(),
+            departure.getCoordinates());
         assertEquals(travel.getSearchLimit(), expectedSearchLimit);
         assertEquals(travel.getSearchDistance(), expectedSearchDistance);
     }
@@ -225,27 +259,26 @@ public class TestTravel {
     @Test
     public void testBuilderNullNetwork() throws IllegalTravelException {
         assertThrows(IllegalTravelException.class, () -> {
-                Travel travel = new Travel
-                    .Builder(null)
-                    .setDepartureCoordinates(coordinatesList.get(0))
-                    .setArrivalCoordinates(coordinatesList.get(1))
-                    .build();
-            }
-        );
+            new Travel
+                .Builder(null)
+                .setDepartureCoordinates(coordinatesList.get(0))
+                .setArrivalCoordinates(coordinatesList.get(1))
+                .build();
+        });
     }
 
     /**
-     * Teste le monteur de la classe Travel dans le cas où ni 
+     * Teste le monteur de la classe Travel dans le cas où ni
      * le point de départ et ni le point d'arrivée n'ont été donnés.
      */
     @Test
-    public void testBuilderNoStationsNorCoordinates() throws IllegalTravelException {
+    public void testBuilderNoStationsNorCoordinates()
+        throws IllegalTravelException {
         assertThrows(IllegalTravelException.class, () -> {
-                Travel travel = new Travel
-                    .Builder(network)
-                    .build();
-            }
-        );
+            new Travel
+                .Builder(network)
+                .build();
+        });
     }
 
     /**
@@ -255,12 +288,11 @@ public class TestTravel {
     @Test
     public void testBuilderNoDeparture() throws IllegalTravelException {
         assertThrows(IllegalTravelException.class, () -> {
-                Travel travel = new Travel
-                    .Builder(network)
-                    .setArrivalCoordinates(coordinatesList.get(0))
-                    .build();
-            }
-        );
+            new Travel
+                .Builder(network)
+                .setArrivalCoordinates(coordinatesList.get(0))
+                .build();
+        });
     }
 
     /**
@@ -270,12 +302,11 @@ public class TestTravel {
     @Test
     public void testBuilderNoArrival() throws IllegalTravelException {
         assertThrows(IllegalTravelException.class, () -> {
-                Travel travel = new Travel
-                    .Builder(network)
-                    .setDepartureCoordinates(coordinatesList.get(0))
-                    .build();
-            }
-        );
+            new Travel
+                .Builder(network)
+                .setDepartureCoordinates(coordinatesList.get(0))
+                .build();
+        });
     }
 
     /**
@@ -285,14 +316,13 @@ public class TestTravel {
     @Test
     public void testBuilderTwoDepartures() throws IllegalTravelException {
         assertThrows(IllegalTravelException.class, () -> {
-                Travel travel = new Travel
-                    .Builder(network)
-                    .setDepartureCoordinates(coordinatesList.get(0))
-                    .setDepartureStation(stationList.get(0))
-                    .setArrivalCoordinates(coordinatesList.get(0))
-                    .build();
-            }
-        );
+            new Travel
+                .Builder(network)
+                .setDepartureCoordinates(coordinatesList.get(0))
+                .setDepartureStation(stationList.get(0))
+                .setArrivalCoordinates(coordinatesList.get(0))
+                .build();
+        });
     }
 
     /**
@@ -326,7 +356,7 @@ public class TestTravel {
             .build();
         Itinerary emptyItinerary = travel.createEmptyItinerary();
         assertEquals(emptyItinerary.getDepartureTime(), departureTime);
-        assertTrue(emptyItinerary.getTransports().size() == 0);
+        assertTrue(emptyItinerary.getTransports().isEmpty());
     }
 
     /**
@@ -335,8 +365,8 @@ public class TestTravel {
      */
     @Test
     public void testEmptyNetwork() throws IllegalTravelException {
-        ArrayList<Path> emptyPathList = new ArrayList<Path>();
-        ArrayList<Station> emptyStationList = new ArrayList<Station>();
+        List<Path> emptyPathList = new ArrayList<Path>();
+        List<Station> emptyStationList = new ArrayList<Station>();
         Network emptyNetwork = new Network(emptyStationList, emptyPathList);
 
         Travel travelCoordinates = new Travel
@@ -346,8 +376,7 @@ public class TestTravel {
             .setArrivalCoordinates(new Double(0, 0))
             .build();
         Itinerary itineraryCoordinates = travelCoordinates.createItinerary();
-        
-        assertTrue(itineraryCoordinates.getTransports().size() == 0);
+        assertTrue(itineraryCoordinates.getTransports().isEmpty());
     }
 
     /**
@@ -365,7 +394,7 @@ public class TestTravel {
             .build();
         Itinerary itinerary = travel.createItinerary();
 
-        ArrayList<Transport> transports = new ArrayList<Transport>();
+        List<Transport> transports = new ArrayList<Transport>();
         transports.add(pathList.get(0));
         transports.add(pathList.get(1));
         Itinerary expected = new Itinerary(departureTime, transports);
@@ -389,8 +418,9 @@ public class TestTravel {
             .build();
         Itinerary itinerary = travel.createItinerary();
 
-        ArrayList<Transport> transports = new ArrayList<Transport>();
-        transports.add(new Walk(coordinatesList.get(0), stationList.get(1).getCoordinates()));
+        List<Transport> transports = new ArrayList<Transport>();
+        transports.add(new Walk(coordinatesList.get(0),
+            stationList.get(1).getCoordinates()));
         transports.add(pathList.get(1));
         Itinerary expected = new Itinerary(departureTime, transports);
 
@@ -412,8 +442,9 @@ public class TestTravel {
             .build();
         Itinerary itinerary = travel.createItinerary();
 
-        ArrayList<Transport> transports = new ArrayList<Transport>();
-        transports.add(new Walk(stationList.get(0).getCoordinates(), coordinatesList.get(1)));
+        List<Transport> transports = new ArrayList<Transport>();
+        transports.add(new Walk(stationList.get(0).getCoordinates(),
+            coordinatesList.get(1)));
         Itinerary expected = new Itinerary(departureTime, transports);
 
         assertEquals(itinerary.getDepartureTime(), expected.getDepartureTime());
@@ -424,7 +455,8 @@ public class TestTravel {
      * Teste la fonction fromCoordinatesToCoordinates.
      */
     @Test
-    public void testFromCoordinatesToCoordinates() throws IllegalTravelException {
+    public void testFromCoordinatesToCoordinates()
+    throws IllegalTravelException {
         LocalTime departureTime = LocalTime.of(8, 20);
         Travel travel = new Travel
             .Builder(network)
@@ -435,10 +467,12 @@ public class TestTravel {
             .build();
         Itinerary itinerary = travel.createItinerary();
 
-        ArrayList<Transport> transports = new ArrayList<Transport>();
-        transports.add(new Walk(coordinatesList.get(2), stationList.get(3).getCoordinates()));
+        List<Transport> transports = new ArrayList<Transport>();
+        transports.add(new Walk(coordinatesList.get(2),
+            stationList.get(3).getCoordinates()));
         transports.add(pathList.get(4));
-        transports.add(new Walk(stationList.get(1).getCoordinates(), coordinatesList.get(1)));
+        transports.add(new Walk(stationList.get(1).getCoordinates(),
+            coordinatesList.get(1)));
         Itinerary expected = new Itinerary(departureTime, transports);
 
         assertEquals(itinerary.getDepartureTime(), expected.getDepartureTime());
@@ -450,7 +484,8 @@ public class TestTravel {
      * où l'itinéraire n'est composé que d'un trajet à pied.
      */
     @Test
-    public void testFromCoordinatesToCoordinatesOnlyWalk() throws IllegalTravelException {
+    public void testFromCoordinatesToCoordinatesOnlyWalk()
+    throws IllegalTravelException {
         LocalTime departureTime = LocalTime.of(8, 20);
         Travel travel = new Travel
             .Builder(network)
@@ -460,8 +495,9 @@ public class TestTravel {
             .build();
         Itinerary itinerary = travel.createItinerary();
 
-        ArrayList<Transport> transports = new ArrayList<Transport>();
-        transports.add(new Walk(coordinatesList.get(3), coordinatesList.get(4)));
+        List<Transport> transports = new ArrayList<Transport>();
+        transports.add(new Walk(coordinatesList.get(3),
+            coordinatesList.get(4)));
         Itinerary expected = new Itinerary(departureTime, transports);
 
         assertEquals(itinerary.getDepartureTime(), expected.getDepartureTime());

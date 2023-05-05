@@ -2,7 +2,8 @@ package model;
 
 import java.awt.geom.Point2D.Double;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestStation {
 
@@ -16,7 +17,8 @@ public class TestStation {
 
         Station station = new Station(name, coordinates);
         assertEquals(name, station.getName(), "L'attribut name est incorrect.");
-        assertEquals(coordinates, station.getCoordinates(), "L'attribut coordinates est incorrect.");
+        assertEquals(coordinates, station.getCoordinates(),
+            "L'attribut coordinates est incorrect.");
     }
 
     /**
@@ -31,7 +33,7 @@ public class TestStation {
         Station station = new Station(name, coordinates);
         double latitude = station.getCoordinates().x;
         assertTrue((latitude >= -90.0) && (latitude <= 90.0),
-                "La latitude doit être comprise en -90 degrés et 90 degrés.");
+            "La latitude doit être comprise en -90 degrés et 90 degrés.");
     }
 
     /**
@@ -46,6 +48,6 @@ public class TestStation {
         Station station = new Station(name, coordinates);
         double longitude = station.getCoordinates().y;
         assertTrue((longitude >= -180.0) && (longitude <= 180.0),
-                "La longitude doit être comprise en -180 degrés et 180 degrés.");
+            "La longitude doit être comprise en -180 degrés et 180 degrés.");
     }
 }

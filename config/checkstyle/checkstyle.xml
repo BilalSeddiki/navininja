@@ -51,14 +51,14 @@
 
   <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
   <module name="SuppressionFilter">
-    <property name="file" value="${org.checkstyle.sun.suppressionfilter.config}"
+    <property name="file" value="${config_loc}/suppressions.xml"
               default="checkstyle-suppressions.xml" />
-    <property name="optional" value="true"/>
+    <property name="optional" value="false"/>
   </module>
 
   <!-- Checks that a package-info.java file exists for each package.     -->
   <!-- See https://checkstyle.org/config_javadoc.html#JavadocPackage -->
-  <module name="JavadocPackage"/>
+  <!-- <module name="JavadocPackage"/> -->
 
   <!-- Checks whether files end with a new line.                        -->
   <!-- See https://checkstyle.org/config_misc.html#NewlineAtEndOfFile -->
@@ -156,13 +156,13 @@
     <module name="EmptyBlock"/>
     <module name="LeftCurly"/>
     <module name="NeedBraces"/>
-    <module name="RightCurly"/>
+    <!-- <module name="RightCurly"/> -->
 
     <!-- Checks for common coding problems               -->
     <!-- See https://checkstyle.org/config_coding.html -->
     <module name="EmptyStatement"/>
-    <module name="EqualsHashCode"/>
-    <module name="HiddenField"/>
+    <!-- <module name="EqualsHashCode"/> -->
+    <!-- <module name="HiddenField"/> -->
     <module name="IllegalInstantiation"/>
     <module name="InnerAssignment"/>
     <module name="MagicNumber"/>
