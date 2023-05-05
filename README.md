@@ -9,6 +9,5 @@ Rochier Marie
 Falguerolle Elliott  
 Guinard Océane  
 Seddiki Bilal  
-Ngoy John  
 
 ##
