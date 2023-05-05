@@ -170,7 +170,7 @@ public class FindARouteController extends Controller {
      */
     private InputFormat checkInputFormat(final String input) {
         String stationNamePattern = // Regex matche les noms des stations
-            "^[a-zA-ZâêàéèœŒÂÊÉÈÀ'\\-\\s]+$";
+            "^[a-zA-ZâêàéèçœŒÂÊÉÈÀÇ'\\-\\s]+$";
         String coordinatesPattern = // regex matche les coordonnées lat,long
             "^-?\\d+(\\.\\d+)?[\\s]*,[\\s]*-?\\d+(\\.\\d+)?$";
         if (input.matches(stationNamePattern)) {
